@@ -1,6 +1,6 @@
 # Browser Toys
 
-ビルド不要・依存ゼロのバニラ JavaScript アプリを **17本** 厳選した公開用ギャラリーです。
+ビルド不要・依存ゼロのバニラ JavaScript アプリを **10本** 厳選した公開用ギャラリーです。
 
 ## 使い方
 
@@ -34,14 +34,7 @@ npx serve .
 
 | アプリ | 説明 |
 |--------|------|
-| 🎨 **[ArtLab](apps/artlab/index.html)** | ジェネラティブアート・ランチャー。下記のアート作品を1画面で切り替え、iframeプレビュー＋全画面表示できるハブ。 |
-| 🌌 **[Cosmos](apps/cosmos/index.html)** | プロシージャル宇宙ジェネレーター。星雲・星・流れ星をシード値で生成。5種のカラーパレット、PNG保存対応。 |
-| 🎆 **[Fireworks](apps/fireworks/index.html)** | 花火シミュレーション。クリックで打ち上げ、自動モード、パーティクル物理。 |
-| 📺 **[Glitch Art](apps/glitch/index.html)** | グリッチアートジェネレーター。RGBシフト、ピクセルソート、スキャンライン、VHS、色収差。7エフェクト。 |
-| 🟩 **[Matrix Rain](apps/matrix/index.html)** | マトリックスデジタルレイン。カタカナ・バイナリ・HEX・漢字の4文字セット、5カラースキーム。 |
-| 🎪 **[Spirograph](apps/spirograph/index.html)** | スピログラフ。R/r/dパラメータで幾何学模様を描画。4カラーモード、PNG保存。 |
-| ⭐ **[Starfield](apps/starfield/index.html)** | スターフィールド。ワープスピード風の星空アニメーション。マウスで方向操作。 |
-| 🌤️ **[Weather Art](apps/weather/index.html)** | 天気アート。晴れ・雨・雪・嵐・オーロラの5つの天気をビジュアル表現。 |
+| 🎨 **[ArtLab](apps/artlab/index.html)** | ジェネラティブアート・ランチャー。Cosmos・Fireworks・Glitch Art・Matrix Rain・Spirograph・Starfield・Weather Art を1画面で切り替え、iframeプレビュー＋全画面表示できるハブ。 |
 
 ### 🔬 シミュレーション・科学
 
