@@ -143,54 +143,185 @@
   .wc-card .del{position:absolute;top:8px;right:8px;background:none;border:0;color:var(--muted2);cursor:pointer;font-size:14px;padding:4px 7px;border-radius:6px}
   .wc-card .del:hover{background:var(--panel);color:var(--red)}
 
-  /* ==== ring timers ==== */
-  .ringbox{display:flex;flex-direction:column;align-items:center;gap:18px;padding:10px 0}
-  .ringwrap{position:relative;width:min(270px,70vw)}
-  .ringwrap svg{width:100%;height:auto;display:block;transform:rotate(-90deg)}
-  .ring-bg{fill:none;stroke:var(--panel2);stroke-width:9}
-  .ring-fg{fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;transition:stroke .3s}
-  .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-  .ring-label .t{font-size:clamp(38px,8vw,54px);font-weight:800}
-  .ring-label .s{color:var(--muted);font-size:14px;font-weight:600}
+  /* ==== shared tool surface ==== */
+  .tool-surface{
+    text-align:center;
+    padding:28px 20px 32px;
+    background:transparent;
+    border:0;
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    border-radius:0;
+  }
+  .tool-actions{margin-top:22px}
+  .tool-actions .btn{
+    background:none;border:0;border-radius:0;padding:10px 14px;
+    font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);
+  }
+  .tool-actions .btn:hover{color:var(--text);border-color:transparent}
+  .tool-actions .btn.primary{background:none;color:var(--text);position:relative}
+  .tool-actions .btn.primary::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:4px;height:1px;background:var(--accent);
+  }
+  .tool-actions .btn.danger{color:var(--muted)}
+  .tool-actions .btn.danger:hover{color:var(--red)}
+  .tool-actions .btn.big{font-size:12px;padding:10px 14px;border-radius:0}
+  .tool-actions .btn:disabled{opacity:.35}
+  .preset-row{
+    display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;
+  }
+  .preset-row button{
+    background:none;border:0;border-radius:0;color:var(--muted);
+    font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:6px 10px;cursor:pointer;
+  }
+  .preset-row button:hover{color:var(--text)}
+  .preset-row button.active{color:var(--text);position:relative}
+  .preset-row button.active::after{
+    content:"";position:absolute;left:10px;right:10px;bottom:2px;height:1px;background:var(--accent);
+  }
+  .mode-row{
+    display:inline-flex;gap:4px;margin-bottom:22px;background:none;border:0;padding:0;
+  }
+  .mode-row button{
+    background:none;border:0;border-radius:0;color:var(--muted);
+    font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    padding:8px 12px;cursor:pointer;
+  }
+  .mode-row button:hover{color:var(--text)}
+  .mode-row button.active{color:var(--text);position:relative}
+  .mode-row button.active::after{
+    content:"";position:absolute;left:12px;right:12px;bottom:2px;height:1px;background:var(--accent);
+  }
+  .cfg-line{
+    display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px;
+    color:var(--muted2);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .cfg-line .fld{color:inherit;font-size:inherit;font-weight:inherit;gap:6px}
+  .cfg-line input[type=number]{
+    width:64px;padding:6px 8px;font-size:13px;border-radius:0;
+    background:transparent;border:0;border-bottom:1px solid var(--border2);
+  }
 
-  /* ==== stopwatch ==== */
-  .sw-time{text-align:center;font-size:clamp(44px,10vw,76px);font-weight:800;padding:22px 0 6px}
-  .sw-time small{font-size:.5em;color:var(--muted);font-weight:700}
-  .laps{margin-top:18px;max-height:280px;overflow-y:auto;border-top:1px solid var(--border)}
-  .lap{display:flex;justify-content:space-between;padding:9px 8px;border-bottom:1px solid var(--border);font-size:14px}
-  .lap .n{color:var(--muted2);font-weight:700}
+  /* ==== Stopwatch C — Split ==== */
+  .split-readout{
+    display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:end;
+    max-width:640px;margin:0 auto;text-align:left;
+  }
+  .split-label{
+    font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted2);margin-bottom:8px;
+  }
+  .split-main .sw-time{
+    text-align:left;font-family:var(--font-display);font-size:clamp(48px,12vw,92px);
+    font-weight:800;letter-spacing:-.04em;line-height:.95;padding:0;
+    color:var(--title-color);text-shadow:var(--title-glow);
+  }
+  .split-main .sw-time small{font-size:.42em;color:var(--muted);font-weight:700}
+  .split-side{border-left:1px solid var(--border);padding-left:22px}
+  .sw-split{
+    font-family:var(--font-display);font-size:clamp(28px,6vw,44px);font-weight:800;
+    letter-spacing:-.03em;color:var(--accent);line-height:1;
+  }
+  .sw-lapcount{
+    margin-top:10px;font-size:11px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted2);
+  }
+  .laps{margin-top:20px;max-height:240px;overflow-y:auto;border-top:1px solid var(--border);text-align:left}
+  .lap{display:flex;justify-content:space-between;padding:9px 4px;border-bottom:1px solid var(--border);font-size:13px}
+  .lap .n{color:var(--muted2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
   .lap.best .d{color:var(--green);font-weight:700}
   .lap.worst .d{color:var(--red);font-weight:700}
   .lap .cum{color:var(--muted2)}
+  @media (max-width:560px){
+    .split-readout{grid-template-columns:1fr;gap:18px}
+    .split-side{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:16px}
+  }
 
-  /* ==== timer multi-alarm ==== */
-  .alarm-box{width:100%;max-width:460px;border-top:1px solid var(--border);padding-top:16px;text-align:center}
-  .alarm-box .cap{color:var(--muted);font-size:13px;font-weight:700;margin-bottom:10px}
+  /* ==== Timer A — Orbit ==== */
+  .orbit{display:flex;flex-direction:column;align-items:center}
+  .orbit .ringwrap{position:relative;width:min(300px,78vw);margin:6px 0 8px}
+  .orbit .ringwrap svg{width:100%;height:auto;display:block;transform:rotate(-90deg)}
+  .orbit .ring-bg{fill:none;stroke:var(--border);stroke-width:2.5}
+  .orbit .ring-fg{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;transition:stroke .3s}
+  .orbit .ring-mark{fill:var(--accent);opacity:.85}
+  .orbit .ring-mark.fired{fill:var(--muted2);opacity:.55}
+  .orbit .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+  .orbit .ring-label .t{
+    font-family:var(--font-display);font-size:clamp(44px,12vw,64px);font-weight:800;
+    letter-spacing:-.04em;color:var(--title-color);text-shadow:var(--title-glow);line-height:1;
+  }
+  .orbit .ring-label .s{
+    color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  }
+  .alarm-box{width:100%;max-width:460px;border-top:1px solid var(--border);padding-top:16px;margin-top:18px;text-align:center}
+  .alarm-box .cap{color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
   .alarm-add{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:12px}
   .alarm-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
   .achip{
     display:inline-flex;align-items:center;gap:6px;
-    background:var(--panel2);border:1px solid var(--border2);border-radius:999px;
-    font-size:13px;font-weight:700;padding:6px 8px 6px 14px;
+    background:none;border:0;border-bottom:1px solid var(--border2);
+    font-size:12px;font-weight:700;letter-spacing:.06em;padding:6px 4px 6px 2px;border-radius:0;
   }
-  .achip.fired{border-color:var(--green);color:var(--green);opacity:.75}
-  .achip.next{border-color:var(--accent)}
-  .achip button{background:none;border:0;color:var(--muted2);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:50%}
+  .achip.fired{color:var(--muted2);border-color:var(--border)}
+  .achip.next{color:var(--accent);border-color:var(--accent)}
+  .achip button{background:none;border:0;color:var(--muted2);cursor:pointer;font-size:12px;padding:2px 6px}
   .achip button:hover{color:var(--red)}
-  .alarm-note{color:var(--muted2);font-size:12px;margin-top:10px}
+  .alarm-note{color:var(--muted2);font-size:12px;margin-top:10px;line-height:1.5}
 
-  /* ==== pomodoro ==== */
-  .pomo-stats{display:flex;gap:24px;justify-content:center;margin-top:4px}
-  .pomo-stats .st{text-align:center}
-  .pomo-stats b{display:block;font-size:22px;font-weight:800}
-  .pomo-stats span{color:var(--muted2);font-size:12px;font-weight:600}
-  .dots{display:flex;gap:7px;justify-content:center}
-  .dots .dot{width:9px;height:9px;border-radius:50%;background:var(--panel2);border:1px solid var(--border)}
-  .dots .dot.done{background:var(--red);border-color:transparent}
+  /* ==== Pomodoro A — Cycle ==== */
+  .cycle{display:flex;flex-direction:column;align-items:center}
+  .cycle-ring{position:relative;width:min(300px,78vw);margin:4px 0 10px}
+  .cycle-ring svg{width:100%;height:auto;display:block;transform:rotate(-90deg)}
+  .cycle-ring .ring-bg{fill:none;stroke:var(--border);stroke-width:2.5}
+  .cycle-ring .ring-fg{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;transition:stroke .3s}
+  .cycle-ring .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+  .cycle-ring .ring-label .t{
+    font-family:var(--font-display);font-size:clamp(44px,12vw,64px);font-weight:800;
+    letter-spacing:-.04em;color:var(--title-color);text-shadow:var(--title-glow);line-height:1;
+  }
+  .cycle-ring .ring-label .s{
+    color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  }
+  .cycle-dots{position:absolute;inset:0;pointer-events:none}
+  .cycle-dot{
+    position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;
+    border-radius:50%;background:transparent;border:1px solid var(--border2);
+    transform-origin:center center;
+  }
+  .cycle-dot.done{background:var(--accent);border-color:transparent}
+  .cycle-stats{
+    margin-top:4px;color:var(--muted2);font-size:11px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+  }
+  .cycle-stats b{color:var(--text);font-weight:800}
 
-  /* ==== interval ==== */
-  .phase-banner{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
-  .cfg-grid{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  /* ==== Interval A — Lane ==== */
+  .lane{display:flex;flex-direction:column;align-items:center}
+  .lane-phase{
+    font-family:var(--font-display);font-size:clamp(28px,7vw,42px);font-weight:800;
+    letter-spacing:.18em;text-transform:uppercase;margin:8px 0 6px;line-height:1;
+  }
+  .lane-time{
+    font-family:var(--font-display);font-size:clamp(52px,14vw,88px);font-weight:800;
+    letter-spacing:-.04em;color:var(--title-color);text-shadow:var(--title-glow);
+    line-height:.95;margin-bottom:22px;
+  }
+  .lane-track{
+    display:flex;gap:6px;width:min(520px,92%);justify-content:center;margin-bottom:14px;
+  }
+  .lane-seg{
+    flex:1;max-width:48px;height:10px;background:var(--panel2);border:1px solid var(--border);
+  }
+  .lane-seg.done{background:var(--accent);border-color:transparent;opacity:.85}
+  .lane-seg.current{background:transparent;border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);position:relative;overflow:hidden}
+  .lane-seg.current > i{
+    position:absolute;left:0;top:0;bottom:0;background:var(--accent);opacity:.55;
+  }
+  .lane-round{
+    color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  }
 
   .settings{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:4px}
 
@@ -200,7 +331,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style></head>
-<body class="bt-themed"><header><div class="wrap"><div class="titlebar"><h1>ClockTools</h1><span class="sub">時計・タイマー</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs" role="tablist"><button class="tab" data-v="clock">クロック</button><button class="tab" data-v="stopwatch">ストップウォッチ</button><button class="tab" data-v="timer">タイマー</button><button class="tab" data-v="pomodoro">ポモドーロ</button><button class="tab" data-v="interval">インターバル</button></nav></div></header><main><div class="wrap"><!-- クロック --><section class="view" id="view-clock"><div class="card clock-main"><div class="clock-modes seg" id="clock-modes" role="tablist" aria-label="時計表示"><button data-m="digital" class="active" type="button">Digital</button><button data-m="analog" type="button">Analog</button></div><div id="clock-digital" class="monument"><div class="monument-time"><span class="monument-hm digits" id="ck-hm">--:--</span><span class="monument-sec digits" id="ck-sec">--</span></div><div class="monument-date" id="ck-date"></div></div><div id="clock-analog" class="studio" style="display:none"><div class="studio-dial-wrap"><canvas id="ck-canvas" width="640" height="640" aria-label="アナログ時計"></canvas></div><div class="studio-date" id="ck-date-analog"></div></div></div><div class="card"><h2>世界時計</h2><div class="wc-add"><select id="wc-select"></select><button class="btn" id="wc-addbtn">追加</button></div><div class="wc-grid" id="wc-grid"></div></div></section><!-- ストップウォッチ --><section class="view" id="view-stopwatch"><div class="card"><div class="sw-time digits" id="sw-time">00:00<small>.00</small></div><div class="btnrow"><button class="btn primary big" id="sw-start">スタート</button><button class="btn big" id="sw-lap" disabled>ラップ</button><button class="btn big danger" id="sw-reset">リセット</button></div><div class="laps" id="sw-laps" style="display:none"></div></div></section><!-- タイマー --><section class="view" id="view-timer"><div class="card ringbox"><div class="chiprow" id="tm-presets"></div><div class="settings" id="tm-custom"><label class="fld"><input type="number" id="tm-min" min="0" max="999" value="5"> 分</label><label class="fld"><input type="number" id="tm-sec" min="0" max="59" value="0"> 秒</label></div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="tm-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="tm-time">05:00</div><div class="s" id="tm-state">停止中</div></div></div><div class="btnrow"><button class="btn primary big" id="tm-start">スタート</button><button class="btn big danger" id="tm-reset">リセット</button></div><div class="alarm-box"><div class="cap">マルチアラーム</div><div class="alarm-add"><label class="fld"><input type="number" id="al-min" min="1" max="999" value="5"> 分後</label><button class="btn" id="al-add">+ 追加</button></div><div class="alarm-chips" id="al-chips"></div><div class="alarm-note" id="al-note">「5分後」「10分後」のように複数追加すると、最長の時点までカウントしながら各時点でチャイムが鳴ります。</div></div></div></section><!-- ポモドーロ --><section class="view" id="view-pomodoro"><div class="card ringbox"><div class="seg" id="po-modes"><button data-m="focus" class="active">集中</button><button data-m="short">小休憩</button><button data-m="long">大休憩</button></div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="po-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="po-time">25:00</div><div class="s" id="po-state">集中する時間</div></div></div><div class="dots" id="po-dots"></div><div class="btnrow"><button class="btn primary big" id="po-start">スタート</button><button class="btn big" id="po-skip">スキップ</button><button class="btn big danger" id="po-reset">リセット</button></div><div class="pomo-stats"><div class="st"><b class="digits" id="po-count">0</b><span>完了セッション</span></div><div class="st"><b class="digits" id="po-total">0<small style="font-size:.6em">分</small></b><span>今日の集中時間</span></div></div><div class="settings"><label class="fld">集中 <input type="number" id="po-focus" min="1" max="120" value="25"> 分</label><label class="fld">小休憩 <input type="number" id="po-short" min="1" max="60" value="5"> 分</label><label class="fld">大休憩 <input type="number" id="po-long" min="1" max="90" value="15"> 分</label></div></div></section><!-- インターバル --><section class="view" id="view-interval"><div class="card ringbox"><div class="chiprow" id="iv-presets"></div><div class="phase-banner" id="iv-phase">READY</div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="iv-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="iv-time">00:20</div><div class="s digits" id="iv-round">ラウンド – / –</div></div></div><div class="btnrow"><button class="btn primary big" id="iv-start">スタート</button><button class="btn big danger" id="iv-reset">リセット</button></div><div class="cfg-grid"><label class="fld">準備 <input type="number" id="iv-prep" min="0" max="120" value="10"> 秒</label><label class="fld">ワーク <input type="number" id="iv-work" min="5" max="600" value="20"> 秒</label><label class="fld">レスト <input type="number" id="iv-rest" min="0" max="600" value="10"> 秒</label><label class="fld">ラウンド <input type="number" id="iv-rounds" min="1" max="50" value="8"> 回</label></div></div></section></div></main><footer>ClockTools — Browser Toys</footer><script src="../../theme.js"></script>
+<body class="bt-themed"><header><div class="wrap"><div class="titlebar"><h1>ClockTools</h1><span class="sub">時計・タイマー</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs" role="tablist"><button class="tab" data-v="clock">クロック</button><button class="tab" data-v="stopwatch">ストップウォッチ</button><button class="tab" data-v="timer">タイマー</button><button class="tab" data-v="pomodoro">ポモドーロ</button><button class="tab" data-v="interval">インターバル</button></nav></div></header><main><div class="wrap"><!-- クロック --><section class="view" id="view-clock"><div class="card clock-main"><div class="clock-modes seg" id="clock-modes" role="tablist" aria-label="時計表示"><button data-m="digital" class="active" type="button">Digital</button><button data-m="analog" type="button">Analog</button></div><div id="clock-digital" class="monument"><div class="monument-time"><span class="monument-hm digits" id="ck-hm">--:--</span><span class="monument-sec digits" id="ck-sec">--</span></div><div class="monument-date" id="ck-date"></div></div><div id="clock-analog" class="studio" style="display:none"><div class="studio-dial-wrap"><canvas id="ck-canvas" width="640" height="640" aria-label="アナログ時計"></canvas></div><div class="studio-date" id="ck-date-analog"></div></div></div><div class="card"><h2>世界時計</h2><div class="wc-add"><select id="wc-select"></select><button class="btn" id="wc-addbtn">追加</button></div><div class="wc-grid" id="wc-grid"></div></div></section><!-- ストップウォッチ --><section class="view" id="view-stopwatch"><div class="card tool-surface"><div class="split-readout"><div class="split-main"><div class="split-label">Elapsed</div><div class="sw-time digits" id="sw-time">00:00<small>.00</small></div></div><div class="split-side"><div class="split-label">Split</div><div class="sw-split digits" id="sw-split">00:00.00</div><div class="sw-lapcount" id="sw-lapcount">0 LAPS</div></div></div><div class="btnrow tool-actions"><button class="btn primary big" id="sw-start">スタート</button><button class="btn big" id="sw-lap" disabled>ラップ</button><button class="btn big danger" id="sw-reset">リセット</button></div><div class="laps" id="sw-laps" style="display:none"></div></div></section><!-- タイマー --><section class="view" id="view-timer"><div class="card tool-surface orbit"><div class="preset-row" id="tm-presets"></div><div class="settings cfg-line" id="tm-custom"><label class="fld"><input type="number" id="tm-min" min="0" max="999" value="5"> 分</label><label class="fld"><input type="number" id="tm-sec" min="0" max="59" value="0"> 秒</label></div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><g id="tm-marks"></g><circle class="ring-fg" id="tm-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="tm-time">05:00</div><div class="s" id="tm-state">Idle</div></div></div><div class="btnrow tool-actions"><button class="btn primary big" id="tm-start">スタート</button><button class="btn big danger" id="tm-reset">リセット</button></div><div class="alarm-box"><div class="cap">Multi Alarm</div><div class="alarm-add"><label class="fld"><input type="number" id="al-min" min="1" max="999" value="5"> 分後</label><button class="btn" id="al-add">追加</button></div><div class="alarm-chips" id="al-chips"></div><div class="alarm-note" id="al-note">「5分後」「10分後」のように複数追加すると、最長の時点までカウントしながら各時点でチャイムが鳴ります。</div></div></div></section><!-- ポモドーロ --><section class="view" id="view-pomodoro"><div class="card tool-surface cycle"><div class="mode-row seg" id="po-modes"><button data-m="focus" class="active">Focus</button><button data-m="short">Short</button><button data-m="long">Long</button></div><div class="ringwrap cycle-ring"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="po-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="po-time">25:00</div><div class="s" id="po-state">Focus</div></div><div class="cycle-dots" id="po-dots"></div></div><div class="btnrow tool-actions"><button class="btn primary big" id="po-start">スタート</button><button class="btn big" id="po-skip">スキップ</button><button class="btn big danger" id="po-reset">リセット</button></div><div class="cycle-stats"><b class="digits" id="po-count">0</b> sessions · <b class="digits" id="po-total">0</b> min today</div><div class="settings cfg-line"><label class="fld">Focus <input type="number" id="po-focus" min="1" max="120" value="25"> m</label><label class="fld">Short <input type="number" id="po-short" min="1" max="60" value="5"> m</label><label class="fld">Long <input type="number" id="po-long" min="1" max="90" value="15"> m</label></div></div></section><!-- インターバル --><section class="view" id="view-interval"><div class="card tool-surface lane"><div class="preset-row" id="iv-presets"></div><div class="lane-phase" id="iv-phase">Ready</div><div class="lane-time digits" id="iv-time">00:20</div><div class="lane-track" id="iv-lane" aria-hidden="true"></div><div class="lane-round digits" id="iv-round">Round – / –</div><div class="btnrow tool-actions"><button class="btn primary big" id="iv-start">スタート</button><button class="btn big danger" id="iv-reset">リセット</button></div><div class="cfg-line"><label class="fld">Prep <input type="number" id="iv-prep" min="0" max="120" value="10"> s</label><label class="fld">Work <input type="number" id="iv-work" min="5" max="600" value="20"> s</label><label class="fld">Rest <input type="number" id="iv-rest" min="0" max="600" value="10"> s</label><label class="fld">Rounds <input type="number" id="iv-rounds" min="1" max="50" value="8"></label></div></div></section></div></main><footer>ClockTools — Browser Toys</footer><script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -234,6 +365,9 @@ function show(v){
   $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.v === v));
   VIEWS.forEach(x => $('#view-'+x).classList.toggle('active', x === v));
   history.replaceState(null, '', '#'+v);
+  if (v === 'pomodoro' && typeof poRender === 'function') requestAnimationFrame(poRender);
+  if (v === 'interval' && typeof ivRender === 'function') requestAnimationFrame(ivRender);
+  if (v === 'timer' && typeof tmRender === 'function') requestAnimationFrame(tmRender);
 }
 $$('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.v)));
 show(location.hash.slice(1) || store.get('view','clock'));
@@ -370,7 +504,7 @@ function clockLoop(){
   if (clockMode === 'analog') clockRaf = requestAnimationFrame(tick);
   else renderClock(true);
 }
-document.addEventListener('bt:theme', () => { if (clockMode === 'analog') renderClock(true); });
+document.addEventListener('bt:theme', () => { if (clockMode === 'analog') renderClock(true); if (typeof tmRender==='function') tmRender(); if (typeof poRender==='function') poRender(); if (typeof ivRender==='function') ivRender(); });
 
 /* ---- 世界時計 ---- */
 const CITIES = [
@@ -437,8 +571,17 @@ function swFmt(ms, cs=true){
   return cs ? base + `<small>.${pad(c)}</small>` : base + '.' + pad(c);
 }
 function swNow(){ return sw.elapsed + (sw.running ? performance.now() - sw.start : 0); }
+function swSplitNow(){
+  const total = swNow();
+  const prev = sw.laps.length ? sw.laps[sw.laps.length-1].total : 0;
+  return total - prev;
+}
 function swRender(){
-  $('#sw-time').innerHTML = swFmt(swNow());
+  const total = swNow();
+  $('#sw-time').innerHTML = swFmt(total);
+  $('#sw-split').textContent = swFmt(swSplitNow(), false);
+  const shown = sw.laps.length;
+  $('#sw-lapcount').textContent = shown + (shown === 1 ? ' LAP' : ' LAPS');
   if (sw.running) sw.raf = requestAnimationFrame(swRender);
 }
 $('#sw-start').addEventListener('click', () => {
@@ -467,6 +610,8 @@ $('#sw-reset').addEventListener('click', () => {
   $('#sw-start').textContent = 'スタート'; $('#sw-start').classList.add('primary');
   $('#sw-lap').disabled = true;
   $('#sw-time').innerHTML = swFmt(0);
+  $('#sw-split').textContent = swFmt(0, false);
+  $('#sw-lapcount').textContent = '0 LAPS';
   renderLaps();
 });
 function renderLaps(){
@@ -495,11 +640,11 @@ const TM_PRESETS = [[1,'1分'],[3,'3分'],[5,'5分'],[10,'10分'],[15,'15分'],[
 (function(){
   const box = $('#tm-presets');
   TM_PRESETS.forEach(([min, label]) => {
-    const b = document.createElement('button'); b.className = 'chip'; b.textContent = label;
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
     b.addEventListener('click', () => {
       $('#tm-min').value = min; $('#tm-sec').value = 0;
       tmStop(); tmSetFromInputs();
-      $$('#tm-presets .chip').forEach(c => c.classList.toggle('active', c === b));
+      $$('#tm-presets button').forEach(c => c.classList.toggle('active', c === b));
     });
     box.appendChild(b);
   });
@@ -514,14 +659,34 @@ function tmSetFromInputs(){
   tmRender();
 }
 ['tm-min','tm-sec'].forEach(id => $('#'+id).addEventListener('input', () => { if (!tm.running) tmSetFromInputs(); }));
+function tmRenderMarks(){
+  const g = $('#tm-marks'); if (!g) return;
+  g.innerHTML = '';
+  if (!tm.alarms.length || !tm.total) return;
+  const R = 90;
+  tm.alarms.forEach(a => {
+    const ratio = Math.min(1, (a.min * 60) / tm.total);
+    // ring SVG is rotated -90deg in CSS; place marks in unrotated user space along circle from top via CSS rotation parent
+    // marks live inside rotated SVG, so angle 0 = right; CSS rotate -90 makes 0 = top. Elapsed grows clockwise from top.
+    // remaining ring uses dashoffset from full; alarms at elapsed minutes from start => angle = ratio * 2pi from top = from 0 in pre-rotated svg (since -90 already).
+    const ang = ratio * Math.PI * 2;
+    const x = 100 + Math.cos(ang) * R;
+    const y = 100 + Math.sin(ang) * R;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', a.fired ? 2.2 : 3);
+    c.setAttribute('class', 'ring-mark' + (a.fired ? ' fired' : ''));
+    g.appendChild(c);
+  });
+}
 function tmRender(){
   const s = Math.ceil(tm.left);
   $('#tm-time').textContent = `${pad(Math.floor(s/60))}:${pad(s%60)}`;
   const next = tm.alarms.find(a => !a.fired);
   $('#tm-state').textContent = tm.running
-    ? (next ? `次のアラーム: ${next.min}分後の時点` : '残り時間')
-    : (tm.left < tm.total ? '一時停止中' : '停止中');
+    ? (next ? `Next ${next.min}m` : 'Remaining')
+    : (tm.left < tm.total ? 'Paused' : 'Idle');
   setRing($('#tm-ring'), tm.total ? tm.left/tm.total : 0, tm.left <= 10 && tm.running ? 'var(--red)' : 'var(--accent)');
+  tmRenderMarks();
   document.title = tm.running ? `(${pad(Math.floor(s/60))}:${pad(s%60)}) ClockTools` : 'ClockTools — 時計・タイマー';
 }
 function tmTick(){
@@ -537,7 +702,7 @@ function tmTick(){
   if (tm.left <= 0){
     tmStop(); tm.left = 0; chime();
     tm.alarms.forEach(a => a.fired = true); alRender();
-    $('#tm-state').textContent = '時間です！';
+    $('#tm-state').textContent = 'Done';
   }
   tmRender();
 }
@@ -564,7 +729,7 @@ function alRender(){
   tm.alarms.forEach((a, i) => {
     const chip = document.createElement('span');
     chip.className = 'achip' + (a.fired ? ' fired' : a === next ? ' next' : '');
-    chip.innerHTML = `${a.fired ? ' ' : ''}${a.min}分後<button title="削除">×</button>`;
+    chip.innerHTML = `${a.min}分後<button title="削除">×</button>`;
     chip.querySelector('button').addEventListener('click', () => {
       tm.alarms.splice(i, 1); alSave(); alRender();
       if (!tm.running) tmSetFromInputs();
@@ -599,7 +764,7 @@ const po = {
   if (po.day !== today){ po.count = 0; po.totalMin = 0; po.day = today; poSaveStats(); }
 })();
 function poSaveStats(){ store.set('pomoCount', po.count); store.set('pomoMin', po.totalMin); store.set('pomoDay', po.day); }
-const PO_LABEL = { focus:'集中する時間', short:'小休憩', long:'大休憩' };
+const PO_LABEL = { focus:'Focus', short:'Short', long:'Long' };
 const PO_COLOR = { focus:'var(--red)', short:'var(--green)', long:'var(--accent2)' };
 function poDur(m){ return Math.max(1, +($('#po-'+(m==='focus'?'focus':m==='short'?'short':'long')).value) || 1) * 60; }
 function poSet(mode){
@@ -615,11 +780,16 @@ function poRender(){
   $('#po-state').textContent = PO_LABEL[po.mode];
   setRing($('#po-ring'), po.left / poDur(po.mode), PO_COLOR[po.mode]);
   $('#po-count').textContent = po.count;
-  $('#po-total').innerHTML = po.totalMin + '<small style="font-size:.6em">分</small>';
+  $('#po-total').textContent = po.totalMin;
   const dots = $('#po-dots'); dots.innerHTML = '';
+  const wrap = dots.parentElement;
+  const radius = Math.max((wrap && wrap.clientWidth) ? wrap.clientWidth * 0.46 : 0, 120);
   for (let i = 0; i < 4; i++){
     const d = document.createElement('div');
-    d.className = 'dot' + (i < po.count % 4 || (po.count > 0 && po.count % 4 === 0) ? ' done' : '');
+    const done = po.count > 0 && (po.count % 4 === 0 || i < po.count % 4);
+    d.className = 'cycle-dot' + (done ? ' done' : '');
+    const ang = (-90 + i * 90) * Math.PI / 180;
+    d.style.transform = `translate(${Math.cos(ang)*radius}px, ${Math.sin(ang)*radius}px)`;
     dots.appendChild(d);
   }
 }
@@ -660,23 +830,23 @@ const IV_PRESETS = {
 (function(){
   const box = $('#iv-presets');
   Object.entries(IV_PRESETS).forEach(([name, p]) => {
-    const b = document.createElement('button'); b.className = 'chip'; b.textContent = name;
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = name;
     b.addEventListener('click', () => {
       ivStopAll();
       $('#iv-prep').value = p.prep; $('#iv-work').value = p.work;
       $('#iv-rest').value = p.rest; $('#iv-rounds').value = p.rounds;
-      $$('#iv-presets .chip').forEach(c => c.classList.toggle('active', c === b));
+      $$('#iv-presets button').forEach(c => c.classList.toggle('active', c === b));
       ivRenderIdle();
     });
     box.appendChild(b);
   });
 })();
 const IV_META = {
-  ready: ['READY',  'var(--muted)'],
-  prep:  ['準備',    'var(--yellow)'],
-  work:  ['ワーク',  'var(--red)'],
-  rest:  ['レスト',  'var(--green)'],
-  done:  ['完了', 'var(--accent2)'],
+  ready: ['Ready', 'var(--muted)'],
+  prep:  ['Prep',  'var(--yellow)'],
+  work:  ['Work',  'var(--red)'],
+  rest:  ['Rest',  'var(--green)'],
+  done:  ['Done',  'var(--accent2)'],
 };
 function ivCfg(){
   return {
@@ -687,6 +857,27 @@ function ivCfg(){
   };
 }
 function ivPhaseDur(){ const c = ivCfg(); return iv.phase === 'prep' ? c.prep : iv.phase === 'work' ? c.work : iv.phase === 'rest' ? c.rest : 0; }
+function ivRenderLane(){
+  const track = $('#iv-lane'); if (!track) return;
+  const c = ivCfg();
+  const dur = ivPhaseDur();
+  const progress = dur ? Math.max(0, Math.min(1, 1 - iv.left/dur)) : 0;
+  let html = '';
+  for (let i = 1; i <= c.rounds; i++){
+    let cls = 'lane-seg';
+    let fill = '';
+    const completed = iv.phase === 'done' || iv.round > i || (iv.round === i && iv.phase === 'rest');
+    const currentWork = iv.phase === 'work' && iv.round === i;
+    const currentPrep = iv.phase === 'prep' && i === 1;
+    if (completed) cls += ' done';
+    else if (currentWork || currentPrep){
+      cls += ' current';
+      fill = `<i style="width:${progress*100}%"></i>`;
+    }
+    html += `<div class="${cls}">${fill}</div>`;
+  }
+  track.innerHTML = html;
+}
 function ivRender(){
   const [label, color] = IV_META[iv.phase];
   $('#iv-phase').textContent = label;
@@ -694,10 +885,12 @@ function ivRender(){
   const s = Math.ceil(iv.left);
   $('#iv-time').textContent = `${pad(Math.floor(s/60))}:${pad(s%60)}`;
   const c = ivCfg();
-  $('#iv-round').textContent = iv.phase === 'ready' || iv.phase === 'done'
-    ? `ラウンド – / ${c.rounds}` : `ラウンド ${iv.round} / ${c.rounds}`;
-  const dur = ivPhaseDur();
-  setRing($('#iv-ring'), dur ? iv.left/dur : 1, color);
+  if (iv.phase === 'ready' || iv.phase === 'done' || iv.phase === 'prep'){
+    $('#iv-round').textContent = `Round – / ${c.rounds}`;
+  } else {
+    $('#iv-round').textContent = `Round ${iv.round} / ${c.rounds}`;
+  }
+  ivRenderLane();
 }
 function ivRenderIdle(){
   iv.phase = 'ready'; iv.round = 0; iv.left = ivCfg().work; ivRender();
