@@ -47,12 +47,12 @@
 <body class="bt-themed">
   <header>
     <div class="titlebar">
-      <h1>📈 LearnViz</h1><span class="sub">学習・可視化ラボ</span>
+      <h1>LearnViz</h1><span class="sub">学習・可視化ラボ</span>
       <div class="theme-switch" role="group" aria-label="テーマ切替">
         <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
         <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
       </div>
-      <a class="back" href="../../index.html">← 一覧へ戻る</a>
+      <a class="back" href="../../index.html">Apps</a>
     </div>
     <nav class="tabs" id="tabs" role="tablist"></nav>
   </header>
@@ -84,7 +84,7 @@ function select(n, push){
   current = a;
   frame.src = pathOf(a);
   $('#btn-open').href = pathOf(a);
-  $('#cur-name').textContent = `${a.i} ${a.t}`;
+  $('#cur-name').textContent = `${a.t}`;
   $('#cur-desc').textContent = a.d;
   document.querySelectorAll('.tab').forEach(el => { const on = el.dataset.n === a.n; el.classList.toggle('active', on); el.setAttribute('aria-selected', on ? 'true' : 'false'); });
   if (push !== false) history.replaceState(null, '', '#' + a.n);
@@ -94,7 +94,7 @@ function select(n, push){
   ITEMS.forEach(a => {
     const b = document.createElement('button');
     b.className = 'tab'; b.dataset.n = a.n; b.setAttribute('role','tab'); b.setAttribute('aria-selected','false');
-    b.innerHTML = `<span>${a.i}</span> ${esc(a.t)}`;
+    b.innerHTML = `<span></span> ${esc(a.t)}`;
     b.addEventListener('click', () => select(a.n));
     nav.appendChild(b);
   });

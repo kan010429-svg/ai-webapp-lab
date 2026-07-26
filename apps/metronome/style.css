@@ -1,121 +1,79 @@
-*, *::before, *::after { box-sizing: border-box; }
-
-main {
-  display: grid;
-  gap: 18px;
-}
-.visual-container {
+.metro .stage {
   position: relative;
-  min-height: 220px;
+  min-height: 280px;
   display: grid;
   place-items: center;
-  background:
-    linear-gradient(90deg, transparent 49%, var(--border) 50%, transparent 51%),
-    var(--panel);
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
-.visual-beat {
-  width: 150px;
-  height: 150px;
-  border: 2px solid var(--border2);
-  border-radius: 50%;
-  background: var(--panel2);
-  transition: transform 0.08s ease, border-color 0.08s, background 0.08s;
-}
-.visual-beat.pulse {
-  transform: scale(1.12);
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 24%, var(--panel2));
-  box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 22%, transparent);
-}
-.visual-beat.accent {
-  border-color: var(--yellow);
-  background: color-mix(in srgb, var(--yellow) 28%, var(--panel2));
-}
-.beat-indicator {
+.pulse-ring {
   position: absolute;
-  color: var(--text);
+  width: min(240px, 60vw);
+  height: min(240px, 60vw);
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  transition: transform 0.08s ease, border-color 0.08s, box-shadow 0.08s;
+}
+.pulse-ring.pulse {
+  transform: scale(1.08);
+  border-color: var(--accent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.pulse-ring.accent { border-width: 2px; }
+.bpm-block { position: relative; z-index: 1; text-align: center; }
+.beat-read {
+  margin-top: 8px;
   font-family: var(--font-display);
-  font-size: 44px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
 }
-
-.bt-app .controls {
-  display: grid;
-  gap: 14px;
-}
-.control-group {
-  display: grid;
-  gap: 8px;
-}
-.control-group label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-input[type="range"] {
+.beat-read .slash { margin: 0 4px; color: var(--muted2); }
+.dock { display: grid; gap: 18px; padding-top: 22px; }
+.slider { display: grid; gap: 8px; }
+.slider input[type="range"] {
   width: 100%;
   accent-color: var(--accent);
+  border: 0;
+  padding: 0;
+  box-shadow: none;
 }
-.bpm-presets {
+.tempo-presets {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
-.preset-controls {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 8px;
-}
-#presetSelect { min-width: 0; }
-.btn {
-  width: 100%;
-}
-.btn-start {
-  min-height: 54px;
+.preset-btn {
+  padding: 12px 0;
+  font-family: var(--font-display);
   font-size: 18px;
 }
-.btn-start.active {
-  background: var(--red) !important;
-  color: #fff !important;
-}
-.btn-tap {
-  border-color: var(--border2);
-  background: var(--panel);
-}
-.btn-tap.tapping {
-  border-color: var(--yellow);
-  color: var(--yellow);
-  transform: scale(0.98);
-}
-
-.tap-tempo {
+.grid-2 {
   display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.check {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  text-align: center;
-}
-.tap-hint {
-  margin: 0;
   color: var(--muted);
   font-size: 13px;
 }
-
-footer {
-  margin-top: 20px;
-  text-align: center;
+.transport {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 10px;
 }
-.back-link {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
+.go { font-size: 15px; padding: 16px 18px; }
+.presets {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
 }
-.back-link:hover { color: var(--text); }
-
-@media (max-width: 480px) {
-  .visual-container { min-height: 180px; }
-  .visual-beat { width: 122px; height: 122px; }
-  .beat-indicator { font-size: 36px; }
-  .bpm-presets,
-  .preset-controls { grid-template-columns: 1fr; }
-}
+#tapBtn.tapping { border-color: var(--accent); color: var(--accent); }

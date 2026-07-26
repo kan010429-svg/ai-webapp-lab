@@ -76,12 +76,12 @@
 <body class="bt-themed">
   <header>
     <div class="titlebar">
-      <h1>🎨 ArtLab</h1><span class="sub">ジェネラティブアート・ランチャー</span>
+      <h1>ArtLab</h1><span class="sub">ジェネラティブアート・ランチャー</span>
       <div class="theme-switch" role="group" aria-label="テーマ切替">
         <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
         <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
       </div>
-      <a class="back" href="../../index.html">← 一覧へ戻る</a>
+      <a class="back" href="../../index.html">Apps</a>
     </div>
   </header>
 
@@ -132,7 +132,7 @@ function select(n, push){
   $('#btn-open').href = pathOf(a);
   document.documentElement.style.setProperty('--ac', a.a);
   $('#cur-dot').style.background = a.a;
-  $('#cur-name').textContent = `${a.i} ${a.t}`;
+  $('#cur-name').textContent = `${a.t}`;
   $('#cur-desc').textContent = a.d;
   document.querySelectorAll('.item').forEach(el => {
     const on = el.dataset.n === a.n;
@@ -152,7 +152,7 @@ function select(n, push){
     b.setAttribute('role', 'tab');
     b.setAttribute('aria-selected', 'false');
     b.style.setProperty('--ac', a.a);
-    b.innerHTML = `<span class="ico">${a.i}</span>
+    b.innerHTML = `<span class="ico"></span>
       <span class="meta"><span class="t">${esc(a.t)}</span><span class="d">${esc(a.d)}</span></span>`;
     b.addEventListener('click', () => select(a.n));
     box.appendChild(b);

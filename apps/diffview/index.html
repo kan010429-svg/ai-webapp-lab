@@ -3,85 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diff Viewer - テキスト差分ビューア</title>
-  <link rel="icon" href="data:,">
+  <title>Diff — テキスト差分</title>
   <script>
   (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
-</script>
-<link rel="stylesheet" href="../../theme.css" />
-<link rel="stylesheet" href="../../app-ui.css" />
-<link rel="stylesheet" href="style.css">
+  </script>
+  <link rel="stylesheet" href="../../theme.css" />
+  <link rel="stylesheet" href="../../app-ui.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bt-themed bt-app">
-  <div id="app" class="bt-shell bt-shell-wide">
-    <header>
-      <div class="bt-top">
-        <a class="bt-back" href="../../index.html">← 一覧へ戻る</a>
-        <div class="bt-brand">
-          <h1>Diff Viewer</h1>
-          <p class="subtitle">テキスト差分比較ツール</p>
-        </div>
-        <div class="theme-switch" role="group" aria-label="テーマ切替">
-          <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-          <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-        </div>
+  <div class="wb-page wb-page-wide">
+    <header class="wb-mast">
+      <a class="wb-home" href="../../index.html">Apps</a>
+      <div class="wb-title-block">
+        <span class="wb-kicker">TextTools</span>
+        <h1 class="wb-title">Diff</h1>
+      </div>
+      <div class="theme-switch" role="group" aria-label="テーマ切替">
+        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
+        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
       </div>
     </header>
 
-    <main>
-      <div class="controls">
-        <button id="compareBtn" class="btn">差分を表示</button>
-        <button id="sampleBtn" class="btn">サンプル読み込み</button>
-        <button id="clearBtn" class="btn">クリア</button>
-        <label class="checkbox-label">
-          <input type="checkbox" id="ignoreWhitespace">
-          空白の違いを無視
-        </label>
+    <div class="command">
+      <div class="wb-actions">
+        <button id="compareBtn" class="wb-btn-key" type="button">Compare</button>
+        <button id="sampleBtn" class="wb-btn-quiet" type="button">Load sample</button>
+        <button id="clearBtn" class="wb-btn-quiet" type="button">Clear</button>
       </div>
-
-      <div class="editor-container">
-        <div class="editor-panel">
-          <div class="panel-header">テキスト A (変更前)</div>
-          <textarea id="inputA" placeholder="比較元のテキストを入力してください"></textarea>
-        </div>
-
-        <div class="editor-panel">
-          <div class="panel-header">テキスト B (変更後)</div>
-          <textarea id="inputB" placeholder="比較先のテキストを入力してください"></textarea>
-        </div>
+      <label class="opt">
+        <input type="checkbox" id="ignoreWhitespace">
+        Ignore whitespace
+      </label>
+      <div class="counts">
+        <span>+<b id="addedCount">0</b></span>
+        <span>-<b id="removedCount">0</b></span>
+        <span>=<b id="unchangedCount">0</b></span>
       </div>
+    </div>
 
-      <div id="status" class="status"></div>
-
-      <div class="info-panel">
-        <div class="info-item added-stat">
-          <span class="info-label">追加行数</span>
-          <span id="addedCount">0</span>
-        </div>
-        <div class="info-item removed-stat">
-          <span class="info-label">削除行数</span>
-          <span id="removedCount">0</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">変更なし</span>
-          <span id="unchangedCount">0</span>
-        </div>
+    <div class="editors">
+      <section>
+        <div class="pane-label"><span class="wb-label">Before</span></div>
+        <textarea id="inputA" placeholder="変更前"></textarea>
+      </section>
+      <section>
+        <div class="pane-label"><span class="wb-label">After</span></div>
+        <textarea id="inputB" placeholder="変更後"></textarea>
+      </section>
+    </div>
+    <p id="status" class="status"></p>
+    <section class="result">
+      <div class="pane-label"><span class="wb-label">Result</span></div>
+      <div id="diffOutput" class="diff-output">
+        <div class="empty-state">左右のテキストを入れて Compare を押してください</div>
       </div>
-
-      <div class="diff-panel">
-        <div class="panel-header">差分結果</div>
-        <div id="diffOutput" class="diff-output">
-          <div class="empty-state">左右にテキストを入力して「差分を表示」を押してください</div>
-        </div>
-      </div>
-    </main>
-
-    <footer>
-      <a href="../../index.html" class="back-link">← アプリ一覧に戻る</a>
-    </footer>
+    </section>
   </div>
-
   <script src="app.js"></script>
-<script src="../../theme.js"></script>
+  <script src="../../theme.js"></script>
 </body>
 </html>

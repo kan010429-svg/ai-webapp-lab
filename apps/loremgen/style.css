@@ -1,85 +1,35 @@
-*, *::before, *::after { box-sizing: border-box; }
-
-main {
+.controls-col {
   display: grid;
-  gap: 16px;
+  gap: 18px;
+  align-content: start;
+  padding-top: 4px;
 }
-.bt-app .options {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
-  gap: 12px;
-  align-items: end;
-}
-.option-group {
-  display: grid;
-  gap: 6px;
-}
-.option-group select,
-.option-group input[type="number"] {
-  width: 100%;
-}
-.checkbox-group label {
+.check {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 38px;
-  color: var(--text);
-}
-.controls {
-  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
 }
 .status {
-  min-height: 22px;
+  min-height: 1.2em;
   color: var(--muted);
   font-size: 13px;
+  margin: 0;
 }
-.status.success { color: var(--green); }
-.status.error { color: var(--red); }
-
-.result-panel {
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-}
-.panel-header {
+.out-head {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  align-items: baseline;
+  margin-bottom: 10px;
 }
-.count-badge {
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-lg);
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  padding: 2px 8px;
+.count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--muted);
 }
 #resultOutput {
-  min-height: 340px;
-  font-size: 14px;
-}
-
-footer {
-  margin-top: 22px;
-  text-align: center;
-}
-.back-link {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
-}
-.back-link:hover { color: var(--text); }
-
-@media (max-width: 760px) {
-  .bt-app .options { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 480px) {
-  .bt-app .options { grid-template-columns: 1fr; }
-  .controls button { flex: 1; }
+  min-height: min(56vh, 460px);
+  font-size: 15px;
+  line-height: 1.7;
 }

@@ -3,52 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Metronome - メトロノーム</title>
+  <title>Metronome</title>
   <script>
   (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
-</script>
-<link rel="stylesheet" href="../../theme.css" />
-<link rel="stylesheet" href="../../app-ui.css" />
-<link rel="stylesheet" href="style.css">
+  </script>
+  <link rel="stylesheet" href="../../theme.css" />
+  <link rel="stylesheet" href="../../app-ui.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bt-themed bt-app">
-  <div id="app" class="bt-shell bt-shell-narrow">
-    <header>
-      <div class="bt-top">
-        <a class="bt-back" href="../../index.html">← 一覧へ戻る</a>
-        <div class="bt-brand">
-          <h1>Metronome</h1>
-          <p class="subtitle">音楽練習用メトロノーム</p>
-        </div>
-        <div class="theme-switch" role="group" aria-label="テーマ切替">
-          <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-          <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-        </div>
+  <div class="wb-page wb-page-narrow metro">
+    <header class="wb-mast">
+      <a class="wb-home" href="../../index.html">Apps</a>
+      <div class="wb-title-block">
+        <span class="wb-kicker">SoundLab</span>
+        <h1 class="wb-title">Metronome</h1>
+      </div>
+      <div class="theme-switch" role="group" aria-label="テーマ切替">
+        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
+        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
       </div>
     </header>
 
-    <main>
-      <div class="visual-container">
-        <div id="visualBeat" class="visual-beat"></div>
-        <div id="beatIndicator" class="beat-indicator">
-          <span id="currentBeat">1</span>/<span id="totalBeats">4</span>
+    <section class="stage">
+      <div id="visualBeat" class="pulse-ring" aria-hidden="true"></div>
+      <div class="bpm-block">
+        <span class="wb-label">BPM</span>
+        <div class="wb-readout wb-readout-xl" id="bpmValue">120</div>
+        <div class="beat-read">
+          <span id="currentBeat">1</span><span class="slash">/</span><span id="totalBeats">4</span>
         </div>
       </div>
+    </section>
 
-      <div class="controls">
-        <div class="control-group">
-          <label for="bpmSlider">BPM: <span id="bpmValue">120</span></label>
-          <input type="range" id="bpmSlider" min="40" max="240" value="120" step="1">
-          <div class="bpm-presets">
-            <button class="preset-btn" data-bpm="60">Largo (60)</button>
-            <button class="preset-btn" data-bpm="90">Andante (90)</button>
-            <button class="preset-btn" data-bpm="120">Moderato (120)</button>
-            <button class="preset-btn" data-bpm="160">Allegro (160)</button>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label for="timeSignature">拍子</label>
+    <section class="dock">
+      <label class="slider">
+        <span class="wb-label">Tempo</span>
+        <input type="range" id="bpmSlider" min="40" max="240" value="120" step="1">
+      </label>
+      <div class="tempo-presets">
+        <button class="preset-btn" data-bpm="60" type="button">60</button>
+        <button class="preset-btn" data-bpm="90" type="button">90</button>
+        <button class="preset-btn" data-bpm="120" type="button">120</button>
+        <button class="preset-btn" data-bpm="160" type="button">160</button>
+      </div>
+      <div class="grid-2">
+        <label class="wb-field">
+          <span>Meter</span>
           <select id="timeSignature">
             <option value="1">1/4</option>
             <option value="2">2/4</option>
@@ -58,52 +59,36 @@
             <option value="6">6/8</option>
             <option value="7">7/8</option>
           </select>
-        </div>
-
-        <div class="control-group">
-          <label for="subdivision">分割</label>
+        </label>
+        <label class="wb-field">
+          <span>Division</span>
           <select id="subdivision">
-            <option value="1" selected>4分音符</option>
-            <option value="2">8分音符</option>
-            <option value="4">16分音符</option>
+            <option value="1" selected>Quarter</option>
+            <option value="2">Eighth</option>
+            <option value="4">Sixteenth</option>
           </select>
-        </div>
-
-        <div class="control-group">
-          <label for="volumeSlider">音量: <span id="volumeValue">80</span>%</label>
-          <input type="range" id="volumeSlider" min="0" max="100" value="80" step="1">
-        </div>
-
-        <div class="control-group">
-          <label>
-            <input type="checkbox" id="accentFirst" checked>
-            1拍目を強調
-          </label>
-        </div>
-
-        <div class="preset-controls">
-          <button id="savePresetBtn" class="btn btn-secondary">💾 保存</button>
-          <select id="presetSelect">
-            <option value="">プリセットを選択...</option>
-          </select>
-          <button id="deletePresetBtn" class="btn btn-secondary">🗑️ 削除</button>
-        </div>
-
-        <button id="startBtn" class="btn btn-start">▶ 開始</button>
+        </label>
       </div>
-
-      <div class="tap-tempo">
-        <button id="tapBtn" class="btn btn-tap">🎯 タップテンポ</button>
-        <p class="tap-hint">リズムに合わせてタップしてBPMを設定</p>
+      <label class="slider">
+        <span class="wb-label">Volume <b id="volumeValue">80</b>%</span>
+        <input type="range" id="volumeSlider" min="0" max="100" value="80" step="1">
+      </label>
+      <label class="check">
+        <input type="checkbox" id="accentFirst" checked>
+        Accent beat 1
+      </label>
+      <div class="transport">
+        <button id="startBtn" class="wb-btn-key go" type="button">Start</button>
+        <button id="tapBtn" class="wb-btn" type="button">Tap tempo</button>
       </div>
-    </main>
-
-    <footer>
-      <a href="../../index.html" class="back-link">← アプリ一覧に戻る</a>
-    </footer>
+      <div class="presets">
+        <button id="savePresetBtn" class="wb-btn-quiet" type="button">Save preset</button>
+        <select id="presetSelect"><option value="">Presets</option></select>
+        <button id="deletePresetBtn" class="wb-btn-quiet" type="button">Delete</button>
+      </div>
+    </section>
   </div>
-
   <script src="app.js"></script>
-<script src="../../theme.js"></script>
+  <script src="../../theme.js"></script>
 </body>
 </html>
