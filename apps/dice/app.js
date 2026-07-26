@@ -25,7 +25,15 @@
   let allRolls = [];
 
   function rollDice(sides) {
-    return Math.floor(Math.random() * sides) + 1;
+    // Unbiased crypto random integer in [1, sides]
+    const max = Math.floor(0x100000000 / sides) * sides;
+    const buf = new Uint32Array(1);
+    let x;
+    do {
+      crypto.getRandomValues(buf);
+      x = buf[0];
+    } while (x >= max);
+    return (x % sides) + 1;
   }
 
   function animateRoll() {
@@ -96,29 +104,39 @@
     }).join('');
   }
 
+  function safeParse(raw, fallback) {
+    try {
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
   function saveToLocalStorage() {
-    localStorage.setItem('dice_history', JSON.stringify(history.slice(0, 20)));
+    try {
+      localStorage.setItem('dice_history', JSON.stringify(history.slice(0, 20)));
+    } catch (_) {}
   }
 
   function loadFromLocalStorage() {
-    const saved = localStorage.getItem('dice_history');
-    if (saved) {
-      history = JSON.parse(saved);
-      renderHistory();
-    }
+    history = safeParse(localStorage.getItem('dice_history'), []);
+    if (!Array.isArray(history)) history = [];
+    renderHistory();
   }
 
   function savePreset() {
     const name = prompt('プリセット名を入力してください:');
     if (!name) return;
-    const presets = JSON.parse(localStorage.getItem('dice_presets') || '{}');
+    const presets = safeParse(localStorage.getItem('dice_presets'), {});
     presets[name] = { sides: currentSides, count: diceCount, modifier };
-    localStorage.setItem('dice_presets', JSON.stringify(presets));
+    try {
+      localStorage.setItem('dice_presets', JSON.stringify(presets));
+    } catch (_) {}
     alert('保存しました！');
   }
 
   function loadPreset() {
-    const presets = JSON.parse(localStorage.getItem('dice_presets') || '{}');
+    const presets = safeParse(localStorage.getItem('dice_presets'), {});
     const names = Object.keys(presets);
     if (names.length === 0) {
       alert('保存されたプリセットがありません');

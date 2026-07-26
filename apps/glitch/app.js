@@ -3,17 +3,27 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let originalImage = null, autoMode = false, autoFrame;
 
+let glitchObjectUrl = null;
 document.getElementById('btn-upload').addEventListener('click', () => document.getElementById('file-input').click());
 document.getElementById('file-input').addEventListener('change', e => {
   const file = e.target.files[0]; if (!file) return;
+  if (glitchObjectUrl) URL.revokeObjectURL(glitchObjectUrl);
   const img = new Image();
   img.onload = () => {
-    canvas.width = img.width; canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    originalImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const maxSide = 1600;
+    let w = img.width, h = img.height;
+    if (Math.max(w, h) > maxSide) {
+      const scale = maxSide / Math.max(w, h);
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+    }
+    canvas.width = w; canvas.height = h;
+    ctx.drawImage(img, 0, 0, w, h);
+    originalImage = ctx.getImageData(0, 0, w, h);
     applyGlitch();
   };
-  img.src = URL.createObjectURL(file);
+  glitchObjectUrl = URL.createObjectURL(file);
+  img.src = glitchObjectUrl;
 });
 
 document.getElementById('btn-glitch').addEventListener('click', applyGlitch);

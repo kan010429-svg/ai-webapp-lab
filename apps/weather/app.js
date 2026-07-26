@@ -1,10 +1,14 @@
 (function(){'use strict';
 const c=document.getElementById('c'),ctx=c.getContext('2d');
-let W,H,mode='sunny',timeOfDay='day',particles=[],t=0,wind=5,density=200,autoMode=false,mouseX=W/2,mouseY=H/2;
+let W=0,H=0,mode='sunny',timeOfDay='day',particles=[],t=0,wind=5,density=200,autoMode=false,mouseX=0,mouseY=0;
 const modes=['sunny','rain','snow','storm','aurora'];
 let modeIndex=0,autoTimer=0;
 
-function resize(){W=c.width=innerWidth;H=c.height=innerHeight-50;init()}
+function resize(){
+  W=c.width=innerWidth;H=c.height=innerHeight-50;
+  if(!mouseX&&!mouseY){mouseX=W/2;mouseY=H/2;}
+  init();
+}
 
 function init(){
   particles=[];
