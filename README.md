@@ -59,3 +59,4 @@ npx serve .
 - npm 依存なし（テーマ用フォントのみ Google Fonts を任意利用。オフライン時はシステムフォントにフォールバック）
 - 各アプリは `apps/<name>/` に自己完結
 - 共有テーマ: `theme.css` / `theme.js`
+- 共有アプリUI: `app-ui.css`（個別ツールの共通クロム）
