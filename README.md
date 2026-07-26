@@ -49,8 +49,13 @@ npx serve .
 |--------|------|
 | 🎵 **[SoundLab](apps/soundlab/index.html)** | 音・オーディオ統合ハブ。Metronome・Tuner・Synthy・Waveform を1画面で切り替え。 |
 
+## テーマ
+
+ギャラリーと各ハブは **Cyber**（デフォルト）/ **Lab** を右上の切替で変更できます。選択は `localStorage`（`bt-theme`）に保存され、ページ間で共有されます。
+
 ## 技術
 
 - フレームワーク / ビルドツールなし
-- 外部 CDN・npm 依存なし
+- npm 依存なし（テーマ用フォントのみ Google Fonts を任意利用。オフライン時はシステムフォントにフォールバック）
 - 各アプリは `apps/<name>/` に自己完結
+- 共有テーマ: `theme.css` / `theme.js`
