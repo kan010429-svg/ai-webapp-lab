@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ArtLab — ジェネラティブアート・ランチャー</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A8%3C/text%3E%3C/svg%3E" />
+<meta name="description" content="Cosmos・Matrix Rain・Fireworks・Spirograph・Starfield・Weather Art・Glitch Art のジェネラティブアートを1画面で切り替え・全画面表示できるランチャー。" />
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#161a26; --panel2:#1c2130;
+    --border:#252b3b; --border2:#333b52;
+    --text:#e7ebf5; --muted:#9aa3b8; --muted2:#6b7488;
+    --accent:#7c8cff; --accent2:#4dd0e1;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;
+    background:
+      radial-gradient(900px 480px at 15% -10%, rgba(124,140,255,.14), transparent 60%),
+      radial-gradient(800px 400px at 100% 0%, rgba(77,208,225,.10), transparent 55%),
+      var(--bg);
+    color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+  }
+  button{font-family:inherit;color:inherit}
+  a{color:inherit}
+
+  header{padding:16px 20px 12px;flex:none;border-bottom:1px solid var(--border)}
+  .titlebar{display:flex;align-items:center;gap:10px;max-width:1400px;margin:0 auto;width:100%}
+  .titlebar h1{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .titlebar .sub{color:var(--muted2);font-size:13px;font-weight:600}
+  .titlebar .back{margin-left:auto;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:8px}
+  .titlebar .back:hover{background:var(--panel2);color:var(--text)}
+
+  .layout{flex:1;display:grid;grid-template-columns:290px minmax(0,1fr);gap:0;min-height:0;max-width:1400px;margin:0 auto;width:100%}
+  aside{border-right:1px solid var(--border);overflow-y:auto;padding:14px}
+  .aside-h{color:var(--muted2);font-size:12px;font-weight:700;letter-spacing:.03em;padding:4px 6px 10px}
+  .item{
+    display:flex;gap:12px;align-items:center;width:100%;text-align:left;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:11px 12px;margin-bottom:8px;cursor:pointer;transition:all .13s;
+  }
+  .item:hover{border-color:var(--border2);transform:translateX(2px)}
+  .item.active{border-color:var(--ac,var(--accent));background:var(--panel2)}
+  .item .ico{font-size:24px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex:none;
+    border-radius:9px;background:color-mix(in srgb,var(--ac,var(--accent)) 15%,transparent)}
+  .item .meta{min-width:0}
+  .item .t{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item .d{font-size:11.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  main{display:flex;flex-direction:column;min-width:0}
+  .toolbar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .toolbar .cur{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px}
+  .toolbar .cur .dot{width:10px;height:10px;border-radius:50%;background:var(--ac,var(--accent))}
+  .toolbar .cur .cd{color:var(--muted2);font-size:12.5px;font-weight:600}
+  .toolbar .spacer{flex:1}
+  .btn{
+    background:var(--panel2);border:1px solid var(--border2);border-radius:10px;
+    color:var(--text);font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;transition:all .12s;
+    display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+  }
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  .stage{flex:1;position:relative;background:#000;min-height:0}
+  .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+
+  footer{flex:none;padding:8px 0;text-align:center;color:var(--muted2);font-size:12px;border-top:1px solid var(--border)}
+
+  @media (max-width:760px){
+    .layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+    aside{border-right:0;border-bottom:1px solid var(--border);display:flex;gap:8px;overflow-x:auto;padding:12px}
+    .aside-h{display:none}
+    .item{flex:none;width:auto;margin-bottom:0;flex-direction:column;text-align:center;width:96px}
+    .item .d{display:none}
+    .item .t{font-size:12px}
+    .stage{min-height:52vh}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="titlebar">
+      <h1>🎨 ArtLab</h1><span class="sub">ジェネラティブアート・ランチャー</span>
+      <a class="back" href="../../index.html">← 一覧へ戻る</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="list" role="tablist" aria-label="ジェネラティブアート作品一覧">
+      <div class="aside-h">作品を選ぶ</div>
+    </aside>
+    <main>
+      <div class="toolbar">
+        <div class="cur"><span class="dot" id="cur-dot"></span><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div>
+        <div class="spacer"></div>
+        <button class="btn" id="btn-random" type="button">🔀 ランダム</button>
+        <button class="btn" id="btn-full" type="button">⛶ 全画面</button>
+        <a class="btn primary" id="btn-open" href="#" target="_blank" rel="noopener">↗ 新しいタブで開く</a>
+      </div>
+      <div class="stage" id="stage">
+        <iframe id="frame" title="ジェネラティブアート プレビュー" allow="fullscreen; autoplay" allowfullscreen></iframe>
+      </div>
+    </main>
+  </div>
+  <footer>ArtLab — Browser Toys</footer>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const ARTS = [
+  {n:'cosmos',    t:'Cosmos',      i:'🌌', a:'#818cf8', d:'プロシージャル宇宙ジェネレーター'},
+  {n:'starfield', t:'Starfield',   i:'⭐', a:'#818cf8', d:'ワープスピードの星空'},
+  {n:'matrix',    t:'Matrix Rain', i:'🟩', a:'#00ff41', d:'デジタルレイン'},
+  {n:'fireworks', t:'Fireworks',   i:'🎆', a:'#ff6b6b', d:'花火シミュレーション'},
+  {n:'spirograph',t:'Spirograph',  i:'🎪', a:'#e879f9', d:'幾何学模様ドローイング'},
+  {n:'weather',   t:'Weather Art', i:'🌤️', a:'#38bdf8', d:'天気のビジュアル表現'},
+  {n:'glitch',    t:'Glitch Art',  i:'📺', a:'#ff3366', d:'グリッチエフェクト'},
+];
+
+const frame = $('#frame');
+let current = null;
+
+function pathOf(a){ return `../${a.n}/index.html`; }
+
+function select(n, push){
+  const a = ARTS.find(x => x.n === n) || ARTS[0];
+  current = a;
+  frame.src = pathOf(a);
+  $('#btn-open').href = pathOf(a);
+  document.documentElement.style.setProperty('--ac', a.a);
+  $('#cur-dot').style.background = a.a;
+  $('#cur-name').textContent = `${a.i} ${a.t}`;
+  $('#cur-desc').textContent = a.d;
+  document.querySelectorAll('.item').forEach(el => {
+    const on = el.dataset.n === a.n;
+    el.classList.toggle('active', on);
+    el.setAttribute('aria-selected', on ? 'true' : 'false');
+    el.style.setProperty('--ac', a.a);
+  });
+  if (push !== false) history.replaceState(null, '', '#' + a.n);
+}
+
+(function buildList(){
+  const box = $('#list');
+  ARTS.forEach(a => {
+    const b = document.createElement('button');
+    b.className = 'item';
+    b.dataset.n = a.n;
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', 'false');
+    b.style.setProperty('--ac', a.a);
+    b.innerHTML = `<span class="ico">${a.i}</span>
+      <span class="meta"><span class="t">${esc(a.t)}</span><span class="d">${esc(a.d)}</span></span>`;
+    b.addEventListener('click', () => select(a.n));
+    box.appendChild(b);
+  });
+})();
+
+$('#btn-full').addEventListener('click', () => {
+  const el = $('#stage');
+  if (document.fullscreenElement) document.exitFullscreen();
+  else if (el.requestFullscreen) el.requestFullscreen();
+});
+$('#btn-random').addEventListener('click', () => {
+  let n; do { n = ARTS[Math.floor(Math.random()*ARTS.length)].n; } while (n === (current && current.n) && ARTS.length > 1);
+  select(n);
+});
+
+select(location.hash.slice(1) || ARTS[0].n, false);
+window.addEventListener('hashchange', () => select(location.hash.slice(1) || ARTS[0].n, false));
+</script>
+</body>
+</html>

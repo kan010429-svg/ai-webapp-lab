@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PhysicsLab — 物理・天体シミュレーション</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%90%3C/text%3E%3C/svg%3E" />
+<meta name="description" content="ライフゲーム・軌道・振り子波・太陽系を1画面で切り替えられる物理・天体シミュレーション統合ハブ。" />
+<style>
+  :root{--bg:#0b0d12;--panel:#161a26;--panel2:#1c2130;--border:#252b3b;--border2:#333b52;--text:#e7ebf5;--muted:#9aa3b8;--muted2:#6b7488;--accent:#7c8cff;--accent2:#4dd0e1;--radius:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;background:radial-gradient(900px 480px at 15% -10%,rgba(124,140,255,.14),transparent 60%),radial-gradient(800px 400px at 100% 0%,rgba(77,208,225,.10),transparent 55%),var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+  button{font-family:inherit;color:inherit}
+  a{color:inherit}
+  header{padding:16px 20px 0;flex:none;border-bottom:1px solid var(--border)}
+  .titlebar{display:flex;align-items:center;gap:10px;max-width:1400px;margin:0 auto;width:100%}
+  .titlebar h1{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .titlebar .sub{color:var(--muted2);font-size:13px;font-weight:600}
+  .titlebar .back{margin-left:auto;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:8px}
+  .titlebar .back:hover{background:var(--panel2);color:var(--text)}
+  nav.tabs{display:flex;gap:2px;overflow-x:auto;margin:12px auto 0;max-width:1400px;width:100%;scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  .tab{position:relative;background:none;border:0;color:var(--muted);font-size:14px;font-weight:600;padding:10px 13px 12px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:color .15s}
+  .tab:hover{color:var(--text)}
+  .tab::after{content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2.5px;border-radius:2px;background:transparent;transition:background .15s}
+  .tab.active{color:var(--text)}
+  .tab.active::after{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .toolbar{display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;max-width:1400px;margin:0 auto;width:100%}
+  .toolbar .cur{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px}
+  .toolbar .cur .cd{color:var(--muted2);font-size:12.5px;font-weight:600}
+  .toolbar .spacer{flex:1}
+  .btn{background:var(--panel2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;transition:all .12s;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  main{flex:1;display:flex;min-height:0}
+  .stage{flex:1;position:relative;background:#0b0d12;min-height:0;max-width:1400px;margin:0 auto;width:100%}
+  .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  footer{flex:none;padding:8px 0;text-align:center;color:var(--muted2);font-size:12px;border-top:1px solid var(--border)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="titlebar">
+      <h1>🪐 PhysicsLab</h1><span class="sub">物理・天体シミュレーション</span>
+      <a class="back" href="../../index.html">← 一覧へ戻る</a>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+  </header>
+  <div class="toolbar">
+    <div class="cur"><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div>
+    <div class="spacer"></div>
+    <button class="btn" id="btn-full" type="button">⛶ 全画面</button>
+    <a class="btn primary" id="btn-open" href="#" target="_blank" rel="noopener">↗ 新しいタブで開く</a>
+  </div>
+  <main>
+    <div class="stage" id="stage"><iframe id="frame" title="プレビュー" allow="fullscreen" allowfullscreen></iframe></div>
+  </main>
+  <footer>PhysicsLab — Browser Toys</footer>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ITEMS = [
+  {n:'life',         t:'Life',            i:'🦠', d:"Conway's Game of Life"},
+  {n:'orbit',        t:'Orbit Simulator', i:'🛸', d:'軌道シミュレーター'},
+  {n:'pendulum',     t:'Pendulum Wave',   i:'🔔', d:'振り子波'},
+  {n:'solar-system', t:'Solar System',    i:'☀️', d:'太陽系ビューアー'},
+];
+const frame = $('#frame');
+let current = null;
+const pathOf = a => `../${a.n}/index.html`;
+function select(n, push){
+  const a = ITEMS.find(x => x.n === n) || ITEMS[0];
+  current = a;
+  frame.src = pathOf(a);
+  $('#btn-open').href = pathOf(a);
+  $('#cur-name').textContent = `${a.i} ${a.t}`;
+  $('#cur-desc').textContent = a.d;
+  document.querySelectorAll('.tab').forEach(el => { const on = el.dataset.n === a.n; el.classList.toggle('active', on); el.setAttribute('aria-selected', on ? 'true' : 'false'); });
+  if (push !== false) history.replaceState(null, '', '#' + a.n);
+}
+(function buildTabs(){
+  const nav = $('#tabs');
+  ITEMS.forEach(a => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.dataset.n = a.n; b.setAttribute('role','tab'); b.setAttribute('aria-selected','false');
+    b.innerHTML = `<span>${a.i}</span> ${esc(a.t)}`;
+    b.addEventListener('click', () => select(a.n));
+    nav.appendChild(b);
+  });
+})();
+$('#btn-full').addEventListener('click', () => {
+  const el = $('#stage');
+  if (document.fullscreenElement) document.exitFullscreen();
+  else if (el.requestFullscreen) el.requestFullscreen();
+});
+select(location.hash.slice(1) || ITEMS[0].n, false);
+window.addEventListener('hashchange', () => select(location.hash.slice(1) || ITEMS[0].n, false));
+</script>
+</body>
+</html>

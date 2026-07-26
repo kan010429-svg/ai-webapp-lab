@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CalcTools — 計算機ボックス</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AE%3C/text%3E%3C/svg%3E" />
-<meta name="description" content="電卓・関数グラフ・単位変換・BMI・ローン・割り勘・営業日・和暦西暦・ハッシュ計算を1つにまとめた計算アプリ。" />
+<meta name="description" content="電卓・関数グラフ・単位変換・BMI・ローン・割り勘・営業日・和暦西暦・サイコロを1つにまとめた計算アプリ。" />
 <style>
   :root{
     --bg:#0b0d12; --panel:#161a26; --panel2:#1c2130;
@@ -142,13 +142,16 @@
   .grp-row .del:hover{color:var(--red);border-color:var(--red)}
   .grp-row label.radio{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;font-weight:600;padding-bottom:9px}
 
-  /* ==== ハッシュ ==== */
-  .hash-out{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-  .hash-row{display:flex;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:9px 12px}
-  .hash-row .a{color:var(--muted);font-size:12px;font-weight:700;width:72px;flex:none}
-  .hash-row .v{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;word-break:break-all;color:var(--text)}
-  .hash-row .cp{background:none;border:1px solid var(--border);border-radius:7px;color:var(--muted);cursor:pointer;font-size:11.5px;padding:4px 10px;white-space:nowrap}
-  .hash-row .cp:hover{color:var(--text);border-color:var(--accent)}
+  /* ==== サイコロ ==== */
+  .dz-display{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;min-height:74px;align-items:center;margin-bottom:6px}
+  .die{width:64px;height:64px;background:var(--panel2);border:1px solid var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--accent2);box-shadow:0 6px 16px rgba(0,0,0,.28);animation:diceroll .5s ease-out;font-variant-numeric:tabular-nums}
+  @keyframes diceroll{0%{transform:rotate(0) scale(.5)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
+  .stepper{display:flex;align-items:center;gap:10px}
+  .stepper button{background:var(--panel2);border:1px solid var(--border2);border-radius:9px;color:var(--text);width:34px;height:34px;font-size:18px;font-weight:700;cursor:pointer;transition:all .12s}
+  .stepper button:hover{border-color:var(--accent)}
+  .stepper span{font-size:19px;font-weight:800;min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+  .dz-hitem{padding:7px 8px;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted)}
+  .dz-hitem:last-child{border-bottom:0}
 
   footer{flex:none;padding:0 0 26px;text-align:center;color:var(--muted2);font-size:12.5px}
   @media (max-width:560px){.card{padding:16px 13px}}
@@ -171,7 +174,7 @@
         <button class="tab" data-v="wareki">🗓️ 和暦西暦</button>
         <button class="tab" data-v="bmi">⚖️ BMI</button>
         <button class="tab" data-v="loan">💵 ローン</button>
-        <button class="tab" data-v="hash">🔒 ハッシュ</button>
+        <button class="tab" data-v="dice">🎲 サイコロ</button>
       </nav>
     </div>
   </header>
@@ -329,14 +332,41 @@
         </div>
       </section>
 
-      <!-- ハッシュ -->
-      <section class="view" id="view-hash">
+      <!-- サイコロ -->
+      <section class="view" id="view-dice">
         <div class="card">
-          <label class="fld"><span>テキスト（入力と同時に計算されます）</span>
-            <textarea id="h-input" placeholder="ハッシュ化するテキストを入力..."></textarea>
-          </label>
-          <div class="hash-out" id="h-out"></div>
-          <div class="note">計算はすべてブラウザ内で完結し、入力が外部へ送信されることはありません。</div>
+          <div class="dz-display" id="dz-display"></div>
+          <div class="result-hero"><div class="v digits" id="dz-result">0</div><div class="cap" id="dz-stats"></div></div>
+          <h2>ダイスの種類</h2>
+          <div class="seg" id="dz-sides" style="margin-bottom:16px">
+            <button data-s="4">D4</button>
+            <button data-s="6" class="active">D6</button>
+            <button data-s="8">D8</button>
+            <button data-s="10">D10</button>
+            <button data-s="12">D12</button>
+            <button data-s="20">D20</button>
+            <button data-s="100">D100</button>
+            <button id="dz-custom">Custom</button>
+          </div>
+          <div class="row">
+            <label class="fld"><span>個数</span>
+              <div class="stepper"><button id="dz-cdec" type="button">−</button><span id="dz-count">1</span><button id="dz-cinc" type="button">＋</button></div>
+            </label>
+            <label class="fld"><span>修正値</span>
+              <div class="stepper"><button id="dz-mdec" type="button">−</button><span id="dz-mod">0</span><button id="dz-minc" type="button">＋</button></div>
+            </label>
+            <button class="btn primary" id="dz-roll" type="button" style="flex:1;min-width:140px">🎲 振る</button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn sm" id="dz-save" type="button">💾 プリセット保存</button>
+            <button class="btn sm" id="dz-load" type="button">📂 読込</button>
+            <button class="btn sm" id="dz-export" type="button">📥 履歴CSV</button>
+          </div>
+          <div class="note">乱数は crypto.getRandomValues による偏りのない整数です。Space / Enter でも振れます。</div>
+        </div>
+        <div class="card">
+          <h2>履歴</h2>
+          <div id="dz-history"><div class="hempty">まだありません</div></div>
         </div>
       </section>
 
@@ -352,7 +382,7 @@ const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---- tabs ---- */
-const VIEWS = ['calc','graph','unit','warikan','bizdays','wareki','bmi','loan','hash'];
+const VIEWS = ['calc','graph','unit','warikan','bizdays','wareki','bmi','loan','dice'];
 function show(v){
   if (!VIEWS.includes(v)) v = 'calc';
   $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.v === v));
@@ -887,75 +917,107 @@ function loanCalc(){
 ['l-amount','l-rate','l-years'].forEach(id => $('#'+id).addEventListener('input', loanCalc));
 loanCalc();
 
-/* ================= ハッシュ ================= */
-/* compact MD5 (RFC 1321) */
-function md5(str){
-  const utf8 = new TextEncoder().encode(str);
-  const K = new Uint32Array(64).map((_, i) => Math.floor(Math.abs(Math.sin(i+1)) * 2**32));
-  const S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
-             4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
-  const len = utf8.length;
-  const nBlocks = ((len + 8) >> 6) + 1;
-  const buf = new Uint8Array(nBlocks * 64);
-  buf.set(utf8); buf[len] = 0x80;
-  const dv = new DataView(buf.buffer);
-  dv.setUint32(nBlocks*64 - 8, len << 3, true);
-  dv.setUint32(nBlocks*64 - 4, Math.floor(len / 536870912), true);
-  let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
-  const rotl = (x, c) => (x << c) | (x >>> (32 - c));
-  for (let bl = 0; bl < nBlocks; bl++){
-    const M = new Uint32Array(16);
-    for (let i = 0; i < 16; i++) M[i] = dv.getUint32(bl*64 + i*4, true);
-    let A = a0, B = b0, C = c0, D = d0;
-    for (let i = 0; i < 64; i++){
-      let F, g;
-      if (i < 16){ F = (B & C) | (~B & D); g = i; }
-      else if (i < 32){ F = (D & B) | (~D & C); g = (5*i + 1) % 16; }
-      else if (i < 48){ F = B ^ C ^ D; g = (3*i + 5) % 16; }
-      else { F = C ^ (B | ~D); g = (7*i) % 16; }
-      F = (F + A + K[i] + M[g]) | 0;
-      A = D; D = C; C = B;
-      B = (B + rotl(F, S[i])) | 0;
-    }
-    a0 = (a0 + A) | 0; b0 = (b0 + B) | 0; c0 = (c0 + C) | 0; d0 = (d0 + D) | 0;
-  }
-  return [a0, b0, c0, d0].map(x => {
-    const b = new Uint8Array(4); new DataView(b.buffer).setUint32(0, x, true);
-    return [...b].map(v => v.toString(16).padStart(2,'0')).join('');
-  }).join('');
-}
-const HASH_ALGOS = [['MD5', null], ['SHA-1','SHA-1'], ['SHA-256','SHA-256'], ['SHA-512','SHA-512']];
+/* ================= サイコロ ================= */
 (function(){
-  const box = $('#h-out');
-  HASH_ALGOS.forEach(([name]) => {
-    const row = document.createElement('div'); row.className = 'hash-row';
-    row.innerHTML = `<div class="a">${name}</div><div class="v" data-a="${name}">–</div><button class="cp">コピー</button>`;
-    row.querySelector('.cp').addEventListener('click', async e => {
-      const v = row.querySelector('.v').textContent;
-      if (v === '–') return;
-      try{ await navigator.clipboard.writeText(v); e.target.textContent = '✓'; setTimeout(() => e.target.textContent = 'コピー', 900); }catch(err){}
-    });
-    box.appendChild(row);
-  });
-})();
-let hashSeq = 0;
-async function hashCalc(){
-  const text = $('#h-input').value;
-  const seq = ++hashSeq;
-  const rows = Object.fromEntries($$('#h-out .v').map(el => [el.dataset.a, el]));
-  if (!text){ Object.values(rows).forEach(el => el.textContent = '–'); return; }
-  rows['MD5'].textContent = md5(text);
-  const data = new TextEncoder().encode(text);
-  for (const [name, algo] of HASH_ALGOS){
-    if (!algo) continue;
-    try{
-      const buf = await crypto.subtle.digest(algo, data);
-      if (seq !== hashSeq) return;
-      rows[name].textContent = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
-    }catch(e){ rows[name].textContent = '(この環境では利用できません)'; }
+  const disp = $('#dz-display'), resEl = $('#dz-result'), statEl = $('#dz-stats'), histBox = $('#dz-history');
+  let sides = 6, count = 1, mod = 0, hist = [], all = [];
+  const parse = (raw, fb) => { try{ return raw ? JSON.parse(raw) : fb; }catch(_){ return fb; } };
+  function rnd(s){
+    const max = Math.floor(0x100000000 / s) * s;
+    const buf = new Uint32Array(1); let x;
+    do { crypto.getRandomValues(buf); x = buf[0]; } while (x >= max);
+    return (x % s) + 1;
   }
-}
-$('#h-input').addEventListener('input', hashCalc);
+  function stats(){
+    if (!all.length){ statEl.textContent = ''; return; }
+    const avg = (all.reduce((a,b)=>a+b,0)/all.length).toFixed(2);
+    const expected = ((sides+1)/2*count + mod).toFixed(2);
+    statEl.textContent = `平均 ${avg} ／ 最大 ${Math.max(...all)} ／ 最小 ${Math.min(...all)} ／ 期待値 ${expected}`;
+  }
+  function renderHist(){
+    histBox.innerHTML = hist.length
+      ? hist.map(h => `<div class="dz-hitem digits">${esc(h)}</div>`).join('')
+      : '<div class="hempty">まだありません</div>';
+  }
+  function save(){ try{ localStorage.setItem('calctools_dice_history', JSON.stringify(hist.slice(0,20))); }catch(_){} }
+  function roll(){
+    const rolls = [];
+    disp.innerHTML = '';
+    for (let i=0;i<count;i++){
+      const r = rnd(sides); rolls.push(r);
+      const d = document.createElement('div'); d.className = 'die'; d.textContent = r; disp.appendChild(d);
+    }
+    const sum = rolls.reduce((a,b)=>a+b,0), total = sum + mod;
+    resEl.innerHTML = mod !== 0 ? `${total} <span class="u">(${sum}${mod>=0?'+':''}${mod})</span>` : `${total}`;
+    all.push(...rolls);
+    stats();
+    const ts = new Date().toLocaleTimeString('ja-JP');
+    const modStr = mod !== 0 ? ` ${mod>=0?'+':''}${mod}` : '';
+    hist.unshift(`${ts} — ${count}D${sides}${modStr}: [${rolls.join(', ')}] = ${total}`);
+    if (hist.length > 20) hist.pop();
+    renderHist(); save();
+  }
+  $$('#dz-sides button').forEach(b => b.addEventListener('click', () => {
+    if (b.id === 'dz-custom'){
+      const v = parseInt(prompt('面数を入力 (2〜1000):', '6'), 10);
+      if (v >= 2 && v <= 1000){
+        sides = v;
+        $$('#dz-sides button').forEach(x => x.classList.remove('active'));
+        b.classList.add('active'); b.textContent = 'D'+v;
+        stats();
+      }
+      return;
+    }
+    sides = +b.dataset.s;
+    $$('#dz-sides button').forEach(x => x.classList.toggle('active', x === b));
+    stats();
+  }));
+  $('#dz-cdec').addEventListener('click', () => { if (count > 1){ count--; $('#dz-count').textContent = count; stats(); } });
+  $('#dz-cinc').addEventListener('click', () => { if (count < 20){ count++; $('#dz-count').textContent = count; stats(); } });
+  $('#dz-mdec').addEventListener('click', () => { mod--; $('#dz-mod').textContent = mod>=0?`+${mod}`:mod; stats(); });
+  $('#dz-minc').addEventListener('click', () => { mod++; $('#dz-mod').textContent = mod>=0?`+${mod}`:mod; stats(); });
+  $('#dz-roll').addEventListener('click', roll);
+  $('#dz-save').addEventListener('click', () => {
+    const name = prompt('プリセット名:'); if (!name) return;
+    const p = parse(localStorage.getItem('calctools_dice_presets'), {});
+    p[name] = {sides, count, mod};
+    try{ localStorage.setItem('calctools_dice_presets', JSON.stringify(p)); alert('保存しました'); }catch(_){}
+  });
+  $('#dz-load').addEventListener('click', () => {
+    const p = parse(localStorage.getItem('calctools_dice_presets'), {});
+    const names = Object.keys(p);
+    if (!names.length){ alert('保存されたプリセットがありません'); return; }
+    const name = prompt('読み込むプリセット:\n' + names.join('\n'));
+    if (!name || !p[name]) return;
+    sides = p[name].sides; count = p[name].count; mod = p[name].mod;
+    $('#dz-count').textContent = count;
+    $('#dz-mod').textContent = mod>=0?`+${mod}`:mod;
+    let matched = false;
+    $$('#dz-sides button').forEach(x => {
+      const on = +x.dataset.s === sides;
+      x.classList.toggle('active', on);
+      if (on) matched = true;
+    });
+    if (!matched){ const c = $('#dz-custom'); c.classList.add('active'); c.textContent = 'D'+sides; }
+    stats();
+  });
+  $('#dz-export').addEventListener('click', () => {
+    if (!hist.length){ alert('履歴がありません'); return; }
+    const csv = 'log\n' + hist.map(h => `"${h.replace(/"/g,'""')}"`).join('\n');
+    const blob = new Blob([csv], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `dice_history_${Date.now()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  });
+  document.addEventListener('keydown', e => {
+    if (!$('#view-dice').classList.contains('active')) return;
+    if (e.target.matches('input,textarea,select')) return;
+    if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); roll(); }
+  });
+  hist = parse(localStorage.getItem('calctools_dice_history'), []);
+  if (!Array.isArray(hist)) hist = [];
+  renderHist(); stats();
+})();
 
 /* ---- init ---- */
 show(location.hash.slice(1) || 'calc');
