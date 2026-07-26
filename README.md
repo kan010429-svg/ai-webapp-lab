@@ -2,8 +2,6 @@
 
 ビルド不要・依存ゼロのバニラ JavaScript アプリを **34本** 厳選した公開用ギャラリーです。
 
-元リポジトリ [ai-app-lab](https://github.com/kan010429-svg/ai-app-lab) から、公開向けアプリだけを抜き出しています。
-
 ## 使い方
 
 ```bash
@@ -13,7 +11,7 @@ npx serve .
 
 ## GitHub Pages
 
-Settings → Pages → Source: Deploy from a branch → `main` / `/ (root)`
+詳細は [PUBLISH.md](PUBLISH.md) を参照。
 
 公開後: `https://kan010429-svg.github.io/ai-webapp-lab/`
 

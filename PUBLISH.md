@@ -1,26 +1,20 @@
-# 公開リポジトリの作成手順
+# GitHub Pages で公開する
 
-このブランチ (`gallery-public`) は、GitHub Pages 向けに厳選した 34 アプリだけのソースです。
-エージェントの GitHub App トークンは **既存 private リポジトリのみ** にアクセスできるため、
-空の public リポジトリは GitHub UI で先に作る必要があります。
+このリポジトリは静的ファイルのみで構成されています。ビルド不要で、GitHub Pages からそのまま配信できます。
 
-## 手順（約2分）
+## 手順
 
-1. https://github.com/new で次を作成
-   - Repository name: `ai-webapp-lab`
-   - Public
-   - README なし（空でOK）
-2. Cursor / GitHub App のインストール設定で、この新リポジトリへのアクセスを許可
-   （または "All repositories"）
-3. エージェントに「`ai-webapp-lab` へ push して」と依頼
+1. GitHub のリポジトリページで **Settings → Pages** を開く
+2. **Source**: Deploy from a branch
+3. **Branch**: `main` / `/ (root)` を選択して Save
 
-またはローカルから:
+数分後に次の URL で公開されます。
+
+`https://kan010429-svg.github.io/ai-webapp-lab/`
+
+## ローカル確認
 
 ```bash
-git clone --branch gallery-public --single-branch https://github.com/kan010429-svg/ai-app-lab.git ai-webapp-lab
-cd ai-webapp-lab
-git remote set-url origin https://github.com/kan010429-svg/ai-webapp-lab.git
-git push -u origin gallery-public:main
+npx serve .
+# または index.html をブラウザで直接開く
 ```
-
-その後 Settings → Pages → Deploy from branch → `main` / root
