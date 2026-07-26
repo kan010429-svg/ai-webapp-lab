@@ -1,29 +1,20 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="cyber">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CalcTools — 計算機ボックス</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AE%3C/text%3E%3C/svg%3E" />
 <meta name="description" content="電卓・関数グラフ・単位変換・BMI・ローン・割り勘・営業日・和暦西暦・サイコロを1つにまとめた計算アプリ。" />
+<script>
+  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="stylesheet" href="../../theme.css" />
 <style>
-  :root{
-    --bg:#0b0d12; --panel:#161a26; --panel2:#1c2130;
-    --border:#252b3b; --border2:#333b52;
-    --text:#e7ebf5; --muted:#9aa3b8; --muted2:#6b7488;
-    --accent:#7c8cff; --accent2:#4dd0e1;
-    --green:#3ddc84; --red:#ff6b6b; --yellow:#ffcc55; --orange:#fb923c;
-    --radius:16px;
-  }
+  /* tokens: theme.css */
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;
-    background:
-      radial-gradient(900px 480px at 20% -10%, rgba(77,208,225,.11), transparent 60%),
-      radial-gradient(800px 400px at 100% 0%, rgba(124,140,255,.10), transparent 55%),
-      var(--bg);
-    color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
     display:flex;flex-direction:column;
   }
   button{font-family:inherit;color:inherit}
@@ -33,7 +24,7 @@
   .titlebar{display:flex;align-items:center;gap:10px}
   .titlebar h1{font-size:19px;font-weight:800;letter-spacing:-.01em}
   .titlebar .sub{color:var(--muted2);font-size:13px;font-weight:600}
-  .titlebar .back{margin-left:auto;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:8px}
+  .titlebar .theme-switch{margin-left:auto}.titlebar .back{color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:8px}
   .titlebar .back:hover{background:var(--panel2);color:var(--text)}
 
   nav.tabs{display:flex;gap:2px;overflow-x:auto;margin-top:14px;border-bottom:1px solid var(--border);scrollbar-width:none}
@@ -62,7 +53,7 @@
     color:var(--text);font-size:14px;font-weight:700;padding:10px 20px;cursor:pointer;transition:all .12s;
   }
   .btn:hover{border-color:var(--accent)}
-  .btn.primary{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  .btn.primary{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
   .btn.primary:hover{filter:brightness(1.1)}
   .btn.sm{font-size:12.5px;padding:6px 12px;border-radius:9px}
 
@@ -80,7 +71,7 @@
   .seg{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
   .seg button{background:none;border:0;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;padding:6px 13px;cursor:pointer;transition:all .12s}
   .seg button:hover{color:var(--text)}
-  .seg button.active{background:var(--accent);color:#fff}
+  .seg button.active{background:var(--accent);color:var(--accent-ink)}
 
   .digits{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 
@@ -115,7 +106,7 @@
   .ckey:hover{border-color:var(--border2);filter:brightness(1.15)}
   .ckey:active{transform:scale(.96)}
   .ckey.op{color:var(--accent2)}
-  .ckey.eq{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  .ckey.eq{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
   .ckey.fn{color:var(--muted);font-size:16px}
   .calc-hist{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;flex-direction:column;min-height:200px;max-height:430px}
   .calc-hist .h{display:flex;justify-content:space-between;align-items:center;color:var(--muted2);font-size:12px;font-weight:700;margin-bottom:6px}
@@ -158,12 +149,16 @@
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
-<body>
+<body class="bt-themed">
   <header>
     <div class="wrap">
       <div class="titlebar">
         <h1>🧮 CalcTools</h1><span class="sub">計算機ボックス</span>
-        <a class="back" href="../../index.html">← 一覧へ戻る</a>
+        <div class="theme-switch" role="group" aria-label="テーマ切替">
+        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
+        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
+      </div>
+      <a class="back" href="../../index.html">← 一覧へ戻る</a>
       </div>
       <nav class="tabs" id="tabs">
         <button class="tab" data-v="calc">🧮 電卓</button>
@@ -374,6 +369,7 @@
   </main>
   <footer>CalcTools — Browser Toys</footer>
 
+<script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);

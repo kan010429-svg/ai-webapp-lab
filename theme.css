@@ -1,0 +1,135 @@
+/* Browser Toys — shared theme tokens (cyber default / lab alternate) */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap");
+
+:root,
+[data-theme="cyber"] {
+  --bg: #07090d;
+  --bg2: #0c1018;
+  --panel: #10161f;
+  --panel2: #161d28;
+  --border: #1e2836;
+  --border2: #2a3648;
+  --text: #e8eef7;
+  --muted: #8b97a8;
+  --muted2: #5f6b7c;
+  --accent: #3de0c5;
+  --accent2: #6ee7d4;
+  --accent-ink: #041512;
+  --star: #e8c96a;
+  --glow: rgba(61, 224, 197, 0.14);
+  --grid-line: rgba(61, 224, 197, 0.055);
+  --grid-size: 48px;
+  --radius: 4px;
+  --radius-lg: 8px;
+  --shadow: 0 0 0 transparent;
+  --controls-bg: rgba(7, 9, 13, 0.88);
+  --font-display: "Syne", "IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --font-body: "IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --title-color: #f4f8ff;
+  --title-glow: 0 0 24px rgba(61, 224, 197, 0.22);
+  --preview-from: #0a121a;
+  --preview-to: #13202c;
+  --green: #3ddc84;
+  --red: #ff6b6b;
+  --yellow: #ffcc55;
+  --orange: #fb923c;
+}
+
+[data-theme="lab"] {
+  --bg: #f3f5f7;
+  --bg2: #e9eef3;
+  --panel: #ffffff;
+  --panel2: #f0f4f8;
+  --border: #d3dce6;
+  --border2: #b7c4d2;
+  --text: #1a2433;
+  --muted: #5a6a7d;
+  --muted2: #7a8a9c;
+  --accent: #1d6fd8;
+  --accent2: #0f766e;
+  --accent-ink: #ffffff;
+  --star: #b8860b;
+  --glow: transparent;
+  --grid-line: rgba(29, 111, 216, 0.09);
+  --grid-size: 28px;
+  --radius: 2px;
+  --radius-lg: 4px;
+  --shadow: 0 1px 0 rgba(26, 36, 51, 0.04);
+  --controls-bg: rgba(243, 245, 247, 0.92);
+  --font-display: "IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --font-body: "IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --title-color: #142033;
+  --title-glow: none;
+  --preview-from: #dce6f0;
+  --preview-to: #c5d4e4;
+  --green: #15803d;
+  --red: #dc2626;
+  --yellow: #ca8a04;
+  --orange: #ea580c;
+}
+
+html {
+  color-scheme: dark;
+}
+html[data-theme="lab"] {
+  color-scheme: light;
+}
+
+body.bt-themed {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    radial-gradient(900px 420px at 12% -8%, var(--glow), transparent 58%);
+  background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size), auto;
+  background-attachment: fixed;
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="lab"] body.bt-themed {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
+}
+
+/* Theme toggle */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+}
+.theme-switch button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 6px 10px;
+  border-radius: calc(var(--radius-lg) - 1px);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.theme-switch button:hover {
+  color: var(--text);
+}
+.theme-switch button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--accent) 18%, var(--panel2));
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+[data-theme="cyber"] .theme-switch button[aria-pressed="true"] {
+  text-shadow: 0 0 10px rgba(61, 224, 197, 0.35);
+}

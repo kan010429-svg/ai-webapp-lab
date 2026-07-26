@@ -1,220 +1,258 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="cyber">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Browser Toys — ブラウザで動く10のバニラJSアプリ</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AA%3C/text%3E%3C/svg%3E" />
-<meta name="description" content="AIエージェントが作った、ビルド不要・依存ゼロのバニラJavaScriptブラウザアプリ集。ゲーム・ツール・ビジュアライゼーション・シミュレーション・音楽・ジェネラティブアートなど厳選10本を検索・カテゴリで探せます。" />
+<title>Browser Toys — ブラウザで動くバニラJSアプリ</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Cpath d='M18 72 L50 18 L82 72 Z' fill='none' stroke='%233de0c5' stroke-width='6'/%3E%3C/svg%3E" />
+<meta name="description" content="ビルド不要・依存ゼロのバニラJavaScriptブラウザアプリ集。ツール・ビジュアル・シミュレーション・音をテーマ切替対応ギャラリーで探せます。" />
+<script>
+  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="stylesheet" href="theme.css" />
 <style>
-  :root{
-    --bg:#0b0d12; --bg2:#111420; --panel:#161a26; --panel2:#1c2130;
-    --border:#252b3b; --border2:#333b52;
-    --text:#e7ebf5; --muted:#9aa3b8; --muted2:#6b7488;
-    --accent:#7c8cff; --accent2:#4dd0e1; --star:#ffcc55;
-    --shadow:0 6px 24px rgba(0,0,0,.35);
-    --radius:16px;
-  }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
-    background:
-      radial-gradient(1200px 600px at 15% -10%, rgba(124,140,255,.14), transparent 60%),
-      radial-gradient(1000px 500px at 100% 0%, rgba(77,208,225,.10), transparent 55%),
-      var(--bg);
-    color:var(--text);
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
+  body{min-height:100vh}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
 
-  /* Header / hero */
-  header.hero{padding:64px 0 34px;text-align:center}
-  .badge{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--panel);border:1px solid var(--border);
-    color:var(--muted);font-size:13px;font-weight:600;
-    padding:6px 14px;border-radius:999px;margin-bottom:22px;
+  .topbar{
+    display:flex;align-items:center;justify-content:flex-end;
+    padding:18px 0 0;
   }
-  .badge .dot{width:8px;height:8px;border-radius:50%;background:#3ddc84;box-shadow:0 0 8px #3ddc84}
+
+  header.hero{padding:28px 0 18px}
   h1.title{
-    font-size:clamp(38px,7vw,68px);font-weight:800;letter-spacing:-.02em;
-    background:linear-gradient(120deg,#fff 10%,var(--accent) 55%,var(--accent2) 100%);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    line-height:1.05;
+    font-family:var(--font-display);
+    font-size:clamp(42px,8vw,72px);
+    font-weight:800;
+    letter-spacing:-.03em;
+    line-height:1.02;
+    color:var(--title-color);
+    text-shadow:var(--title-glow);
   }
-  .lead{color:var(--muted);font-size:clamp(15px,2.4vw,19px);margin:16px auto 0;max-width:620px}
-  .hero-stats{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:30px}
-  .hstat{text-align:center}
-  .hstat b{display:block;font-size:26px;font-weight:800;color:var(--text)}
-  .hstat span{font-size:12.5px;color:var(--muted2);letter-spacing:.03em}
+  .lead{
+    color:var(--muted);
+    font-size:clamp(14px,2.2vw,17px);
+    margin-top:14px;
+    max-width:34em;
+  }
 
-  /* Controls */
   .controls{
     position:sticky;top:0;z-index:50;
-    background:rgba(11,13,18,.82);backdrop-filter:blur(12px);
+    background:var(--controls-bg);
+    backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
-    padding:14px 0;margin-top:20px;
+    padding:12px 0;
+    margin-top:20px;
   }
-  .controls-inner{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .search{position:relative;flex:1;min-width:220px}
+  .controls-inner{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .search{position:relative;flex:1;min-width:200px;max-width:360px}
   .search input{
-    width:100%;background:var(--panel);border:1px solid var(--border2);
-    color:var(--text);font-size:15px;padding:12px 40px 12px 42px;border-radius:12px;
-    outline:none;transition:border-color .15s,box-shadow .15s;
+    width:100%;
+    background:transparent;
+    border:0;
+    border-bottom:1px solid var(--border2);
+    border-radius:0;
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:14px;
+    padding:10px 28px 10px 0;
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
   }
-  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,140,255,.18)}
-  .search .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.6}
-  .search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);
-    background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;
-    padding:6px;border-radius:8px;display:none}
-  .search .clr:hover{background:var(--panel2);color:var(--text)}
-  .count{color:var(--muted2);font-size:14px;white-space:nowrap}
-  .count b{color:var(--text)}
+  .search input::placeholder{color:var(--muted2)}
+  .search input:focus{
+    border-bottom-color:var(--accent);
+    box-shadow:0 1px 0 0 var(--accent);
+  }
+  .search .clr{
+    position:absolute;right:0;top:50%;transform:translateY(-50%);
+    background:none;border:0;color:var(--muted);cursor:pointer;font-size:14px;
+    padding:4px;display:none;
+  }
+  .search .clr:hover{color:var(--text)}
+  .count{color:var(--muted2);font-size:13px;margin-left:auto;white-space:nowrap}
+  .count b{color:var(--text);font-weight:600}
 
-  /* Category tabs */
-  .tabs-wrap{position:sticky;top:70px;z-index:40;background:var(--bg);padding-top:18px;margin-bottom:4px}
-  .tabs{display:flex;gap:4px;flex-wrap:wrap;overflow-x:auto;border-bottom:1px solid var(--border);scrollbar-width:none}
-  .tabs::-webkit-scrollbar{display:none}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;margin-top:14px}
   .tab{
     position:relative;background:none;border:0;color:var(--muted);
-    font-size:14px;font-weight:600;padding:10px 16px 12px;
-    cursor:pointer;transition:color .15s;display:inline-flex;align-items:center;gap:7px;
-    white-space:nowrap;
+    font-family:var(--font-body);
+    font-size:13px;font-weight:600;letter-spacing:.02em;
+    padding:8px 10px;cursor:pointer;transition:color .15s;
   }
   .tab:hover{color:var(--text)}
   .tab::after{
-    content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2.5px;
-    border-radius:2px;background:transparent;transition:background .15s;
+    content:"";position:absolute;left:10px;right:10px;bottom:2px;height:1px;
+    background:transparent;transition:background .15s, box-shadow .15s;
   }
   .tab.active{color:var(--text)}
-  .tab.active::after{background:linear-gradient(90deg,var(--accent),var(--accent2))}
-  .tab .n{
-    opacity:.75;font-weight:700;font-size:11.5px;color:var(--muted2);
-    background:var(--panel2);padding:1px 7px;border-radius:999px;
+  .tab.active::after{
+    background:var(--accent);
+    box-shadow:0 0 8px color-mix(in srgb, var(--accent) 50%, transparent);
   }
-  .tab.active .n{color:var(--text);opacity:1}
+  [data-theme="lab"] .tab.active::after{box-shadow:none}
 
-  /* Sections */
-  section.block{padding:34px 0 8px}
-  .block-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-  .block-head h2{font-size:22px;font-weight:800;letter-spacing:-.01em}
-  .block-head .star{color:var(--star)}
-  .block-sub{color:var(--muted2);font-size:14px;margin-bottom:18px}
+  section.block{padding:36px 0 8px}
+  .block-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+  .block-head h2{
+    font-family:var(--font-display);
+    font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted2);
+  }
+  .block-sub{color:var(--muted2);font-size:13px}
 
-  /* Grid */
   .grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));
-    gap:16px;padding-bottom:8px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:18px 16px;
+    padding-bottom:8px;
   }
   .card{
-    position:relative;background:var(--panel);border:1px solid var(--border);
-    border-radius:var(--radius);padding:20px 18px 18px;overflow:hidden;
-    transition:transform .16s ease,border-color .16s,box-shadow .16s;
-    display:flex;flex-direction:column;min-height:158px;
+    position:relative;
+    display:flex;flex-direction:column;
+    background:transparent;
+    border:0;
+    border-radius:0;
+    padding:0;
+    min-height:0;
+    transition:opacity .16s ease, transform .16s ease;
   }
-  .card::before{
-    content:"";position:absolute;inset:0 0 auto 0;height:3px;
-    background:var(--ac,#7c8cff);opacity:.85;
+  .card:hover{transform:translateY(-2px)}
+  .card:hover .card-preview{border-color:color-mix(in srgb, var(--ac, var(--accent)) 55%, var(--border))}
+  .card-preview{
+    aspect-ratio:16/10;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:
+      radial-gradient(120% 90% at 80% 20%, color-mix(in srgb, var(--ac, var(--accent)) 28%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--preview-from), var(--preview-to));
+    position:relative;
+    overflow:hidden;
+    transition:border-color .16s;
   }
-  .card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:var(--shadow)}
-  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-  .card-ico{
-    width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
-    font-size:24px;background:color-mix(in srgb,var(--ac) 16%,var(--panel2));
-    border:1px solid color-mix(in srgb,var(--ac) 30%,transparent);flex:none;
+  [data-theme="cyber"] .card-preview::after{
+    content:"";
+    position:absolute;inset:0;
+    background:repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,.015) 2px,
+      rgba(255,255,255,.015) 3px
+    );
+    pointer-events:none;
   }
-  .card-score{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--star);font-weight:700}
-  .card-title{font-size:17px;font-weight:700;margin-top:12px;color:var(--text)}
-  .card-desc{color:var(--muted);font-size:13.2px;line-height:1.55;margin-top:6px;flex:1}
-  .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-  .tag{font-size:11px;color:var(--muted2);background:var(--panel2);border:1px solid var(--border);
-    padding:3px 8px;border-radius:6px}
-  .fav-badge{position:absolute;top:14px;right:14px;font-size:12px}
+  .card-mark{
+    position:absolute;left:14px;bottom:12px;
+    font-family:var(--font-display);
+    font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:color-mix(in srgb, var(--text) 80%, var(--ac, var(--accent)));
+    opacity:.85;
+  }
+  .card-title{
+    font-family:var(--font-display);
+    font-size:17px;font-weight:700;letter-spacing:-.01em;
+    margin-top:12px;color:var(--text);
+  }
+  .card-desc{
+    color:var(--muted);font-size:13px;line-height:1.5;margin-top:5px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .card-meta{
+    margin-top:8px;font-size:11.5px;color:var(--muted2);letter-spacing:.04em;
+  }
 
-  .empty{text-align:center;color:var(--muted);padding:70px 0}
-  .empty .big{font-size:40px;margin-bottom:10px}
-
-  footer{border-top:1px solid var(--border);margin-top:50px;padding:34px 0 60px;color:var(--muted2);font-size:13.5px;text-align:center}
+  .empty{text-align:left;color:var(--muted);padding:48px 0}
+  footer{
+    border-top:1px solid var(--border);
+    margin-top:56px;padding:28px 0 48px;
+    color:var(--muted2);font-size:13px;
+  }
   footer a{color:var(--accent);font-weight:600}
-  footer .fnote{margin-top:8px;font-size:12.5px}
+  footer a:hover{text-decoration:underline}
+  footer .fnote{margin-top:6px;font-size:12.5px}
+  footer code{font-family:var(--font-mono);font-size:12px}
 
   @media (max-width:640px){
-    header.hero{padding:44px 0 24px}
-    .grid{grid-template-columns:1fr;gap:12px}
-    .hero-stats{gap:20px}
-    .controls-inner{gap:10px}
-    .count{order:3;width:100%}
+    .wrap{padding:0 18px}
+    header.hero{padding:18px 0 10px}
+    .grid{grid-template-columns:1fr 1fr;gap:14px 12px}
+    .count{order:3;width:100%;margin-left:0}
+    .search{max-width:none}
   }
-  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+  @media (max-width:420px){
+    .grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto}
+    .card:hover{transform:none}
+  }
 </style>
 </head>
-<body>
+<body class="bt-themed">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="theme-switch" role="group" aria-label="テーマ切替">
+        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
+        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
+      </div>
+    </div>
+  </div>
+
   <header class="hero">
     <div class="wrap">
-      <span class="badge"><span class="dot"></span> ビルド不要 · 依存ゼロ · バニラJS</span>
       <h1 class="title">Browser Toys</h1>
-      <p class="lead">ゲーム・音楽・シミュレーション・ツールなど、公開向けに厳選した10のバニラJSアプリ。ビルド不要、依存ゼロ。</p>
-      <div class="hero-stats">
-        <div class="hstat"><b id="stat-total">–</b><span>APPS</span></div>
-        <div class="hstat"><b>4</b><span>CATEGORIES</span></div>
-        <div class="hstat"><b>0</b><span>DEPENDENCIES</span></div>
-      </div>
+      <p class="lead">ビルド不要・依存ゼロのバニラJSアプリ。ツールと遊びを、そのままブラウザで。</p>
     </div>
   </header>
 
   <div class="controls">
-    <div class="wrap controls-inner">
-      <div class="search">
-        <span class="ico">🔍</span>
-        <input type="text" id="search" placeholder="アプリを検索（名前・説明）…" autocomplete="off" spellcheck="false" />
-        <button class="clr" id="clear" title="クリア" aria-label="検索をクリア">✕</button>
+    <div class="wrap">
+      <div class="controls-inner">
+        <div class="search">
+          <input type="text" id="search" placeholder="検索…" autocomplete="off" spellcheck="false" />
+          <button class="clr" id="clear" title="クリア" aria-label="検索をクリア">✕</button>
+        </div>
+        <div class="count"><b id="count">0</b> / <span id="total">0</span></div>
       </div>
-      <div class="count"><b id="count">0</b> / <span id="total">0</span> 個</div>
+      <nav class="tabs" id="tabs" role="tablist"></nav>
     </div>
   </div>
 
-  <div class="tabs-wrap">
-    <div class="wrap"><nav class="tabs" id="tabs" role="tablist"></nav></div>
-  </div>
-
   <main class="wrap">
-
-    <section class="block" id="featured-block">
-      <div class="block-head"><span class="star">★</span><h2>おすすめ</h2></div>
-      <div class="block-sub">公開向けに選んだ注目のアプリ</div>
-      <div class="grid" id="featured-grid"></div>
-    </section>
-
     <section class="block">
-      <div class="block-head"><h2 id="all-title">すべてのアプリ</h2></div>
-      <div class="block-sub" id="all-sub"></div>
-      <div class="grid" id="grid"></div>
-      <div class="empty" id="empty" style="display:none">
-        <div class="big">🔍</div>
-        <div>該当するアプリが見つかりませんでした</div>
+      <div class="block-head">
+        <h2 id="all-title">Apps</h2>
+        <div class="block-sub" id="all-sub"></div>
       </div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" style="display:none">該当するアプリが見つかりませんでした</div>
     </section>
   </main>
 
   <footer>
     <div class="wrap">
       <div>Browser Toys — <a href="https://github.com/kantafukui/browser-toys" target="_blank" rel="noopener">github.com/kantafukui/browser-toys</a></div>
-      <div class="fnote">各アプリは <code>apps/&lt;name&gt;/index.html</code> にあります。すべてビルド不要でそのまま動きます。</div>
+      <div class="fnote">各アプリは <code>apps/&lt;name&gt;/index.html</code> にあります。テーマは Cyber / Lab を切替できます。</div>
     </div>
   </footer>
 
+<script src="theme.js"></script>
 <script>
 /* === App catalog data (embedded, no external deps) === */
-const CATS = {"tools":{"label":"ツール","icon":"🛠"},"visualart":{"label":"ビジュアル・アート","icon":"🎨"},"science":{"label":"シミュレーション・科学","icon":"🔬"},"audio":{"label":"音・オーディオ","icon":"🎵"}};
+const CATS = {
+  tools: { label: 'Tools', ja: 'ツール' },
+  visualart: { label: 'Art', ja: 'ビジュアル' },
+  science: { label: 'Science', ja: '科学' },
+  audio: { label: 'Sound', ja: '音' }
+};
 const APPS = [{"n":"artlab","t":"ArtLab","d":"ジェネラティブアート・ランチャー。Cosmos・Matrix・Fireworks・Spirograph・Starfield・Weather・Glitchを1画面で切り替え、全画面表示できるハブ。","c":"visualart","i":"🎨","a":"#a78bfa","s":5,"f":1,"g":["ランチャー","アート","ギャラリー","星空","花火","グリッチ","cosmos","matrix","weather","fireworks","spirograph","starfield","glitch"]},{"n":"crypto","t":"Crypto Lab","d":"暗号・ハッシュ・パスワード生成ツール。古典暗号は学習用。SHAハッシュ、安全なパスワード生成、ステガノグラフィー対応。","c":"tools","i":"🔐","a":"#f59e0b","s":4,"f":0,"g":["暗号","ハッシュ","パスワード"]},{"n":"imgresize","t":"画像リサイズ・圧縮","d":"画像リサイズ・圧縮ツール。JPEG/PNG/WebP出力と品質調整に対応。処理はすべてブラウザ内Canvasで完結。","c":"tools","i":"🖼️","a":"#818cf8","s":4,"f":0,"g":["画像","リサイズ","ツール"]},{"n":"contrast-checker","t":"Color Contrast Checker","d":"カラーコントラストチェッカー。前景色・背景色のコントラスト比を計算、WCAG AA/AAA基準の合否判定。アクセシビリティ対応に最適。","c":"tools","i":"🔍","a":"#89b4fa","s":3,"f":0,"g":["アクセシビリティ","カラー","WCAG"]},{"n":"clocktools","t":"ClockTools","d":"時計・タイマー統合アプリ。クロック（デジタル・ワード・2進数）・世界時計・ストップウォッチ・タイマー・ポモドーロ・インターバルの5機能。","c":"tools","i":"⏰","a":"#7c8cff","s":5,"f":1,"g":["時計","タイマー","ツール集"]},{"n":"calctools","t":"CalcTools","d":"計算機統合アプリ。電卓・関数グラフ・単位変換・割り勘・営業日・和暦西暦・BMI・ローン・サイコロの9機能を1画面で。","c":"tools","i":"🧮","a":"#4dd0e1","s":5,"f":1,"g":["計算機","変換","サイコロ","ツール集"]},{"n":"soundlab","t":"SoundLab","d":"音・オーディオ統合ハブ。メトロノーム・チューナー・シンセ・波形ビジュアライザーを1画面で切り替え。","c":"audio","i":"🎵","a":"#ff6b6b","s":5,"f":1,"g":["音楽","オーディオ","ハブ","metronome","tuner","synthy","waveform"]},{"n":"texttools","t":"TextTools","d":"テキスト統合ハブ。文字数カウンター・ダミーテキスト生成・差分ビューア・正規表現ラボを1画面で切り替え。","c":"tools","i":"📝","a":"#fb923c","s":5,"f":1,"g":["テキスト","文字","ハブ","charcount","loremgen","diffview","regex","lorem"]},{"n":"physicslab","t":"PhysicsLab","d":"物理・天体シミュレーション統合ハブ。ライフゲーム・軌道・振り子波・太陽系を1画面で切り替え。","c":"science","i":"🪐","a":"#cba6f7","s":5,"f":1,"g":["物理","シミュレーション","ハブ","life","orbit","pendulum","solar-system","solar"]},{"n":"learnviz","t":"LearnViz","d":"学習・可視化統合ハブ。ソート可視化・確率シミュレーター・フーリエお絵かきを1画面で切り替え。","c":"science","i":"📈","a":"#6366f1","s":5,"f":1,"g":["学習","可視化","ハブ","sortviz","probsim","fourier"]}];
 
 const $ = s => document.querySelector(s);
-const catOrder = ["all", "tools", "visualart", "science", "audio"];
-
+const catOrder = ['all', 'tools', 'visualart', 'science', 'audio'];
 const state = { cat: 'all', q: '' };
 
 function catCount(cat){
@@ -225,13 +263,14 @@ function buildTabs(){
   const tabs = $('#tabs');
   const frag = document.createDocumentFragment();
   catOrder.forEach(cat => {
-    const meta = cat === 'all' ? {label:'すべて', icon:'✨'} : CATS[cat];
+    const label = cat === 'all' ? 'All' : CATS[cat].label;
     const el = document.createElement('button');
     el.className = 'tab' + (cat === state.cat ? ' active' : '');
     el.dataset.cat = cat;
     el.setAttribute('role', 'tab');
     el.setAttribute('aria-selected', cat === state.cat ? 'true' : 'false');
-    el.innerHTML = `<span>${meta.icon}</span> ${meta.label} <span class="n">${catCount(cat)}</span>`;
+    el.textContent = label;
+    el.title = cat === 'all' ? `すべて (${catCount(cat)})` : `${CATS[cat].ja} (${catCount(cat)})`;
     el.addEventListener('click', () => { state.cat = cat; render(); syncTabs(); });
     frag.appendChild(el);
   });
@@ -245,20 +284,19 @@ function syncTabs(){
   });
 }
 
-function stars(n){ return '★'.repeat(n); }
+function shortDesc(d){
+  const s = String(d || '');
+  const cut = s.split(/[。．]/)[0];
+  return cut.length > 48 ? cut.slice(0, 48) + '…' : cut;
+}
 
 function cardHTML(a){
-  const tags = (a.g || []).slice(0,3).map(t => `<span class="tag">${esc(t)}</span>`).join('');
-  const fav = a.f ? '<span class="fav-badge" title="おすすめ">⭐</span>' : '';
+  const cat = CATS[a.c] ? CATS[a.c].label : a.c;
   return `<a class="card" href="apps/${a.n}/index.html" style="--ac:${a.a}">
-    ${fav}
-    <div class="card-top">
-      <div class="card-ico">${a.i}</div>
-      <div class="card-score" title="監査スコア ${a.s}/5">${stars(a.s)}</div>
-    </div>
+    <div class="card-preview" aria-hidden="true"><span class="card-mark">${esc(cat)}</span></div>
     <div class="card-title">${esc(a.t)}</div>
-    <div class="card-desc">${esc(a.d)}</div>
-    <div class="card-tags">${tags}</div>
+    <div class="card-desc">${esc(shortDesc(a.d))}</div>
+    <div class="card-meta">${esc(a.n)}</div>
   </a>`;
 }
 
@@ -274,31 +312,19 @@ function matches(a){
 
 function render(){
   const list = APPS.filter(matches);
-  const grid = $('#grid');
-  grid.innerHTML = list.map(cardHTML).join('');
+  $('#grid').innerHTML = list.map(cardHTML).join('');
   $('#empty').style.display = list.length ? 'none' : 'block';
   $('#count').textContent = list.length;
 
-  // Featured only when no active search/filter
-  const showFeatured = state.cat === 'all' && !state.q;
-  $('#featured-block').style.display = showFeatured ? '' : 'none';
-  if (showFeatured && !$('#featured-grid').dataset.done){
-    $('#featured-grid').innerHTML = APPS.filter(a => a.f).map(cardHTML).join('');
-    $('#featured-grid').dataset.done = '1';
-  }
-
-  const allTitle = state.cat === 'all'
-    ? 'すべてのアプリ'
-    : `${CATS[state.cat].icon} ${CATS[state.cat].label}`;
+  const allTitle = state.cat === 'all' ? 'Apps' : CATS[state.cat].label;
   $('#all-title').textContent = allTitle;
   $('#all-sub').textContent = state.q
-    ? `「${state.q}」の検索結果 ${list.length} 件`
-    : (state.cat === 'all' ? '全アプリ一覧' : `${list.length} 個のアプリ`);
+    ? `「${state.q}」 ${list.length} 件`
+    : `${list.length} apps`;
 }
 
 function init(){
   $('#total').textContent = APPS.length;
-  $('#stat-total').textContent = APPS.length;
   buildTabs();
   render();
 
