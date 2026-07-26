@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmos — 宇宙ジェネレーター</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌌</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <a href="../../index.html" class="back-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </a>
+        <span class="app-title">🌌 Cosmos</span>
+      </div>
+      <div class="toolbar-center">
+        <button class="btn btn-primary" id="generateBtn">✨ 生成</button>
+        <div class="control-group">
+          <label>星の密度</label>
+          <input type="range" id="density" min="100" max="3000" value="800" class="slider">
+        </div>
+        <div class="control-group">
+          <label>星雲</label>
+          <input type="range" id="nebula" min="0" max="100" value="60" class="slider">
+        </div>
+        <div class="control-group">
+          <label>パレット</label>
+          <select id="palette">
+            <option value="deep">ディープスペース</option>
+            <option value="warm">ウォームネビュラ</option>
+            <option value="cool">クールブルー</option>
+            <option value="neon">ネオン</option>
+            <option value="pastel">パステル</option>
+          </select>
+        </div>
+        <button class="btn" id="saveBtn">📷 保存</button>
+      </div>
+      <div class="toolbar-right">
+        <span class="seed-display">Seed: <b id="seedValue">—</b></span>
+      </div>
+    </header>
+    <main class="canvas-area">
+      <canvas id="canvas"></canvas>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

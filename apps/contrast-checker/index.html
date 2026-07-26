@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Contrast Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎨 Color Contrast Checker</h1>
+      <p class="subtitle">WCAGアクセシビリティ基準チェック</p>
+    </header>
+
+    <div class="color-inputs">
+      <div class="color-input-group">
+        <h3>前景色（テキスト）</h3>
+        <div class="color-picker-wrapper">
+          <input type="color" id="fg-color" value="#000000">
+          <input type="text" id="fg-hex" value="#000000" maxlength="7">
+        </div>
+      </div>
+
+      <div class="color-input-group">
+        <h3>背景色</h3>
+        <div class="color-picker-wrapper">
+          <input type="color" id="bg-color" value="#ffffff">
+          <input type="text" id="bg-hex" value="#ffffff" maxlength="7">
+        </div>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div id="preview-box" class="preview-box">
+        <div class="preview-text">サンプルテキスト</div>
+        <div class="preview-small">小さいテキスト (18px未満)</div>
+      </div>
+    </div>
+
+    <div class="results">
+      <h2>コントラスト比</h2>
+      
+      <div class="ratio-display">
+        <div class="ratio-value" id="ratio-value">21:1</div>
+        <div class="ratio-label">コントラスト比</div>
+      </div>
+
+      <div class="wcag-grid">
+        <div class="wcag-item">
+          <div class="wcag-header">
+            <span class="wcag-level">WCAG AA 通常</span>
+            <span class="wcag-badge pass" id="aa-normal-badge">合格</span>
+          </div>
+          <div class="wcag-desc">
+            通常サイズのテキスト（18px未満）に必要な最小コントラスト比 4.5:1
+          </div>
+        </div>
+
+        <div class="wcag-item">
+          <div class="wcag-header">
+            <span class="wcag-level">WCAG AA 大</span>
+            <span class="wcag-badge pass" id="aa-large-badge">合格</span>
+          </div>
+          <div class="wcag-desc">
+            大きいテキスト（18px以上または太字14px以上）に必要な最小コントラスト比 3:1
+          </div>
+        </div>
+
+        <div class="wcag-item">
+          <div class="wcag-header">
+            <span class="wcag-level">WCAG AAA 通常</span>
+            <span class="wcag-badge pass" id="aaa-normal-badge">合格</span>
+          </div>
+          <div class="wcag-desc">
+            通常サイズのテキストに推奨される高いコントラスト比 7:1
+          </div>
+        </div>
+
+        <div class="wcag-item">
+          <div class="wcag-header">
+            <span class="wcag-level">WCAG AAA 大</span>
+            <span class="wcag-badge pass" id="aaa-large-badge">合格</span>
+          </div>
+          <div class="wcag-desc">
+            大きいテキストに推奨される高いコントラスト比 4.5:1
+          </div>
+        </div>
+      </div>
+
+      <div class="info">
+        💡 WCAGガイドライン: AA基準は法的要件として一般的、AAA基準はより高いアクセシビリティを提供します。
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

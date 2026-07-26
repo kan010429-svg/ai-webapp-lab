@@ -1,0 +1,5 @@
+(()=>{const c=document.getElementById('canvas'),x=c.getContext('2d');let W,H,animId;const r=()=>{W=c.width=innerWidth;H=c.height=innerHeight-50};r();addEventListener('resize',r);let stars=[];function init(){stars=[];for(let i=0;i<2000;i++)stars.push({x:(Math.random()-0.5)*W*3,y:(Math.random()-0.5)*H*3,z:Math.random()*W});}init();function draw(){x.fillStyle='#050510';x.fillRect(0,0,W,H);const spd=+document.getElementById('speed').value;const den=+document.getElementById('density').value;while(stars.length<den)stars.push({x:(Math.random()-0.5)*W*3,y:(Math.random()-0.5)*H*3,z:W});while(stars.length>den)stars.pop();for(const s of stars){s.z-=spd;if(s.z<=0){s.x=(Math.random()-0.5)*W*3;s.y=(Math.random()-0.5)*H*3;s.z=W;}const sx=W/2+s.x/s.z*W*0.5;const sy=H/2+s.y/s.z*H*0.5;const sz=Math.max(0.5,(1-s.z/W)*3);const b=1-s.z/W;x.beginPath();x.arc(sx,sy,sz,0,Math.PI*2);x.fillStyle=`rgba(255,255,255,${b})`;x.fill();}animId=requestAnimationFrame(draw);}draw();
+
+function cleanup(){if(animId)cancelAnimationFrame(animId);}
+window.addEventListener('beforeunload',cleanup);window.addEventListener('pagehide',cleanup);
+})();

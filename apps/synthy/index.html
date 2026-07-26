@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synthy — シンセサイザー</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎹</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <a href="../../index.html" class="back-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </a>
+        <span class="app-title">🎹 Synthy</span>
+      </div>
+      <div class="toolbar-center">
+        <div class="control-group">
+          <label>波形</label>
+          <select id="waveform">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth" selected>Sawtooth</option>
+            <option value="triangle">Triangle</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>オクターブ</label>
+          <button class="btn btn-sm" id="octDown">−</button>
+          <span id="octValue">4</span>
+          <button class="btn btn-sm" id="octUp">＋</button>
+        </div>
+        <div class="control-group">
+          <label>Attack</label>
+          <input type="range" id="attack" min="0" max="1000" value="50" class="slider">
+        </div>
+        <div class="control-group">
+          <label>Release</label>
+          <input type="range" id="release" min="0" max="2000" value="300" class="slider">
+        </div>
+        <div class="control-group">
+          <label>Filter</label>
+          <input type="range" id="filterFreq" min="100" max="8000" value="4000" class="slider">
+        </div>
+        <div class="control-group">
+          <label>Volume</label>
+          <input type="range" id="volume" min="0" max="100" value="60" class="slider">
+        </div>
+      </div>
+    </header>
+    <main class="main-area">
+      <canvas id="visualizer"></canvas>
+      <div class="keyboard" id="keyboard"></div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

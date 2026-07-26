@@ -1,0 +1,233 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0a0a1a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.1);
+  --text: #e8e8f0;
+  --text-dim: rgba(232, 232, 240, 0.5);
+  --accent: #89b4fa;
+  --accent-2: #a6e3a1;
+  --error: #f38ba8;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+.color-inputs {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.color-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.color-input-group h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.color-picker-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+input[type="color"] {
+  width: 80px;
+  height: 60px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+input[type="text"] {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  text-transform: uppercase;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.preview-box {
+  padding: 48px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.preview-text {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.preview-small {
+  font-size: 1rem;
+}
+
+.results {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.results h2 {
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.ratio-display {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.ratio-value {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  margin-bottom: 8px;
+}
+
+.ratio-label {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+
+.wcag-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.wcag-item {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.wcag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.wcag-level {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.wcag-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.wcag-badge.pass {
+  background: rgba(166, 227, 161, 0.2);
+  color: var(--accent-2);
+  border: 1px solid rgba(166, 227, 161, 0.3);
+}
+
+.wcag-badge.fail {
+  background: rgba(243, 139, 168, 0.2);
+  color: var(--error);
+  border: 1px solid rgba(243, 139, 168, 0.3);
+}
+
+.wcag-desc {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.info {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(137, 180, 250, 0.1);
+  border: 1px solid rgba(137, 180, 250, 0.2);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .color-inputs {
+    grid-template-columns: 1fr;
+  }
+  
+  .wcag-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ratio-value {
+    font-size: 3rem;
+  }
+}

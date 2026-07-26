@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glitch Art</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <a href="../../index.html" class="back-btn">← Back</a>
+      <h1>📺 Glitch Art</h1>
+    </div>
+    <div class="toolbar-right">
+      <button id="btn-upload">📁 画像選択</button>
+      <button id="btn-glitch">⚡ グリッチ</button>
+      <button id="btn-auto">▶ 自動</button>
+      <button id="btn-save">💾 保存</button>
+    </div>
+  </div>
+  <div class="main">
+    <canvas id="canvas"></canvas>
+    <div class="controls">
+      <div class="section-title">エフェクト</div>
+      <label class="ctrl"><span>RGBシフト</span><input type="range" id="rgb-shift" min="0" max="100" value="30"></label>
+      <label class="ctrl"><span>スキャンライン</span><input type="range" id="scanlines" min="0" max="100" value="20"></label>
+      <label class="ctrl"><span>ピクセルソート</span><input type="range" id="pixel-sort" min="0" max="100" value="0"></label>
+      <label class="ctrl"><span>ノイズ</span><input type="range" id="noise" min="0" max="100" value="15"></label>
+      <label class="ctrl"><span>スライス</span><input type="range" id="slice" min="0" max="100" value="25"></label>
+      <label class="ctrl"><span>色収差</span><input type="range" id="chromatic" min="0" max="100" value="20"></label>
+      <label class="ctrl"><span>VHS</span><input type="range" id="vhs" min="0" max="100" value="0"></label>
+    </div>
+  </div>
+  <input type="file" id="file-input" accept="image/*" style="display:none">
+  <script src="app.js"></script>
+</body>
+</html>
