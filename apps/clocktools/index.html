@@ -286,11 +286,11 @@
   }
   .cycle-dots{position:absolute;inset:0;pointer-events:none}
   .cycle-dot{
-    position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;
-    border-radius:50%;background:transparent;border:1px solid var(--border2);
-    transform-origin:center center;
+    position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;
+    border-radius:50%;background:var(--panel);border:1.5px solid var(--muted2);
+    transform-origin:center center;z-index:2;
   }
-  .cycle-dot.done{background:var(--accent);border-color:transparent}
+  .cycle-dot.done{background:var(--accent);border-color:var(--accent)}
   .cycle-stats{
     margin-top:4px;color:var(--muted2);font-size:11px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;
@@ -866,11 +866,13 @@ function ivRenderLane(){
   for (let i = 1; i <= c.rounds; i++){
     let cls = 'lane-seg';
     let fill = '';
-    const completed = iv.phase === 'done' || iv.round > i || (iv.round === i && iv.phase === 'rest');
-    const currentWork = iv.phase === 'work' && iv.round === i;
-    const currentPrep = iv.phase === 'prep' && i === 1;
-    if (completed) cls += ' done';
-    else if (currentWork || currentPrep){
+    if (iv.phase === 'ready'){
+      html += `<div class="${cls}"></div>`;
+      continue;
+    }
+    if (iv.phase === 'done' || iv.round > i || (iv.round === i && iv.phase === 'rest')){
+      cls += ' done';
+    } else if ((iv.phase === 'work' && iv.round === i) || (iv.phase === 'prep' && i === 1)){
       cls += ' current';
       fill = `<i style="width:${progress*100}%"></i>`;
     }
