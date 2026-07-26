@@ -1,6 +1,6 @@
 # AI App Lab Gallery
 
-ビルド不要・依存ゼロのバニラ JavaScript アプリを **27本** 厳選した公開用ギャラリーです。
+ビルド不要・依存ゼロのバニラ JavaScript アプリを **28本** 厳選した公開用ギャラリーです。
 
 ## 使い方
 
@@ -70,6 +70,7 @@ npx serve .
 | 📺 **[Glitch Art](apps/glitch/index.html)** | グリッチアートジェネレーター。RGBシフト、ピクセルソート、スキャンライン、VHS、色収差。7エフェクト。 |
 | 🟩 **[Matrix Rain](apps/matrix/index.html)** | マトリックスデジタルレイン。カタカナ・バイナリ・HEX・漢字の4文字セット、5カラースキーム。 |
 | 🎪 **[Spirograph](apps/spirograph/index.html)** | スピログラフ。R/r/dパラメータで幾何学模様を描画。4カラーモード、PNG保存。 |
+| ⭐ **[Starfield](apps/starfield/index.html)** | スターフィールド。ワープスピード風の星空アニメーション。マウスで方向操作。 |
 | 🌤️ **[Weather Art](apps/weather/index.html)** | 天気アート。晴れ・雨・雪・嵐・オーロラの5つの天気をビジュアル表現。 |
 
 ### 💻 開発ツール
