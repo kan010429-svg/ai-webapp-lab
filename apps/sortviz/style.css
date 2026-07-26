@@ -108,5 +108,37 @@ canvas { width: 100%; height: 100%; }
 }
 
 
-.bt-appbar{justify-content:flex-end;text-align:left}
-header .bt-appbar{margin-bottom:16px}
+/* Browser Toys chrome refresh */
+body.bt-canvas-app .toolbar,
+.info-bar {
+  background: var(--panel) !important;
+  border-color: var(--border) !important;
+  border-radius: 0 !important;
+  backdrop-filter: none;
+}
+.back-link:hover,
+.btn:hover { border-color: var(--accent); background: var(--panel2); }
+.app-title { font-family: var(--font-display); color: var(--title-color); }
+.btn,
+.control-group select,
+.complexity {
+  background: var(--panel2);
+  border-color: var(--border2);
+  border-radius: var(--radius-lg);
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+.control-group,
+.stat-label,
+.complexity { color: var(--muted); }
+.slider { accent-color: var(--accent); background: var(--border); }
+body.bt-app .canvas-area {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}

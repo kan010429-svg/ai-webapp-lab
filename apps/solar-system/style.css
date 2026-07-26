@@ -196,3 +196,43 @@ h1 {
     flex: 1;
   }
 }
+
+/* Browser Toys chrome refresh */
+body.bt-canvas-app header {
+  margin-bottom: 22px;
+  background: transparent !important;
+  border: 0 !important;
+}
+.container { width: min(1200px, 100%); }
+.view-container,
+.info-panel {
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+}
+.control-btn,
+.planet-btn {
+  background: var(--panel2);
+  border-color: var(--border2);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+}
+.control-btn:hover,
+.planet-btn:hover {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+.planet-btn.active {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-ink);
+}
+.speed-control label,
+.subtitle,
+.info-label,
+.description { color: var(--muted); }
+.speed-control input[type="range"] { accent-color: var(--accent); }
+.info-item,
+.description {
+  background: var(--panel2);
+  border-radius: var(--radius-lg);
+}

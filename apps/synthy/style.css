@@ -40,5 +40,30 @@ body { font-family: var(--font-body); background-color: var(--bg); color: var(--
 }
 
 
-.bt-appbar{justify-content:flex-end;text-align:left}
-header .bt-appbar{margin-bottom:16px}
+/* Browser Toys chrome refresh */
+body.bt-canvas-app .toolbar {
+  background: var(--panel) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  backdrop-filter: none;
+}
+.back-link:hover,
+.btn:hover,
+.btn-sm:hover { border-color: var(--accent); background: var(--panel2); }
+.app-title { font-family: var(--font-display); color: var(--title-color); }
+.btn, .btn-sm,
+.control-group select {
+  background: var(--panel2);
+  border-color: var(--border2);
+  border-radius: var(--radius-lg);
+}
+.control-group { color: var(--muted); }
+.slider { accent-color: var(--accent); background: var(--border); }
+body.bt-app .main-area {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}

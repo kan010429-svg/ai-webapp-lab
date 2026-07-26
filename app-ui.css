@@ -1,0 +1,386 @@
+/* Browser Toys — shared app UI (pairs with theme.css) */
+
+body.bt-app {
+  min-height: 100vh;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+body.bt-app.bt-app-fill {
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top chrome */
+.bt-shell {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 20px 20px 56px;
+}
+.bt-shell-wide { width: min(1200px, 100%); }
+.bt-shell-narrow { width: min(560px, 100%); }
+
+.bt-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.bt-top .bt-back,
+.bt-top a.back-btn {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: var(--radius-lg);
+}
+.bt-top .bt-back:hover,
+.bt-top a.back-btn:hover {
+  color: var(--text);
+  background: var(--panel2);
+}
+.bt-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.bt-brand h1,
+.bt-top h1 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--title-color);
+  text-shadow: var(--title-glow);
+  margin: 0;
+}
+.bt-brand .sub,
+.bt-top .subtitle,
+header .subtitle {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0;
+}
+.bt-top .theme-switch,
+.bt-appbar .theme-switch { margin-left: auto; }
+.bt-appbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.bt-appbar .bt-back { margin-right: auto; }
+
+/* Sticky toolbars (crypto/regex style) */
+.bt-app .toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  flex: none;
+}
+.bt-app .toolbar-left,
+.bt-app .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bt-app .toolbar h1 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.bt-app .toolbar .back-btn {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.bt-app .toolbar .back-btn:hover { color: var(--accent); }
+.bt-app .toolbar button,
+.bt-app .toolbar select {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+.bt-app .toolbar button:hover,
+.bt-app .toolbar select:hover { border-color: var(--accent); }
+
+/* Tabs */
+.bt-app .tabs,
+.bt-app .mode-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  margin: 0 0 14px;
+}
+.bt-app .tab,
+.bt-app .mode-tab {
+  position: relative;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 12px 12px;
+  cursor: pointer;
+  border-radius: 0;
+}
+.bt-app .tab:hover,
+.bt-app .mode-tab:hover { color: var(--text); }
+.bt-app .tab.active,
+.bt-app .mode-tab.active { color: var(--text); }
+.bt-app .tab.active::after,
+.bt-app .mode-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+[data-theme="lab"] .bt-app .tab.active::after,
+[data-theme="lab"] .bt-app .mode-tab.active::after { box-shadow: none; }
+
+/* Surfaces */
+.bt-panel,
+.bt-app main,
+.bt-app .editor-card,
+.bt-app .settings-panel,
+.bt-app .result-panel,
+.bt-app .diff-panel,
+.bt-app .upload-area,
+.bt-app .note-display,
+.bt-app .visual-container {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.bt-app main {
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+/* Forms */
+.bt-app input[type="text"],
+.bt-app input[type="number"],
+.bt-app input[type="search"],
+.bt-app select,
+.bt-app textarea {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  padding: 9px 12px;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.bt-app textarea {
+  width: 100%;
+  resize: vertical;
+  line-height: 1.55;
+  min-height: 120px;
+}
+.bt-app input:focus,
+.bt-app select:focus,
+.bt-app textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.bt-app label,
+.bt-app .option-group label,
+.bt-app .field label {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+/* Buttons */
+.bt-app button,
+.bt-app .btn,
+.bt-app .btn-ghost,
+.bt-app .preset-btn,
+.bt-app .scale-btn {
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border2);
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 650;
+  padding: 9px 14px;
+  transition: border-color 0.12s, background 0.12s, color 0.12s, transform 0.12s;
+}
+.bt-app button:hover,
+.bt-app .btn:hover,
+.bt-app .preset-btn:hover,
+.bt-app .scale-btn:hover {
+  border-color: var(--accent);
+}
+.bt-app .btn.primary,
+.bt-app .btn-start,
+.bt-app button.primary,
+.bt-app #generateBtn.primary,
+.bt-app #compareBtn,
+.bt-app #startBtn.btn-start,
+.bt-app #btn-encrypt,
+.bt-app #btn-gen-pw {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-ink);
+}
+.bt-app .btn.primary:hover,
+.bt-app .btn-start:hover,
+.bt-app #compareBtn:hover,
+.bt-app #btn-encrypt:hover,
+.bt-app #btn-gen-pw:hover {
+  filter: brightness(1.06);
+}
+.bt-app .btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  padding: 6px 10px;
+}
+.bt-app .btn-ghost:hover {
+  color: var(--text);
+  background: var(--panel2);
+  border-color: var(--border);
+}
+
+/* Stats / chips */
+.bt-app .stats-grid,
+.bt-app .stat-grid,
+.bt-app .wcag-grid {
+  display: grid;
+  gap: 10px;
+}
+.bt-app .stat-card,
+.bt-app .stat-item,
+.bt-app .wcag-item,
+.bt-app .info-item,
+.bt-app .hash-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+.bt-app .stat-label,
+.bt-app .ratio-label {
+  color: var(--muted2);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.bt-app .stat-value,
+.bt-app .ratio-value {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-top: 4px;
+  color: var(--text);
+}
+.bt-app .stat-card.highlight,
+.bt-app .stat-card.highlight .stat-value {
+  color: var(--accent);
+}
+
+/* Utility rows */
+.bt-app .row,
+.bt-app .controls,
+.bt-app .options,
+.bt-app .actions,
+.bt-app .settings-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.bt-app .hint-text,
+.bt-app .status,
+.bt-app .empty-state {
+  color: var(--muted);
+  font-size: 13px;
+}
+.bt-app .privacy-badge,
+.bt-app .section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* Canvas app floating chrome */
+body.bt-canvas-app .bt-float,
+body.bt-canvas-app #controls,
+body.bt-canvas-app header,
+body.bt-canvas-app .toolbar {
+  background: color-mix(in srgb, var(--panel) 82%, transparent) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+}
+body.bt-canvas-app header {
+  border-radius: 0;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+}
+body.bt-canvas-app #controls {
+  padding: 10px 12px;
+}
+body.bt-canvas-app #controls label,
+body.bt-canvas-app header label {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+body.bt-canvas-app button,
+body.bt-canvas-app select,
+body.bt-canvas-app input[type="range"] {
+  accent-color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .bt-shell { padding: 14px 14px 40px; }
+  .bt-brand h1, .bt-top h1 { font-size: 22px; }
+}

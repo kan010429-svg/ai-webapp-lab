@@ -19,5 +19,25 @@ body { font-family: var(--font-mono); background-color: var(--bg); color: var(--
 @media (max-width: 768px) { .main { flex-direction: column; } .controls { width: 100%; max-height: 35vh; } }
 
 
-.bt-appbar{justify-content:flex-end;text-align:left}
-header .bt-appbar{margin-bottom:16px}
+/* Browser Toys chrome refresh */
+body.bt-canvas-app .toolbar {
+  background: var(--panel) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  backdrop-filter: none;
+}
+.toolbar button {
+  background: var(--panel2);
+  border-color: var(--border2);
+  border-radius: var(--radius-lg);
+}
+.toolbar button:hover { border-color: var(--accent); background: var(--panel); }
+.toolbar h1 { font-family: var(--font-display); color: var(--title-color); }
+.back-btn,
+.ctrl span { color: var(--muted); }
+.controls {
+  background: var(--panel);
+  border-color: var(--border);
+}
+.ctrl input[type="range"] { accent-color: var(--accent); }

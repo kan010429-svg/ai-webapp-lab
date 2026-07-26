@@ -19,5 +19,28 @@ body { font-family: var(--font-mono); background-color: var(--bg); color: var(--
 .preset-menu button:hover { background: rgba(255,106,192,0.15); }
 
 
-.bt-appbar{justify-content:flex-end;text-align:left}
-header .bt-appbar{margin-bottom:16px}
+/* Browser Toys chrome refresh */
+body.bt-canvas-app .toolbar {
+  background: var(--panel) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  backdrop-filter: none;
+}
+.toolbar button,
+.toolbar select,
+.preset-menu {
+  background: var(--panel2);
+  border-color: var(--border2);
+  border-radius: var(--radius-lg);
+}
+.toolbar button:hover,
+.preset-menu button:hover {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+.toolbar h1 { font-family: var(--font-display); color: var(--title-color); }
+.back-btn { color: var(--muted); }
+.slider-label { color: var(--muted); }
+.preset-menu { backdrop-filter: none; }
+.preset-menu button:hover { color: var(--accent); }
