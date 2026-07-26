@@ -1,12 +1,6 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #050510;
-  --surface: #0e0e20;
-  --border: rgba(255,255,255,0.06);
-  --text: #d0d0e8;
-  --text-dim: rgba(208,208,232,0.4);
-  --accent: #10b981;
   --accent-glow: rgba(16,185,129,0.3);
   --cell: #10b981;
   --cell-glow: rgba(16,185,129,0.25);
@@ -15,8 +9,8 @@
 html, body { height: 100%; overflow: hidden; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
-  background: var(--bg); color: var(--text);
+  font-family: var(--font-body);
+  background-color: var(--bg); color: var(--text);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -146,3 +140,7 @@ canvas { width: 100%; height: 100%; display: block; }
   width: 100%;
   margin-top: 16px;
 }
+
+
+.bt-appbar{justify-content:flex-end;text-align:left}
+header .bt-appbar{margin-bottom:16px}

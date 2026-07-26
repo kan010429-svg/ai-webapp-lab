@@ -1,14 +1,23 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="cyber">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spirograph - Browser Toys</title>
-  <link rel="stylesheet" href="style.css">
+  <script>
+  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="stylesheet" href="../../theme.css" />
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bt-themed bt-canvas-app">
   <div id="app">
     <header>
+      <div class="bt-appbar"><div class="theme-switch" role="group" aria-label="テーマ切替">
+        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
+        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
+      </div></div>
+
       <h1>🌀 Spirograph</h1>
       <div class="controls">
         <label>R <input type="range" id="R" min="20" max="200" value="120"></label>
@@ -23,5 +32,6 @@
     <canvas id="canvas"></canvas>
   </div>
   <script src="app.js"></script>
+<script src="../../theme.js"></script>
 </body>
 </html>

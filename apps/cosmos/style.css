@@ -1,11 +1,9 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --bg: #020208; --surface: #0a0a18; --border: rgba(255,255,255,0.06);
-  --text: #d0d0e8; --text-dim: rgba(208,208,232,0.4);
-  --accent: #818cf8; --accent-glow: rgba(129,140,248,0.3);
+  --accent-glow: rgba(129,140,248,0.3);
 }
 html, body { height: 100%; overflow: hidden; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-body); background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
 .app { display: flex; flex-direction: column; height: 100vh; }
 .toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; min-height: 52px; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; gap: 12px; flex-wrap: wrap; }
 .toolbar-left, .toolbar-center, .toolbar-right { display: flex; align-items: center; gap: 8px; }
@@ -27,3 +25,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino San
 .canvas-area { flex: 1; overflow: hidden; }
 canvas { width: 100%; height: 100%; display: block; }
 @media (max-width: 800px) { .toolbar { padding: 8px 12px; } .toolbar-center { order: 3; width: 100%; justify-content: flex-start; } }
+
+
+.bt-appbar{justify-content:flex-end;text-align:left}
+header .bt-appbar{margin-bottom:16px}

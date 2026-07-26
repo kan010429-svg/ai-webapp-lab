@@ -1,11 +1,9 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --bg: #020206; --surface: rgba(8,8,20,0.9); --border: rgba(255,255,255,0.06);
-  --text: #d0d0e8; --text-dim: rgba(208,208,232,0.4);
-  --accent: #818cf8; --accent-glow: rgba(129,140,248,0.4);
+  --accent-glow: rgba(129,140,248,0.4);
 }
 html, body { height: 100%; overflow: hidden; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-body); background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
 .app { display: flex; flex-direction: column; height: 100vh; }
 
 .toolbar {
@@ -62,3 +60,7 @@ canvas { width: 100%; height: 100%; display: block; }
   .toolbar-center { order: 3; width: 100%; justify-content: flex-start; }
   .start-title { font-size: 2rem; }
 }
+
+
+.bt-appbar{justify-content:flex-end;text-align:left}
+header .bt-appbar{margin-bottom:16px}

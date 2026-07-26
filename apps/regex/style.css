@@ -1,25 +1,17 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --border: #30363d;
-  --text: #e6edf3;
-  --text-dim: #8b949e;
-  --accent: #58a6ff;
   --match-bg: rgba(88, 166, 255, 0.25);
   --match-border: #58a6ff;
   --group1: rgba(255, 107, 107, 0.3);
   --group2: rgba(166, 227, 161, 0.3);
   --group3: rgba(203, 166, 247, 0.3);
   --group4: rgba(250, 179, 135, 0.3);
-  --error: #f85149;
-  --success: #3fb950;
 }
 
 body {
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  background: var(--bg);
+  font-family: var(--font-mono);
+  background-color: var(--bg);
   color: var(--text);
   height: 100vh;
   display: flex;

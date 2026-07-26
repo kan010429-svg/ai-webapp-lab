@@ -126,31 +126,25 @@
     aspect-ratio:16/10;
     border:1px solid var(--border);
     border-radius:var(--radius);
-    background:
-      radial-gradient(120% 90% at 80% 20%, color-mix(in srgb, var(--ac, var(--accent)) 28%, transparent), transparent 55%),
-      linear-gradient(160deg, var(--preview-from), var(--preview-to));
+    background:linear-gradient(160deg, var(--preview-from), var(--preview-to));
     position:relative;
     overflow:hidden;
     transition:border-color .16s;
   }
-  [data-theme="cyber"] .card-preview::after{
-    content:"";
-    position:absolute;inset:0;
-    background:repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,.015) 2px,
-      rgba(255,255,255,.015) 3px
-    );
-    pointer-events:none;
+  .card-preview canvas{
+    position:absolute;inset:0;width:100%;height:100%;display:block;
   }
   .card-mark{
-    position:absolute;left:14px;bottom:12px;
+    position:absolute;left:12px;bottom:10px;z-index:2;
     font-family:var(--font-display);
     font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-    color:color-mix(in srgb, var(--text) 80%, var(--ac, var(--accent)));
-    opacity:.85;
+    color:rgba(255,255,255,.82);
+    text-shadow:0 1px 8px rgba(0,0,0,.55);
+    pointer-events:none;
+  }
+  [data-theme="lab"] .card-mark{
+    color:rgba(20,32,51,.78);
+    text-shadow:0 1px 0 rgba(255,255,255,.55);
   }
   .card-title{
     font-family:var(--font-display);
@@ -292,12 +286,187 @@ function shortDesc(d){
 
 function cardHTML(a){
   const cat = CATS[a.c] ? CATS[a.c].label : a.c;
-  return `<a class="card" href="apps/${a.n}/index.html" style="--ac:${a.a}">
-    <div class="card-preview" aria-hidden="true"><span class="card-mark">${esc(cat)}</span></div>
+  return `<a class="card" href="apps/${a.n}/index.html" style="--ac:${a.a}" data-app="${esc(a.n)}">
+    <div class="card-preview" aria-hidden="true">
+      <canvas data-preview="${esc(a.n)}"></canvas>
+      <span class="card-mark">${esc(cat)}</span>
+    </div>
     <div class="card-title">${esc(a.t)}</div>
     <div class="card-desc">${esc(shortDesc(a.d))}</div>
     <div class="card-meta">${esc(a.n)}</div>
   </a>`;
+}
+
+/* Mini live previews for gallery cards */
+function previewTheme(){
+  const dark = document.documentElement.getAttribute('data-theme') !== 'lab';
+  return {
+    dark,
+    bg: dark ? '#0a121a' : '#d7e2ee',
+    ink: dark ? '#e8eef7' : '#1a2433',
+    muted: dark ? 'rgba(232,238,247,.35)' : 'rgba(26,36,51,.28)',
+    grid: dark ? 'rgba(61,224,197,.08)' : 'rgba(29,111,216,.12)',
+  };
+}
+function hexAlpha(hex, a){
+  const h = String(hex||'#3de0c5').replace('#','');
+  const full = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
+  const n = parseInt(full, 16);
+  if (Number.isNaN(n)) return `rgba(61,224,197,${a})`;
+  const r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  return `rgba(${r},${g},${b},${a})`;
+}
+function drawPreview(canvas, id, accent){
+  const parent = canvas.parentElement;
+  const w = Math.max(1, parent.clientWidth);
+  const h = Math.max(1, parent.clientHeight);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.floor(w * dpr);
+  canvas.height = Math.floor(h * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const T = previewTheme();
+  const ac = accent || '#3de0c5';
+  const t = (performance.now() / 1000);
+
+  // base
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, T.bg);
+  g.addColorStop(1, hexAlpha(ac, T.dark ? 0.28 : 0.18));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  // soft grid
+  ctx.strokeStyle = T.grid;
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 18){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for (let y = 0; y < h; y += 18){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+  ctx.save();
+  if (id === 'artlab'){
+    for (let i=0;i<48;i++){
+      const x = (Math.sin(i*1.7+t*.3)*.5+.5)*w;
+      const y = (Math.cos(i*1.1+t*.2)*.5+.5)*h;
+      ctx.fillStyle = hexAlpha(i%3?ac:'#a78bfa', .35 + (i%5)*.08);
+      ctx.beginPath(); ctx.arc(x,y,1.2+(i%4),0,Math.PI*2); ctx.fill();
+    }
+    ctx.strokeStyle = hexAlpha(ac,.55); ctx.lineWidth=1.2;
+    ctx.beginPath();
+    for (let x=0;x<=w;x+=4){
+      const y = h*.55 + Math.sin(x*.04+t)*12 + Math.sin(x*.01-t*.7)*18;
+      x?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.stroke();
+  } else if (id === 'crypto'){
+    ctx.fillStyle = hexAlpha(ac,.15);
+    ctx.fillRect(w*.18,h*.22,w*.64,h*.56);
+    ctx.strokeStyle = ac; ctx.lineWidth=2;
+    ctx.strokeRect(w*.18,h*.22,w*.64,h*.56);
+    ctx.font = `600 ${Math.floor(h*.16)}px ui-monospace, monospace`;
+    ctx.fillStyle = T.ink;
+    ctx.fillText('0xA7', w*.28, h*.52);
+    ctx.fillStyle = hexAlpha(ac,.8);
+    ctx.fillText('##', w*.58, h*.68);
+  } else if (id === 'imgresize'){
+    ctx.fillStyle = hexAlpha(ac,.2);
+    ctx.fillRect(w*.14,h*.18,w*.42,h*.48);
+    ctx.strokeStyle = ac; ctx.lineWidth=1.5;
+    ctx.strokeRect(w*.14,h*.18,w*.42,h*.48);
+    ctx.fillStyle = hexAlpha(ac,.45);
+    ctx.fillRect(w*.42,h*.36,w*.34,h*.36);
+    ctx.strokeStyle = T.ink; ctx.setLineDash([4,3]);
+    ctx.strokeRect(w*.42,h*.36,w*.34,h*.36);
+  } else if (id === 'contrast-checker'){
+    ctx.fillStyle = '#111'; ctx.fillRect(w*.12,h*.2,w*.36,h*.58);
+    ctx.fillStyle = '#f4f4f4'; ctx.fillRect(w*.48,h*.2,w*.4,h*.58);
+    ctx.fillStyle = '#fff'; ctx.font=`700 ${Math.floor(h*.2)}px sans-serif`;
+    ctx.fillText('Aa', w*.2, h*.55);
+    ctx.fillStyle = '#111'; ctx.fillText('Aa', w*.58, h*.55);
+  } else if (id === 'clocktools'){
+    const cx=w*.5, cy=h*.5, r=Math.min(w,h)*.32;
+    ctx.strokeStyle = ac; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+    const ang = t%(Math.PI*2);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(ang-Math.PI/2)*r*.7, cy+Math.sin(ang-Math.PI/2)*r*.7); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(ang*12-Math.PI/2)*r*.45, cy+Math.sin(ang*12-Math.PI/2)*r*.45); ctx.stroke();
+  } else if (id === 'calctools'){
+    const cols=4, rows=3, pad=w*.12, gap=6;
+    const bw=(w-pad*2-gap*(cols-1))/cols, bh=(h-pad*2-gap*(rows-1))/rows;
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      const x=pad+c*(bw+gap), y=pad+r*(bh+gap);
+      ctx.fillStyle = hexAlpha(ac, (r+c)%2? .18:.3);
+      ctx.fillRect(x,y,bw,bh);
+    }
+    ctx.fillStyle = T.ink;
+    ctx.font = `700 ${Math.floor(h*.18)}px ui-monospace, monospace`;
+    ctx.textAlign='right';
+    ctx.fillText('42', w-pad, pad+bh*.7);
+    ctx.textAlign='left';
+  } else if (id === 'soundlab'){
+    ctx.strokeStyle = ac; ctx.lineWidth=2; ctx.beginPath();
+    for(let x=0;x<=w;x++){
+      const y = h*.5 + Math.sin(x*.08 + t*3)* (h*.18) * Math.sin(x*.02 + t);
+      x?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.stroke();
+    ctx.strokeStyle = hexAlpha(ac,.4); ctx.beginPath();
+    for(let x=0;x<=w;x+=3){
+      const y = h*.5 + Math.sin(x*.12 - t*2)* (h*.08);
+      x?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.stroke();
+  } else if (id === 'texttools'){
+    for(let i=0;i<6;i++){
+      const y = h*.22 + i*(h*.1);
+      ctx.fillStyle = hexAlpha(ac, i===2? .7 : .25);
+      ctx.fillRect(w*.14, y, w*(.45 + (i%3)*.12), 7);
+    }
+    ctx.strokeStyle = ac; ctx.strokeRect(w*.14, h*.22 + 2*(h*.1)-4, w*.57, 15);
+  } else if (id === 'physicslab'){
+    const cx=w*.5, cy=h*.52;
+    ctx.strokeStyle = hexAlpha(ac,.5); ctx.beginPath();
+    ctx.ellipse(cx,cy,w*.34,h*.18,0,0,Math.PI*2); ctx.stroke();
+    const ox = cx + Math.cos(t)*w*.34, oy = cy + Math.sin(t)*h*.18;
+    ctx.fillStyle = ac; ctx.beginPath(); ctx.arc(ox,oy,5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = hexAlpha('#ffcc55',.9); ctx.beginPath(); ctx.arc(cx,cy,7,0,Math.PI*2); ctx.fill();
+  } else if (id === 'learnviz'){
+    const n=8, gap=5, pad=w*.12;
+    const bw=(w-pad*2-gap*(n-1))/n;
+    for(let i=0;i<n;i++){
+      const hh = h*(.2 + ((Math.sin(t+i)+1)*.25) + (i%3)*.08);
+      ctx.fillStyle = hexAlpha(ac, .35 + (i/n)*.4);
+      ctx.fillRect(pad+i*(bw+gap), h-pad-hh, bw, hh);
+    }
+  } else {
+    ctx.fillStyle = hexAlpha(ac,.35);
+    ctx.beginPath(); ctx.arc(w*.5,h*.5,Math.min(w,h)*.22,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+let previewRaf = 0;
+let previewLast = 0;
+function paintPreviews(){
+  document.querySelectorAll('canvas[data-preview]').forEach(c => {
+    const id = c.getAttribute('data-preview');
+    const card = c.closest('.card');
+    const ac = card ? getComputedStyle(card).getPropertyValue('--ac').trim() : '#3de0c5';
+    drawPreview(c, id, ac || '#3de0c5');
+  });
+}
+function startPreviewLoop(){
+  cancelAnimationFrame(previewRaf);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce){ paintPreviews(); return; }
+  const tick = (now) => {
+    if (now - previewLast > 80){ // ~12fps
+      previewLast = now;
+      paintPreviews();
+    }
+    previewRaf = requestAnimationFrame(tick);
+  };
+  previewRaf = requestAnimationFrame(tick);
 }
 
 function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -321,12 +490,16 @@ function render(){
   $('#all-sub').textContent = state.q
     ? `「${state.q}」 ${list.length} 件`
     : `${list.length} apps`;
+  requestAnimationFrame(paintPreviews);
 }
 
 function init(){
   $('#total').textContent = APPS.length;
   buildTabs();
   render();
+  startPreviewLoop();
+  window.addEventListener('resize', () => paintPreviews());
+  document.addEventListener('bt:theme', () => paintPreviews());
 
   const search = $('#search');
   const clr = $('#clear');

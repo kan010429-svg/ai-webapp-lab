@@ -34,6 +34,16 @@
   --red: #ff6b6b;
   --yellow: #ffcc55;
   --orange: #fb923c;
+  /* aliases used by legacy app stylesheets */
+  --surface: var(--panel);
+  --surface2: var(--panel2);
+  --surface-2: var(--panel2);
+  --text-dim: var(--muted);
+  --accent-2: var(--accent2);
+  --error: var(--red);
+  --danger: var(--red);
+  --success: var(--green);
+  --warn: var(--orange);
 }
 
 [data-theme="lab"] {
@@ -68,6 +78,15 @@
   --red: #dc2626;
   --yellow: #ca8a04;
   --orange: #ea580c;
+  --surface: var(--panel);
+  --surface2: var(--panel2);
+  --surface-2: var(--panel2);
+  --text-dim: var(--muted);
+  --accent-2: var(--accent2);
+  --error: var(--red);
+  --danger: var(--red);
+  --success: var(--green);
+  --warn: var(--orange);
 }
 
 html {
@@ -132,4 +151,34 @@ body.bt-themed {
 }
 [data-theme="cyber"] .theme-switch button[aria-pressed="true"] {
   text-shadow: 0 0 10px rgba(61, 224, 197, 0.35);
+}
+
+/* Shared app chrome helpers */
+.bt-appbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.bt-appbar .bt-back {
+  margin-right: auto;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: var(--radius-lg);
+}
+.bt-appbar .bt-back:hover {
+  color: var(--text);
+  background: var(--panel2);
+}
+body.bt-themed.bt-canvas-app {
+  background-image: none;
+  background-color: #05070b;
+}
+html[data-theme="lab"] body.bt-themed.bt-canvas-app {
+  background-color: #0b1220;
 }

@@ -1,6 +1,6 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-:root { --bg: #0a0a14; --surface: rgba(15,15,30,0.9); --border: #252545; --text: #d0d0e8; --text-dim: #6060a0; --accent: #ff6ac0; --accent2: #6ac0ff; }
-body { font-family: 'SF Mono','Fira Code','Consolas',monospace; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+/* theme tokens from theme.css */
+body { font-family: var(--font-mono); background-color: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 .toolbar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
 .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 12px; }
 .toolbar h1 { font-size: 1rem; font-weight: 600; }
@@ -17,3 +17,7 @@ body { font-family: 'SF Mono','Fira Code','Consolas',monospace; background: var(
 .preset-menu.visible { display: flex; flex-direction: column; gap: 2px; }
 .preset-menu button { background: none; border: none; color: var(--text); padding: 6px 16px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.8rem; text-align: left; }
 .preset-menu button:hover { background: rgba(255,106,192,0.15); }
+
+
+.bt-appbar{justify-content:flex-end;text-align:left}
+header .bt-appbar{margin-bottom:16px}
