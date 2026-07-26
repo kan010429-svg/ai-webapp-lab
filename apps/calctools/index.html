@@ -638,8 +638,9 @@ function wCalc(){
   }).join('');
   const diff = kanjiPay - per[kanjiIdx].pay;
   out.innerHTML = `
-    <table class="res"><tr><th>グループ</th><th>支払い</th><th class="num">小計</th></tr>${rows}
-    <tr><td><b>合計</b></td><td></td><td class="num digits"><b>${yen(total)}</b></td></tr></table><div class="note">幹事の調整額: ${diff === 0 ? 'なし' : (diff > 0 ? '+' : '') + yen(diff).replace('¥', diff > 0 ? '¥' : '-¥').replace('--','-')}</div>`;
+    <div class="result-hero"><div class="v digits">${yen(total)}</div><div class="cap">合計</div></div>
+    <table class="res"><tr><th>グループ</th><th>支払い</th><th class="num">小計</th></tr>${rows}</table>
+    <div class="note">幹事の調整額: ${diff === 0 ? 'なし' : (diff > 0 ? '+' : '') + yen(diff).replace('¥', diff > 0 ? '¥' : '-¥').replace('--','-')}</div>`;
 }
 ['w-total','w-unit','w-round'].forEach(id => $('#'+id).addEventListener('input', wCalc));
 wGroupsRender(); wCalc();
