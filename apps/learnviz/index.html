@@ -46,7 +46,7 @@
       <h1>📈 LearnViz</h1><span class="sub">学習・可視化ラボ</span>
       <a class="back" href="../../index.html">← 一覧へ戻る</a>
     </div>
-    <nav class="tabs" id="tabs"></nav>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
   </header>
   <div class="toolbar">
     <div class="cur"><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div>
@@ -77,14 +77,14 @@ function select(n, push){
   $('#btn-open').href = pathOf(a);
   $('#cur-name').textContent = `${a.i} ${a.t}`;
   $('#cur-desc').textContent = a.d;
-  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.dataset.n === a.n));
+  document.querySelectorAll('.tab').forEach(el => { const on = el.dataset.n === a.n; el.classList.toggle('active', on); el.setAttribute('aria-selected', on ? 'true' : 'false'); });
   if (push !== false) history.replaceState(null, '', '#' + a.n);
 }
 (function buildTabs(){
   const nav = $('#tabs');
   ITEMS.forEach(a => {
     const b = document.createElement('button');
-    b.className = 'tab'; b.dataset.n = a.n;
+    b.className = 'tab'; b.dataset.n = a.n; b.setAttribute('role','tab'); b.setAttribute('aria-selected','false');
     b.innerHTML = `<span>${a.i}</span> ${esc(a.t)}`;
     b.addEventListener('click', () => select(a.n));
     nav.appendChild(b);
@@ -96,6 +96,7 @@ $('#btn-full').addEventListener('click', () => {
   else if (el.requestFullscreen) el.requestFullscreen();
 });
 select(location.hash.slice(1) || ITEMS[0].n, false);
+window.addEventListener('hashchange', () => select(location.hash.slice(1) || ITEMS[0].n, false));
 </script>
 </body>
 </html>

@@ -90,7 +90,7 @@
   </header>
 
   <div class="layout">
-    <aside id="list">
+    <aside id="list" role="tablist" aria-label="ジェネラティブアート作品一覧">
       <div class="aside-h">作品を選ぶ</div>
     </aside>
     <main>
@@ -140,6 +140,7 @@ function select(n, push){
   document.querySelectorAll('.item').forEach(el => {
     const on = el.dataset.n === a.n;
     el.classList.toggle('active', on);
+    el.setAttribute('aria-selected', on ? 'true' : 'false');
     el.style.setProperty('--ac', a.a);
   });
   if (push !== false) history.replaceState(null, '', '#' + a.n);
@@ -151,6 +152,8 @@ function select(n, push){
     const b = document.createElement('button');
     b.className = 'item';
     b.dataset.n = a.n;
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', 'false');
     b.style.setProperty('--ac', a.a);
     b.innerHTML = `<span class="ico">${a.i}</span>
       <span class="meta"><span class="t">${esc(a.t)}</span><span class="d">${esc(a.d)}</span></span>`;
@@ -170,6 +173,7 @@ $('#btn-random').addEventListener('click', () => {
 });
 
 select(location.hash.slice(1) || ARTS[0].n, false);
+window.addEventListener('hashchange', () => select(location.hash.slice(1) || ARTS[0].n, false));
 </script>
 </body>
 </html>
