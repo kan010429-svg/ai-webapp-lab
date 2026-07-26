@@ -15,7 +15,7 @@ npx serve .
 
 Settings → Pages → Source: Deploy from a branch → `main` / `/ (root)`
 
-公開後: `https://kan010429-svg.github.io/ai-app-lab-gallery/`
+公開後: `https://kan010429-svg.github.io/ai-webapp-lab/`
 
 ## アプリ一覧
 

@@ -7,19 +7,19 @@
 ## 手順（約2分）
 
 1. https://github.com/new で次を作成
-   - Repository name: `ai-app-lab-gallery`
+   - Repository name: `ai-webapp-lab`
    - Public
    - README なし（空でOK）
 2. Cursor / GitHub App のインストール設定で、この新リポジトリへのアクセスを許可
    （または "All repositories"）
-3. エージェントに「`ai-app-lab-gallery` へ push して」と依頼
+3. エージェントに「`ai-webapp-lab` へ push して」と依頼
 
 またはローカルから:
 
 ```bash
-git clone --branch gallery-public --single-branch https://github.com/kan010429-svg/ai-app-lab.git ai-app-lab-gallery
-cd ai-app-lab-gallery
-git remote set-url origin https://github.com/kan010429-svg/ai-app-lab-gallery.git
+git clone --branch gallery-public --single-branch https://github.com/kan010429-svg/ai-app-lab.git ai-webapp-lab
+cd ai-webapp-lab
+git remote set-url origin https://github.com/kan010429-svg/ai-webapp-lab.git
 git push -u origin gallery-public:main
 ```
 
