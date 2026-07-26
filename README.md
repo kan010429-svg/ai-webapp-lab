@@ -1,4 +1,4 @@
-# AI App Lab Gallery
+# Browser Toys
 
 ビルド不要・依存ゼロのバニラ JavaScript アプリを **28本** 厳選した公開用ギャラリーです。
 
@@ -13,7 +13,7 @@ npx serve .
 
 詳細は [PUBLISH.md](PUBLISH.md) を参照。
 
-公開後: `https://kan010429-svg.github.io/ai-webapp-lab/`
+公開後: `https://kan010429-svg.github.io/browser-toys/`
 
 ## アプリ一覧
 

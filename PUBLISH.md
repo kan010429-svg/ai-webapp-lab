@@ -10,7 +10,7 @@
 
 数分後に次の URL で公開されます。
 
-`https://kan010429-svg.github.io/ai-webapp-lab/`
+`https://kan010429-svg.github.io/browser-toys/`
 
 ## ローカル確認
 
