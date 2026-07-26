@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spirograph - AI App Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>🌀 Spirograph</h1>
+      <div class="controls">
+        <label>R <input type="range" id="R" min="20" max="200" value="120"></label>
+        <label>r <input type="range" id="r" min="5" max="100" value="45"></label>
+        <label>d <input type="range" id="d" min="5" max="150" value="80"></label>
+        <label>速度 <input type="range" id="speed" min="1" max="50" value="10"></label>
+        <select id="colorMode"><option value="rainbow">Rainbow</option><option value="gradient">Gradient</option><option value="mono">Mono</option><option value="neon">Neon</option></select>
+        <button id="clearBtn">🗑️ クリア</button>
+        <button id="saveBtn">💾 PNG</button>
+      </div>
+    </header>
+    <canvas id="canvas"></canvas>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

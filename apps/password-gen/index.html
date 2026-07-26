@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Password Generator</h1>
+    <div class="password-display">
+      <input type="text" id="password" readonly>
+      <button id="copy" class="btn-icon" title="コピー">📋</button>
+    </div>
+    <div class="options">
+      <div class="option">
+        <label>
+          <input type="checkbox" id="uppercase" checked>
+          大文字 (A-Z)
+        </label>
+      </div>
+      <div class="option">
+        <label>
+          <input type="checkbox" id="lowercase" checked>
+          小文字 (a-z)
+        </label>
+      </div>
+      <div class="option">
+        <label>
+          <input type="checkbox" id="numbers" checked>
+          数字 (0-9)
+        </label>
+      </div>
+      <div class="option">
+        <label>
+          <input type="checkbox" id="symbols" checked>
+          記号 (!@#$%^&*)
+        </label>
+      </div>
+    </div>
+    <div class="length-control">
+      <label>パスワード長: <span id="lengthValue">16</span></label>
+      <input type="range" id="length" min="8" max="64" value="16">
+    </div>
+    <div class="strength" id="strength">
+      <div class="strength-bar"></div>
+      <div class="strength-text">強度: <span></span></div>
+    </div>
+    <button id="generate" class="btn-primary">パスワード生成</button>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

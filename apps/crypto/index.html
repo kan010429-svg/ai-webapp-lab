@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <a href="../../index.html" class="back-btn">← Back</a>
+      <h1>🔐 Crypto Lab</h1>
+    </div>
+  </div>
+  <div class="main">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="cipher">暗号化</button>
+      <button class="tab" data-tab="hash">ハッシュ</button>
+      <button class="tab" data-tab="password">パスワード</button>
+      <button class="tab" data-tab="steganography">ステガノ</button>
+    </div>
+    <div class="tab-content" id="tab-content">
+      <!-- Cipher -->
+      <div class="panel" id="panel-cipher">
+        <div class="row">
+          <select id="cipher-type"><option value="caesar">シーザー暗号</option><option value="vigenere">ヴィジュネル暗号</option><option value="rot13">ROT13</option><option value="atbash">アトバシュ暗号</option><option value="base64">Base64</option></select>
+          <button id="btn-encrypt">🔒 暗号化</button>
+          <button id="btn-decrypt">🔓 復号化</button>
+        </div>
+        <div class="key-row" id="key-row">
+          <label>鍵: <input type="text" id="cipher-key" value="3" placeholder="シフト数 or キーワード"></label>
+        </div>
+        <textarea id="cipher-input" placeholder="テキストを入力..."></textarea>
+        <div class="arrow">↓</div>
+        <textarea id="cipher-output" placeholder="結果" readonly></textarea>
+      </div>
+      <!-- Hash -->
+      <div class="panel hidden" id="panel-hash">
+        <textarea id="hash-input" placeholder="ハッシュ化するテキストを入力..."></textarea>
+        <div class="hash-results" id="hash-results"></div>
+      </div>
+      <!-- Password -->
+      <div class="panel hidden" id="panel-password">
+        <div class="pw-gen">
+          <label>長さ: <input type="range" id="pw-length" min="4" max="64" value="16"><span id="pw-len-val">16</span></label>
+          <label><input type="checkbox" id="pw-upper" checked> 大文字</label>
+          <label><input type="checkbox" id="pw-lower" checked> 小文字</label>
+          <label><input type="checkbox" id="pw-digits" checked> 数字</label>
+          <label><input type="checkbox" id="pw-symbols" checked> 記号</label>
+          <button id="btn-gen-pw">生成</button>
+        </div>
+        <div class="pw-output" id="pw-output"></div>
+        <div class="pw-strength" id="pw-strength"></div>
+        <div class="section-title">パスワード強度チェック</div>
+        <input type="text" id="pw-check" placeholder="パスワードを入力して強度チェック...">
+        <div class="pw-meter" id="pw-meter"></div>
+      </div>
+      <!-- Steganography -->
+      <div class="panel hidden" id="panel-steganography">
+        <p class="hint-text">画像にテキストを隠す / 画像からテキストを抽出</p>
+        <div class="row">
+          <button id="btn-steg-upload">📁 画像選択</button>
+          <button id="btn-steg-encode">🔒 埋め込み</button>
+          <button id="btn-steg-decode">🔓 抽出</button>
+          <button id="btn-steg-save">💾 保存</button>
+        </div>
+        <textarea id="steg-text" placeholder="隠すテキストを入力..."></textarea>
+        <canvas id="steg-canvas"></canvas>
+        <div id="steg-result" class="steg-result"></div>
+        <input type="file" id="steg-file" accept="image/*" style="display:none">
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

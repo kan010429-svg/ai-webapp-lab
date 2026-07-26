@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fourier Draw</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <a href="../../index.html" class="back-btn">← Back</a>
+      <h1>🌀 Fourier Draw</h1>
+    </div>
+    <div class="toolbar-right">
+      <label class="slider-label">円の数: <input type="range" id="num-circles" min="1" max="150" value="50"> <span id="num-val">50</span></label>
+      <button id="btn-clear">クリア</button>
+      <button id="btn-presets">プリセット ▾</button>
+    </div>
+  </div>
+  <canvas id="canvas"></canvas>
+  <div id="hint" class="hint">マウスで図形を描いてください</div>
+  <div id="preset-menu" class="preset-menu">
+    <button data-shape="circle">円</button>
+    <button data-shape="square">四角</button>
+    <button data-shape="star">星</button>
+    <button data-shape="heart">ハート</button>
+    <button data-shape="treble">ト音記号</button>
+    <button data-shape="pi">π</button>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

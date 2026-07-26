@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendulum — 振り子シミュレーション</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="canvas"></canvas>
+    <div id="controls">
+      <label>振り子数: <input type="range" id="count" min="1" max="30" value="15"><span id="countVal">15</span></label>
+      <label>重力: <input type="range" id="gravity" min="1" max="20" value="10"><span id="gravVal">10</span></label>
+      <label>減衰: <input type="range" id="damping" min="990" max="1000" value="999"><span id="dampVal">0.999</span></label>
+      <select id="mode"><option value="wave">ウェーブ</option><option value="double">二重振り子</option><option value="free">フリー</option></select>
+      <button id="resetBtn">リセット</button>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

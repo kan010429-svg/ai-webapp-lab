@@ -1,0 +1,19 @@
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg: #0a0a14; --surface: rgba(15,15,30,0.9); --border: #252545; --text: #d0d0e8; --text-dim: #6060a0; --accent: #ff6ac0; --accent2: #6ac0ff; }
+body { font-family: 'SF Mono','Fira Code','Consolas',monospace; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+.toolbar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
+.toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 12px; }
+.toolbar h1 { font-size: 1rem; font-weight: 600; }
+.back-btn { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; }
+.back-btn:hover { color: var(--accent); }
+.toolbar button, .toolbar select { background: rgba(0,0,0,0.5); color: var(--text); border: 1px solid var(--border); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: inherit; }
+.toolbar button:hover { border-color: var(--accent); }
+.slider-label { font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+.slider-label input { width: 80px; accent-color: var(--accent); }
+#canvas { display: block; width: 100vw; height: 100vh; cursor: crosshair; }
+.hint { position: fixed; bottom: 50%; left: 50%; transform: translate(-50%, 50%); font-size: 1.2rem; color: var(--text-dim); pointer-events: none; transition: opacity 0.5s; }
+.hint.hidden { opacity: 0; }
+.preset-menu { display: none; position: fixed; top: 44px; right: 16px; z-index: 20; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px; backdrop-filter: blur(10px); }
+.preset-menu.visible { display: flex; flex-direction: column; gap: 2px; }
+.preset-menu button { background: none; border: none; color: var(--text); padding: 6px 16px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.8rem; text-align: left; }
+.preset-menu button:hover { background: rgba(255,106,192,0.15); }

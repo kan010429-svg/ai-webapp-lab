@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CalcTools — 計算機ボックス</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AE%3C/text%3E%3C/svg%3E" />
+<meta name="description" content="電卓・関数グラフ・単位変換・BMI・ローン・割り勘・営業日・和暦西暦・ハッシュ計算を1つにまとめた計算アプリ。" />
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#161a26; --panel2:#1c2130;
+    --border:#252b3b; --border2:#333b52;
+    --text:#e7ebf5; --muted:#9aa3b8; --muted2:#6b7488;
+    --accent:#7c8cff; --accent2:#4dd0e1;
+    --green:#3ddc84; --red:#ff6b6b; --yellow:#ffcc55; --orange:#fb923c;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;
+    background:
+      radial-gradient(900px 480px at 20% -10%, rgba(77,208,225,.11), transparent 60%),
+      radial-gradient(800px 400px at 100% 0%, rgba(124,140,255,.10), transparent 55%),
+      var(--bg);
+    color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+  }
+  button{font-family:inherit;color:inherit}
+  .wrap{width:100%;max-width:860px;margin:0 auto;padding:0 20px}
+
+  header{padding:20px 0 0;flex:none}
+  .titlebar{display:flex;align-items:center;gap:10px}
+  .titlebar h1{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .titlebar .sub{color:var(--muted2);font-size:13px;font-weight:600}
+  .titlebar .back{margin-left:auto;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:8px}
+  .titlebar .back:hover{background:var(--panel2);color:var(--text)}
+
+  nav.tabs{display:flex;gap:2px;overflow-x:auto;margin-top:14px;border-bottom:1px solid var(--border);scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  .tab{
+    position:relative;background:none;border:0;color:var(--muted);
+    font-size:14px;font-weight:600;padding:10px 13px 12px;cursor:pointer;
+    white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:color .15s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab::after{content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2.5px;border-radius:2px;background:transparent;transition:background .15s}
+  .tab.active{color:var(--text)}
+  .tab.active::after{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+  main{flex:1;padding:28px 0 60px}
+  .view{display:none}
+  .view.active{display:block;animation:fadein .18s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .card + .card{margin-top:16px}
+  .card h2{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.02em}
+
+  .btn{
+    background:var(--panel2);border:1px solid var(--border2);border-radius:12px;
+    color:var(--text);font-size:14px;font-weight:700;padding:10px 20px;cursor:pointer;transition:all .12s;
+  }
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  .btn.primary:hover{filter:brightness(1.1)}
+  .btn.sm{font-size:12.5px;padding:6px 12px;border-radius:9px}
+
+  input[type=number],input[type=text],select,textarea{
+    background:var(--panel2);border:1px solid var(--border2);border-radius:10px;
+    color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:inherit;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+  textarea{width:100%;resize:vertical;min-height:90px;line-height:1.5}
+  label.fld{display:flex;flex-direction:column;gap:5px;color:var(--muted);font-size:12.5px;font-weight:700}
+  label.fld > span{padding-left:2px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .row > .fld{flex:1;min-width:120px}
+
+  .seg{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+  .seg button{background:none;border:0;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;padding:6px 13px;cursor:pointer;transition:all .12s}
+  .seg button:hover{color:var(--text)}
+  .seg button.active{background:var(--accent);color:#fff}
+
+  .digits{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+  .result-hero{text-align:center;padding:18px 10px}
+  .result-hero .v{font-size:clamp(30px,7vw,44px);font-weight:800}
+  .result-hero .u{font-size:.55em;color:var(--muted);font-weight:700}
+  .result-hero .cap{color:var(--muted);font-size:13.5px;margin-top:2px}
+  .badge{display:inline-block;font-size:13px;font-weight:700;padding:4px 14px;border-radius:999px;margin-top:8px}
+
+  table.res{width:100%;border-collapse:collapse;font-size:14px}
+  table.res th,table.res td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left}
+  table.res th{color:var(--muted2);font-size:12px;font-weight:700}
+  table.res td.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.res tr:last-child td{border-bottom:0}
+
+  .note{color:var(--muted2);font-size:12.5px;margin-top:10px}
+
+  /* ==== 電卓 ==== */
+  .calc-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:16px}
+  @media (max-width:680px){.calc-layout{grid-template-columns:1fr}}
+  .calc-display{
+    background:var(--panel2);border:1px solid var(--border);border-radius:14px;
+    padding:14px 18px;text-align:right;margin-bottom:14px;overflow:hidden;
+  }
+  .calc-expr{color:var(--muted2);font-size:14px;min-height:21px;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+  .calc-cur{font-size:clamp(30px,6vw,42px);font-weight:800;line-height:1.2;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+  .calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .ckey{
+    background:var(--panel2);border:1px solid var(--border);border-radius:12px;
+    font-size:19px;font-weight:700;padding:15px 0;cursor:pointer;transition:all .1s;
+  }
+  .ckey:hover{border-color:var(--border2);filter:brightness(1.15)}
+  .ckey:active{transform:scale(.96)}
+  .ckey.op{color:var(--accent2)}
+  .ckey.eq{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  .ckey.fn{color:var(--muted);font-size:16px}
+  .calc-hist{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;flex-direction:column;min-height:200px;max-height:430px}
+  .calc-hist .h{display:flex;justify-content:space-between;align-items:center;color:var(--muted2);font-size:12px;font-weight:700;margin-bottom:6px}
+  .calc-hist .list{flex:1;overflow-y:auto}
+  .hitem{padding:7px 8px;border-radius:8px;cursor:pointer;font-size:13px}
+  .hitem:hover{background:var(--panel)}
+  .hitem .e{color:var(--muted2);font-size:12px}
+  .hitem .r{font-weight:700}
+  .hempty{color:var(--muted2);font-size:12.5px;text-align:center;padding:30px 0}
+
+  /* ==== グラフ ==== */
+  .fx-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .fx-row .sw{width:14px;height:14px;border-radius:4px;flex:none}
+  .fx-row input{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .fx-row .del{background:none;border:0;color:var(--muted2);cursor:pointer;font-size:15px;padding:4px 8px;border-radius:6px}
+  .fx-row .del:hover{color:var(--red);background:var(--panel2)}
+  #graph-canvas{width:100%;height:380px;border-radius:12px;border:1px solid var(--border);background:var(--panel2);touch-action:none;cursor:grab}
+  .fx-err{color:var(--red);font-size:12px;min-height:16px;padding-left:24px}
+
+  /* ==== 割り勘 ==== */
+  .grp-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;padding:10px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:var(--panel2)}
+  .grp-row .fld{flex:1;min-width:90px}
+  .grp-row .del{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted2);cursor:pointer;padding:8px 12px}
+  .grp-row .del:hover{color:var(--red);border-color:var(--red)}
+  .grp-row label.radio{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;font-weight:600;padding-bottom:9px}
+
+  /* ==== ハッシュ ==== */
+  .hash-out{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .hash-row{display:flex;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:9px 12px}
+  .hash-row .a{color:var(--muted);font-size:12px;font-weight:700;width:72px;flex:none}
+  .hash-row .v{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;word-break:break-all;color:var(--text)}
+  .hash-row .cp{background:none;border:1px solid var(--border);border-radius:7px;color:var(--muted);cursor:pointer;font-size:11.5px;padding:4px 10px;white-space:nowrap}
+  .hash-row .cp:hover{color:var(--text);border-color:var(--accent)}
+
+  footer{flex:none;padding:0 0 26px;text-align:center;color:var(--muted2);font-size:12.5px}
+  @media (max-width:560px){.card{padding:16px 13px}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="titlebar">
+        <h1>🧮 CalcTools</h1><span class="sub">計算機ボックス</span>
+        <a class="back" href="../../index.html">← 一覧へ戻る</a>
+      </div>
+      <nav class="tabs" id="tabs">
+        <button class="tab" data-v="calc">🧮 電卓</button>
+        <button class="tab" data-v="graph">📈 グラフ</button>
+        <button class="tab" data-v="unit">📏 単位変換</button>
+        <button class="tab" data-v="warikan">🍻 割り勘</button>
+        <button class="tab" data-v="bizdays">📅 営業日</button>
+        <button class="tab" data-v="wareki">🗓️ 和暦西暦</button>
+        <button class="tab" data-v="bmi">⚖️ BMI</button>
+        <button class="tab" data-v="loan">💵 ローン</button>
+        <button class="tab" data-v="hash">🔒 ハッシュ</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+
+      <!-- 電卓 -->
+      <section class="view" id="view-calc">
+        <div class="card">
+          <div class="calc-layout">
+            <div>
+              <div class="calc-display">
+                <div class="calc-expr digits" id="c-expr">&nbsp;</div>
+                <div class="calc-cur digits" id="c-cur">0</div>
+              </div>
+              <div class="calc-keys" id="c-keys"></div>
+              <div class="note">キーボード対応: 数字・演算子・Enter(=)・Backspace・Esc(C)・%</div>
+            </div>
+            <div class="calc-hist">
+              <div class="h"><span>履歴</span><button class="btn sm" id="c-clearhist">クリア</button></div>
+              <div class="list" id="c-hist"><div class="hempty">履歴はまだありません</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- グラフ -->
+      <section class="view" id="view-graph">
+        <div class="card">
+          <div id="fx-list"></div>
+          <div style="display:flex;gap:8px;margin:4px 0 14px">
+            <button class="btn sm" id="fx-add">＋ 関数を追加</button>
+            <button class="btn sm" id="fx-fit">表示リセット</button>
+          </div>
+          <canvas id="graph-canvas"></canvas>
+          <div class="note">使える記法: x, +, -, *, /, ^, sin cos tan asin acos atan, log(=log10) ln, sqrt, abs, exp, pi, e ／ ドラッグで移動・ホイール/ピンチでズーム</div>
+        </div>
+      </section>
+
+      <!-- 単位変換 -->
+      <section class="view" id="view-unit">
+        <div class="card">
+          <div class="seg" id="u-cats" style="margin-bottom:16px"></div>
+          <div class="row">
+            <label class="fld"><span>値</span><input type="number" id="u-value" value="1" step="any"></label>
+            <label class="fld"><span>変換元</span><select id="u-from"></select></label>
+            <label class="fld"><span>変換先</span><select id="u-to"></select></label>
+            <button class="btn" id="u-swap" title="入れ替え">⇄</button>
+          </div>
+          <div class="result-hero"><div class="v digits" id="u-result">–</div><div class="cap" id="u-cap"></div></div>
+          <div id="u-table"></div>
+        </div>
+      </section>
+
+      <!-- 割り勘 -->
+      <section class="view" id="view-warikan">
+        <div class="card">
+          <div class="row" style="margin-bottom:14px">
+            <label class="fld" style="flex:2"><span>合計金額（円）</span><input type="number" id="w-total" value="10000" min="0" step="100"></label>
+            <label class="fld"><span>丸め単位</span>
+              <select id="w-unit"><option value="1">1円</option><option value="10">10円</option><option value="100" selected>100円</option><option value="500">500円</option><option value="1000">1000円</option></select>
+            </label>
+            <label class="fld"><span>丸め方式</span>
+              <select id="w-round"><option value="round">四捨五入</option><option value="ceil">切り上げ</option><option value="floor" selected>切り捨て</option></select>
+            </label>
+          </div>
+          <h2>グループ（傾斜配分）</h2>
+          <div id="w-groups"></div>
+          <button class="btn sm" id="w-addgrp">＋ グループを追加</button>
+          <div class="note">端数は「幹事」に指定した1名の金額で調整するため、内訳の合計は必ず合計金額と一致します。</div>
+        </div>
+        <div class="card">
+          <h2>計算結果</h2>
+          <div id="w-result"></div>
+        </div>
+      </section>
+
+      <!-- 営業日 -->
+      <section class="view" id="view-bizdays">
+        <div class="card">
+          <div class="seg" id="b-modes" style="margin-bottom:16px">
+            <button data-m="after" class="active">N営業日後</button>
+            <button data-m="between">期間の営業日数</button>
+          </div>
+          <div id="b-after">
+            <div class="row">
+              <label class="fld"><span>基準日</span><input type="date" id="b-date1"></label>
+              <label class="fld"><span>営業日数</span><input type="number" id="b-n" value="5" min="1" max="365"></label>
+              <label class="fld"><span>方向</span><select id="b-dir"><option value="1">後</option><option value="-1">前</option></select></label>
+            </div>
+          </div>
+          <div id="b-between" style="display:none">
+            <div class="row">
+              <label class="fld"><span>開始日</span><input type="date" id="b-date2"></label>
+              <label class="fld"><span>終了日</span><input type="date" id="b-date3"></label>
+            </div>
+          </div>
+          <div class="result-hero"><div class="v digits" id="b-result">–</div><div class="cap" id="b-cap"></div></div>
+          <div id="b-detail"></div>
+          <div class="note">土日と日本の祝日（2025〜2027年・振替休日/国民の休日を含む）を除外して計算します。対象期間外の年は祝日なしとして扱われます。</div>
+        </div>
+      </section>
+
+      <!-- 和暦西暦 -->
+      <section class="view" id="view-wareki">
+        <div class="card">
+          <div class="seg" id="j-modes" style="margin-bottom:16px">
+            <button data-m="toWareki" class="active">西暦 → 和暦</button>
+            <button data-m="toSeireki">和暦 → 西暦</button>
+          </div>
+          <div id="j-toWareki" class="row">
+            <label class="fld"><span>西暦（年）</span><input type="number" id="j-year" min="1868" max="2100"></label>
+          </div>
+          <div id="j-toSeireki" class="row" style="display:none">
+            <label class="fld"><span>元号</span>
+              <select id="j-era"><option value="令和">令和</option><option value="平成">平成</option><option value="昭和">昭和</option><option value="大正">大正</option><option value="明治">明治</option></select>
+            </label>
+            <label class="fld"><span>年</span><input type="number" id="j-eyear" min="1" value="1"></label>
+          </div>
+          <div class="result-hero"><div class="v" id="j-result">–</div><div class="cap" id="j-cap"></div></div>
+          <div id="j-table"></div>
+        </div>
+      </section>
+
+      <!-- BMI -->
+      <section class="view" id="view-bmi">
+        <div class="card">
+          <div class="row">
+            <label class="fld"><span>身長（cm）</span><input type="number" id="m-height" value="170" min="80" max="250" step="0.1"></label>
+            <label class="fld"><span>体重（kg）</span><input type="number" id="m-weight" value="60" min="20" max="300" step="0.1"></label>
+          </div>
+          <div class="result-hero">
+            <div class="v digits" id="m-bmi">–</div>
+            <div><span class="badge" id="m-cat"></span></div>
+          </div>
+          <div id="m-table"></div>
+          <div class="note">判定は日本肥満学会の基準（18.5未満: 低体重 / 18.5〜25: 普通体重 / 25以上: 肥満）。適正体重はBMI 22で算出。</div>
+        </div>
+      </section>
+
+      <!-- ローン -->
+      <section class="view" id="view-loan">
+        <div class="card">
+          <div class="row">
+            <label class="fld"><span>借入額（万円）</span><input type="number" id="l-amount" value="3000" min="1" step="10"></label>
+            <label class="fld"><span>年利（%）</span><input type="number" id="l-rate" value="1.5" min="0" max="20" step="0.01"></label>
+            <label class="fld"><span>期間（年）</span><input type="number" id="l-years" value="35" min="1" max="50"></label>
+          </div>
+          <div class="result-hero">
+            <div class="v digits" id="l-monthly">–</div>
+            <div class="cap">毎月の返済額（元利均等）</div>
+          </div>
+          <div id="l-table"></div>
+        </div>
+      </section>
+
+      <!-- ハッシュ -->
+      <section class="view" id="view-hash">
+        <div class="card">
+          <label class="fld"><span>テキスト（入力と同時に計算されます）</span>
+            <textarea id="h-input" placeholder="ハッシュ化するテキストを入力..."></textarea>
+          </label>
+          <div class="hash-out" id="h-out"></div>
+          <div class="note">計算はすべてブラウザ内で完結し、入力が外部へ送信されることはありません。</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+  <footer>CalcTools — AI App Lab</footer>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---- tabs ---- */
+const VIEWS = ['calc','graph','unit','warikan','bizdays','wareki','bmi','loan','hash'];
+function show(v){
+  if (!VIEWS.includes(v)) v = 'calc';
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.v === v));
+  VIEWS.forEach(x => $('#view-'+x).classList.toggle('active', x === v));
+  history.replaceState(null, '', '#'+v);
+  if (v === 'graph') graphResize();
+}
+$$('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.v)));
+
+/* ================= 電卓 ================= */
+const calc = { cur:'0', prev:null, op:null, justEq:false, hist:[] };
+const C_KEYS = [
+  ['C','fn'],['±','fn'],['%','fn'],['÷','op'],
+  ['7',''],['8',''],['9',''],['×','op'],
+  ['4',''],['5',''],['6',''],['−','op'],
+  ['1',''],['2',''],['3',''],['＋','op'],
+  ['0',''],['.',''],['⌫','fn'],['=','eq'],
+];
+(function(){
+  const box = $('#c-keys');
+  C_KEYS.forEach(([k, cls]) => {
+    const b = document.createElement('button');
+    b.className = 'ckey' + (cls ? ' '+cls : '');
+    b.textContent = k;
+    b.addEventListener('click', () => calcKey(k));
+    box.appendChild(b);
+  });
+})();
+const OPMAP = {'÷':'/', '×':'*', '−':'-', '＋':'+'};
+function calcApply(a, op, b){
+  switch(op){
+    case '+': return a + b;
+    case '-': return a - b;
+    case '*': return a * b;
+    case '/': return b === 0 ? NaN : a / b;
+  }
+}
+function calcFmtNum(n){
+  if (!isFinite(n) || isNaN(n)) return 'エラー';
+  const s = Math.abs(n) >= 1e12 || (Math.abs(n) < 1e-9 && n !== 0)
+    ? n.toExponential(6) : String(Math.round(n * 1e10) / 1e10);
+  return s.length > 14 ? Number(n).toPrecision(10).replace(/\.?0+$/,'') : s;
+}
+function calcRender(){
+  $('#c-cur').textContent = calc.cur;
+  $('#c-expr').innerHTML = calc.prev !== null
+    ? `${calcFmtNum(calc.prev)} ${Object.keys(OPMAP).find(k=>OPMAP[k]===calc.op)||''}` : '&nbsp;';
+}
+function calcHistRender(){
+  const list = $('#c-hist');
+  if (!calc.hist.length){ list.innerHTML = '<div class="hempty">履歴はまだありません</div>'; return; }
+  list.innerHTML = calc.hist.slice().reverse().map((h,i) =>
+    `<div class="hitem" data-r="${h.r}"><div class="e digits">${esc(h.e)} =</div><div class="r digits">${esc(h.r)}</div></div>`).join('');
+  list.querySelectorAll('.hitem').forEach(el => el.addEventListener('click', () => {
+    calc.cur = el.dataset.r; calc.justEq = true; calcRender();
+  }));
+}
+$('#c-clearhist').addEventListener('click', () => { calc.hist = []; calcHistRender(); });
+function calcKey(k){
+  if (/^[0-9]$/.test(k)){
+    if (calc.justEq){ calc.cur = k; calc.justEq = false; }
+    else calc.cur = calc.cur === '0' ? k : (calc.cur.replace('-','').length < 15 ? calc.cur + k : calc.cur);
+  }
+  else if (k === '.'){
+    if (calc.justEq){ calc.cur = '0.'; calc.justEq = false; }
+    else if (!calc.cur.includes('.')) calc.cur += '.';
+  }
+  else if (k === 'C'){ calc.cur = '0'; calc.prev = null; calc.op = null; calc.justEq = false; }
+  else if (k === '⌫'){ if (!calc.justEq) calc.cur = calc.cur.length > 1 ? calc.cur.slice(0,-1) : '0'; }
+  else if (k === '±'){ calc.cur = calc.cur.startsWith('-') ? calc.cur.slice(1) : (calc.cur !== '0' ? '-'+calc.cur : calc.cur); }
+  else if (k === '%'){ calc.cur = calcFmtNum(parseFloat(calc.cur) / 100); }
+  else if (OPMAP[k] || '+-*/'.includes(k)){
+    const op = OPMAP[k] || k;
+    if (calc.prev !== null && calc.op && !calc.justEq){
+      const r = calcApply(calc.prev, calc.op, parseFloat(calc.cur));
+      calc.prev = r; calc.cur = calcFmtNum(r);
+    } else calc.prev = parseFloat(calc.cur);
+    calc.op = op; calc.justEq = true;
+  }
+  else if (k === '='){
+    if (calc.prev !== null && calc.op){
+      const b = parseFloat(calc.cur);
+      const expr = `${calcFmtNum(calc.prev)} ${Object.keys(OPMAP).find(x=>OPMAP[x]===calc.op)} ${calcFmtNum(b)}`;
+      const r = calcFmtNum(calcApply(calc.prev, calc.op, b));
+      calc.hist.push({e: expr, r});
+      if (calc.hist.length > 50) calc.hist.shift();
+      calc.cur = r; calc.prev = null; calc.op = null; calc.justEq = true;
+      calcHistRender();
+    }
+  }
+  calcRender();
+}
+document.addEventListener('keydown', e => {
+  if (!$('#view-calc').classList.contains('active')) return;
+  if (e.target.matches('input,textarea,select')) return;
+  const k = e.key;
+  if (/^[0-9]$/.test(k) || '+-*/.%'.includes(k)) { calcKey(k); e.preventDefault(); }
+  else if (k === 'Enter' || k === '=') { calcKey('='); e.preventDefault(); }
+  else if (k === 'Backspace') { calcKey('⌫'); e.preventDefault(); }
+  else if (k === 'Escape') { calcKey('C'); e.preventDefault(); }
+});
+calcRender();
+
+/* ================= グラフ ================= */
+const FX_COLORS = ['#7c8cff','#4dd0e1','#3ddc84','#ff6b6b','#ffcc55','#e879f9'];
+let fxs = [{expr:'sin(x)'},{expr:'x^2/8 - 2'}];
+const gview = { cx:0, cy:0, scale:40 }; // pixels per unit
+function fxCompile(src){
+  let s = src.trim();
+  if (!s) return null;
+  if (!/^[0-9a-z+\-*/^().,\s]*$/i.test(s)) throw new Error('使用できない文字が含まれています');
+  s = s.replace(/\^/g, '**')
+       .replace(/\b(asin|acos|atan|sinh|cosh|tanh|sin|cos|tan|sqrt|abs|exp|floor|ceil|round|min|max|pow)\b/g, 'Math.$1')
+       .replace(/\bln\b/g, 'Math.log')
+       .replace(/\blog\b/g, 'Math.log10')
+       .replace(/\bpi\b/gi, 'Math.PI')
+       .replace(/\be\b/g, 'Math.E');
+  if (/[a-df-wyz_$]/i.test(s.replace(/Math\.\w+/g, '').replace(/x/g, ''))) throw new Error('未知の識別子があります');
+  const f = new Function('x', `"use strict"; return (${s});`);
+  f(0); // smoke test
+  return f;
+}
+function fxListRender(){
+  const box = $('#fx-list'); box.innerHTML = '';
+  fxs.forEach((f, i) => {
+    const row = document.createElement('div');
+    row.innerHTML = `<div class="fx-row">
+      <div class="sw" style="background:${FX_COLORS[i % FX_COLORS.length]}"></div>
+      <span style="color:var(--muted2);font-size:13px">y =</span>
+      <input type="text" value="${esc(f.expr)}" spellcheck="false" autocomplete="off">
+      <button class="del" title="削除">✕</button>
+    </div><div class="fx-err"></div>`;
+    const input = row.querySelector('input'), err = row.querySelector('.fx-err');
+    input.addEventListener('input', () => {
+      f.expr = input.value;
+      try{ f.fn = fxCompile(f.expr); err.textContent = ''; }
+      catch(e){ f.fn = null; err.textContent = f.expr.trim() ? '式を解釈できません' : ''; }
+      graphDraw();
+    });
+    row.querySelector('.del').addEventListener('click', () => { fxs.splice(i,1); fxListRender(); graphDraw(); });
+    box.appendChild(row);
+    try{ f.fn = fxCompile(f.expr); }catch(e){ f.fn = null; }
+  });
+}
+$('#fx-add').addEventListener('click', () => {
+  if (fxs.length >= 6) return;
+  fxs.push({expr:''}); fxListRender();
+});
+$('#fx-fit').addEventListener('click', () => { gview.cx = 0; gview.cy = 0; gview.scale = 40; graphDraw(); });
+const gc = $('#graph-canvas');
+const gctx = gc.getContext('2d');
+function graphResize(){
+  const r = gc.getBoundingClientRect();
+  if (!r.width) return;
+  const dpr = devicePixelRatio || 1;
+  gc.width = r.width * dpr; gc.height = r.height * dpr;
+  graphDraw();
+}
+function graphDraw(){
+  const W = gc.width, H = gc.height;
+  if (!W) return;
+  const dpr = devicePixelRatio || 1;
+  const scale = gview.scale * dpr;
+  const ox = W/2 - gview.cx * scale, oy = H/2 + gview.cy * scale;
+  gctx.clearRect(0,0,W,H);
+  // grid
+  const step = niceStep(scale);
+  gctx.lineWidth = 1;
+  gctx.strokeStyle = 'rgba(255,255,255,.05)';
+  gctx.beginPath();
+  for (let x = ox % (step*scale); x < W; x += step*scale){ gctx.moveTo(x,0); gctx.lineTo(x,H); }
+  for (let y = oy % (step*scale); y < H; y += step*scale){ gctx.moveTo(0,y); gctx.lineTo(W,y); }
+  gctx.stroke();
+  // axes
+  gctx.strokeStyle = 'rgba(255,255,255,.25)';
+  gctx.beginPath();
+  gctx.moveTo(0, oy); gctx.lineTo(W, oy);
+  gctx.moveTo(ox, 0); gctx.lineTo(ox, H);
+  gctx.stroke();
+  // axis labels
+  gctx.fillStyle = 'rgba(255,255,255,.35)';
+  gctx.font = `${11*dpr}px system-ui`;
+  for (let gx = Math.ceil((0-ox)/(step*scale))*step; ; gx += step){
+    const px = ox + gx*scale;
+    if (px > W) break;
+    if (Math.abs(gx) > 1e-9) gctx.fillText(fmtTick(gx), px+3*dpr, oy-4*dpr);
+  }
+  for (let gy = Math.ceil((oy-H)/(step*scale))*step; ; gy += step){
+    const py = oy - gy*scale;
+    if (py < 0) break;
+    if (Math.abs(gy) > 1e-9) gctx.fillText(fmtTick(gy), ox+4*dpr, py-3*dpr);
+  }
+  // functions
+  fxs.forEach((f, i) => {
+    if (!f.fn) return;
+    gctx.strokeStyle = FX_COLORS[i % FX_COLORS.length];
+    gctx.lineWidth = 2 * dpr;
+    gctx.beginPath();
+    let pen = false;
+    for (let px = 0; px <= W; px += 2){
+      const x = (px - ox) / scale;
+      let y;
+      try{ y = f.fn(x); }catch(e){ y = NaN; }
+      if (!isFinite(y)){ pen = false; continue; }
+      const py = oy - y * scale;
+      if (py < -H || py > 2*H){ pen = false; continue; }
+      if (pen) gctx.lineTo(px, py); else { gctx.moveTo(px, py); pen = true; }
+    }
+    gctx.stroke();
+  });
+}
+function niceStep(scalePx){
+  const target = 70 / scalePx; // desired units per gridline
+  const p = Math.pow(10, Math.floor(Math.log10(target)));
+  for (const m of [1,2,5,10]) if (m*p >= target) return m*p;
+  return 10*p;
+}
+function fmtTick(v){ return Math.abs(v) >= 1e5 || Math.abs(v) < 1e-4 ? v.toExponential(0) : String(Math.round(v*1e6)/1e6); }
+// pan & zoom
+let drag = null;
+gc.addEventListener('pointerdown', e => { drag = {x:e.clientX, y:e.clientY, cx:gview.cx, cy:gview.cy}; gc.setPointerCapture(e.pointerId); });
+gc.addEventListener('pointermove', e => {
+  if (!drag) return;
+  gview.cx = drag.cx - (e.clientX - drag.x)/gview.scale;
+  gview.cy = drag.cy + (e.clientY - drag.y)/gview.scale;
+  graphDraw();
+});
+gc.addEventListener('pointerup', () => drag = null);
+gc.addEventListener('wheel', e => {
+  e.preventDefault();
+  const f = e.deltaY < 0 ? 1.15 : 1/1.15;
+  gview.scale = Math.max(4, Math.min(2000, gview.scale * f));
+  graphDraw();
+}, {passive:false});
+addEventListener('resize', graphResize);
+fxListRender();
+
+/* ================= 単位変換 ================= */
+const UNITS = {
+  '長さ': { base:'m', items:{ 'mm':.001, 'cm':.01, 'm':1, 'km':1000, 'インチ':.0254, 'フィート':.3048, 'ヤード':.9144, 'マイル':1609.344, '尺':10/33, '里':3927.27 } },
+  '重さ': { base:'kg', items:{ 'mg':1e-6, 'g':.001, 'kg':1, 't':1000, 'オンス':.028349523125, 'ポンド':.45359237, '匁':.00375, '貫':3.75 } },
+  '温度': { special:'temp', items:{ '℃':0, '℉':0, 'K':0 } },
+  '面積': { base:'m²', items:{ 'cm²':.0001, 'm²':1, 'a':100, 'ha':10000, 'km²':1e6, '坪':400/121, '畳':1.62, 'エーカー':4046.8564224 } },
+  '体積': { base:'L', items:{ 'mL':.001, 'L':1, 'm³':1000, '合':.18039, '升':1.8039, 'ガロン(米)':3.785411784, 'パイント(米)':.473176473 } },
+  '速度': { base:'m/s', items:{ 'm/s':1, 'km/h':1/3.6, 'ノット':.514444, 'mph':.44704, 'マッハ':340.29 } },
+  'データ量': { base:'B', items:{ 'B':1, 'KB':1e3, 'MB':1e6, 'GB':1e9, 'TB':1e12, 'KiB':1024, 'MiB':1048576, 'GiB':1073741824 } },
+};
+let uCat = '長さ';
+(function(){
+  const seg = $('#u-cats');
+  Object.keys(UNITS).forEach(cat => {
+    const b = document.createElement('button');
+    b.textContent = cat;
+    b.className = cat === uCat ? 'active' : '';
+    b.addEventListener('click', () => { uCat = cat; $$('#u-cats button').forEach(x => x.classList.toggle('active', x === b)); uBuild(); });
+    seg.appendChild(b);
+  });
+})();
+function uBuild(){
+  const items = Object.keys(UNITS[uCat].items);
+  const from = $('#u-from'), to = $('#u-to');
+  from.innerHTML = to.innerHTML = items.map(u => `<option>${u}</option>`).join('');
+  from.value = items[0]; to.value = items[1] || items[0];
+  uCalc();
+}
+function tempConv(v, from, to){
+  let c = from === '℃' ? v : from === '℉' ? (v-32)*5/9 : v - 273.15;
+  return to === '℃' ? c : to === '℉' ? c*9/5+32 : c + 273.15;
+}
+function uConv(v, from, to){
+  const cat = UNITS[uCat];
+  return cat.special === 'temp' ? tempConv(v, from, to) : v * cat.items[from] / cat.items[to];
+}
+function uFmt(n){
+  if (!isFinite(n)) return '–';
+  if (n !== 0 && (Math.abs(n) >= 1e9 || Math.abs(n) < 1e-6)) return n.toExponential(6);
+  return parseFloat(n.toPrecision(10)).toLocaleString('ja-JP', {maximumFractionDigits: 10});
+}
+function uCalc(){
+  const v = parseFloat($('#u-value').value);
+  const from = $('#u-from').value, to = $('#u-to').value;
+  if (isNaN(v)){ $('#u-result').textContent = '–'; $('#u-cap').textContent=''; $('#u-table').innerHTML=''; return; }
+  const r = uConv(v, from, to);
+  $('#u-result').innerHTML = `${uFmt(r)} <span class="u">${esc(to)}</span>`;
+  $('#u-cap').textContent = `${uFmt(v)} ${from} =`;
+  const items = Object.keys(UNITS[uCat].items).filter(u => u !== from);
+  $('#u-table').innerHTML = `<table class="res">` + items.map(u =>
+    `<tr><td>${esc(u)}</td><td class="num digits">${uFmt(uConv(v, from, u))}</td></tr>`).join('') + `</table>`;
+}
+['u-value','u-from','u-to'].forEach(id => $('#'+id).addEventListener('input', uCalc));
+$('#u-swap').addEventListener('click', () => {
+  const f = $('#u-from').value; $('#u-from').value = $('#u-to').value; $('#u-to').value = f; uCalc();
+});
+uBuild();
+
+/* ================= 割り勘 ================= */
+let wGroups = [{name:'普通', count:4, weight:1, kanji:true}];
+function wGroupsRender(){
+  const box = $('#w-groups'); box.innerHTML = '';
+  wGroups.forEach((g, i) => {
+    const row = document.createElement('div'); row.className = 'grp-row';
+    row.innerHTML = `
+      <label class="fld"><span>グループ名</span><input type="text" data-k="name" value="${esc(g.name)}"></label>
+      <label class="fld"><span>人数</span><input type="number" data-k="count" value="${g.count}" min="1" max="99"></label>
+      <label class="fld"><span>重み（倍率）</span><input type="number" data-k="weight" value="${g.weight}" min="0" step="0.1"></label>
+      <label class="radio"><input type="radio" name="w-kanji" ${g.kanji?'checked':''}> 幹事（端数調整）</label>
+      <button class="del" ${wGroups.length===1?'disabled':''}>✕</button>`;
+    row.querySelectorAll('input[data-k]').forEach(inp => inp.addEventListener('input', () => {
+      g[inp.dataset.k] = inp.dataset.k === 'name' ? inp.value : +inp.value;
+      wCalc();
+    }));
+    row.querySelector('input[type=radio]').addEventListener('change', () => {
+      wGroups.forEach((x, xi) => x.kanji = xi === i); wCalc();
+    });
+    row.querySelector('.del').addEventListener('click', () => {
+      wGroups.splice(i, 1);
+      if (!wGroups.some(x => x.kanji)) wGroups[0].kanji = true;
+      wGroupsRender(); wCalc();
+    });
+    box.appendChild(row);
+  });
+}
+$('#w-addgrp').addEventListener('click', () => {
+  if (wGroups.length >= 6) return;
+  wGroups.push({name:'グループ'+(wGroups.length+1), count:1, weight:1, kanji:false});
+  wGroupsRender(); wCalc();
+});
+function wRound(v, unit, mode){
+  const f = mode === 'ceil' ? Math.ceil : mode === 'floor' ? Math.floor : Math.round;
+  return f(v / unit) * unit;
+}
+function wCalc(){
+  const total = Math.max(0, +$('#w-total').value || 0);
+  const unit = +$('#w-unit').value, mode = $('#w-round').value;
+  const totalWeight = wGroups.reduce((s,g) => s + g.count * g.weight, 0);
+  const out = $('#w-result');
+  if (!total || !totalWeight){ out.innerHTML = '<div class="note">金額とグループを入力してください</div>'; return; }
+  const per = wGroups.map(g => ({...g, pay: wRound(total * g.weight / totalWeight, unit, mode)}));
+  const kanjiIdx = per.findIndex(g => g.kanji);
+  let subtotal = per.reduce((s,g,i) => s + g.pay * g.count - (i === kanjiIdx ? g.pay : 0), 0);
+  const kanjiPay = total - subtotal; // organizer absorbs the remainder
+  let rows = per.map((g, i) => {
+    const pays = i === kanjiIdx
+      ? (g.count > 1 ? `${yen(g.pay)} × ${g.count-1}人 ＋ 幹事 ${yen(kanjiPay)}` : `幹事 ${yen(kanjiPay)}`)
+      : `${yen(g.pay)} × ${g.count}人`;
+    const sub = i === kanjiIdx ? g.pay * (g.count-1) + kanjiPay : g.pay * g.count;
+    return `<tr><td>${esc(g.name)}${i===kanjiIdx?' 👑':''}</td><td>${pays}</td><td class="num digits">${yen(sub)}</td></tr>`;
+  }).join('');
+  const diff = kanjiPay - per[kanjiIdx].pay;
+  out.innerHTML = `
+    <table class="res"><tr><th>グループ</th><th>支払い</th><th class="num">小計</th></tr>${rows}
+    <tr><td><b>合計</b></td><td></td><td class="num digits"><b>${yen(total)}</b></td></tr></table>
+    <div class="note">幹事の調整額: ${diff === 0 ? 'なし' : (diff > 0 ? '+' : '') + yen(diff).replace('¥', diff > 0 ? '¥' : '-¥').replace('--','-')}</div>`;
+}
+['w-total','w-unit','w-round'].forEach(id => $('#'+id).addEventListener('input', wCalc));
+wGroupsRender(); wCalc();
+
+/* ================= 営業日 ================= */
+const HOLIDAYS = {
+  '2025-01-01':'元日','2025-01-13':'成人の日','2025-02-11':'建国記念の日','2025-02-23':'天皇誕生日',
+  '2025-02-24':'休日(振替休日)','2025-03-20':'春分の日','2025-04-29':'昭和の日','2025-05-03':'憲法記念日',
+  '2025-05-04':'みどりの日','2025-05-05':'こどもの日','2025-05-06':'休日(振替休日)','2025-07-21':'海の日',
+  '2025-08-11':'山の日','2025-09-15':'敬老の日','2025-09-23':'秋分の日','2025-10-13':'スポーツの日',
+  '2025-11-03':'文化の日','2025-11-23':'勤労感謝の日','2025-11-24':'休日(振替休日)',
+  '2026-01-01':'元日','2026-01-12':'成人の日','2026-02-11':'建国記念の日','2026-02-23':'天皇誕生日',
+  '2026-03-20':'春分の日','2026-04-29':'昭和の日','2026-05-03':'憲法記念日','2026-05-04':'みどりの日',
+  '2026-05-05':'こどもの日','2026-05-06':'休日(振替休日)','2026-07-20':'海の日','2026-08-11':'山の日',
+  '2026-09-21':'敬老の日','2026-09-22':'国民の休日','2026-09-23':'秋分の日','2026-10-12':'スポーツの日',
+  '2026-11-03':'文化の日','2026-11-23':'勤労感謝の日',
+  '2027-01-01':'元日','2027-01-11':'成人の日','2027-02-11':'建国記念の日','2027-02-23':'天皇誕生日',
+  '2027-03-21':'春分の日','2027-03-22':'休日(振替休日)','2027-04-29':'昭和の日','2027-05-03':'憲法記念日',
+  '2027-05-04':'みどりの日','2027-05-05':'こどもの日','2027-07-19':'海の日','2027-08-11':'山の日',
+  '2027-09-20':'敬老の日','2027-09-23':'秋分の日','2027-10-11':'スポーツの日','2027-11-03':'文化の日',
+  '2027-11-23':'勤労感謝の日',
+};
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const JWD = ['日','月','火','水','木','金','土'];
+const jdate = d => `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${JWD[d.getDay()]}）`;
+function isBizday(d){ return d.getDay() !== 0 && d.getDay() !== 6 && !HOLIDAYS[iso(d)]; }
+let bMode = 'after';
+$$('#b-modes button').forEach(b => b.addEventListener('click', () => {
+  bMode = b.dataset.m;
+  $$('#b-modes button').forEach(x => x.classList.toggle('active', x === b));
+  $('#b-after').style.display = bMode === 'after' ? '' : 'none';
+  $('#b-between').style.display = bMode === 'between' ? '' : 'none';
+  bCalc();
+}));
+function bCalc(){
+  const detail = $('#b-detail');
+  if (bMode === 'after'){
+    const d0 = $('#b-date1').valueAsDate;
+    const n = Math.max(1, Math.min(365, +$('#b-n').value || 1));
+    const dir = +$('#b-dir').value;
+    if (!d0){ $('#b-result').textContent='–'; $('#b-cap').textContent=''; detail.innerHTML=''; return; }
+    const d = new Date(d0.getTime() + d0.getTimezoneOffset()*60000);
+    let count = 0, skipped = [];
+    while (count < n){
+      d.setDate(d.getDate() + dir);
+      if (isBizday(d)) count++;
+      else if (skipped.length < 12){
+        const h = HOLIDAYS[iso(d)];
+        if (h) skipped.push(`${iso(d)} ${h}`);
+      }
+      if (Math.abs(d.getFullYear() - d0.getFullYear()) > 3) break;
+    }
+    $('#b-result').textContent = jdate(d);
+    $('#b-cap').textContent = `${n}営業日${dir > 0 ? '後' : '前'}`;
+    detail.innerHTML = skipped.length ? `<div class="note">スキップした祝日: ${skipped.join('、')}</div>` : '';
+  } else {
+    const a = $('#b-date2').valueAsDate, b = $('#b-date3').valueAsDate;
+    if (!a || !b || b < a){ $('#b-result').textContent='–'; $('#b-cap').textContent = b && a && b < a ? '終了日は開始日以降にしてください' : ''; detail.innerHTML=''; return; }
+    const d = new Date(a.getTime() + a.getTimezoneOffset()*60000);
+    const end = new Date(b.getTime() + b.getTimezoneOffset()*60000);
+    let biz = 0, all = 0, hols = [];
+    while (d <= end){
+      all++;
+      if (isBizday(d)) biz++;
+      else if (HOLIDAYS[iso(d)] && hols.length < 15) hols.push(`${iso(d)} ${HOLIDAYS[iso(d)]}`);
+      d.setDate(d.getDate() + 1);
+    }
+    $('#b-result').innerHTML = `${biz} <span class="u">営業日</span>`;
+    $('#b-cap').textContent = `暦日 ${all}日中（開始日・終了日を含む）`;
+    detail.innerHTML = hols.length ? `<div class="note">期間内の祝日: ${hols.join('、')}</div>` : '';
+  }
+}
+(function(){
+  const today = new Date();
+  $('#b-date1').value = iso(today);
+  $('#b-date2').value = iso(today);
+  const next = new Date(today); next.setMonth(next.getMonth()+1);
+  $('#b-date3').value = iso(next);
+})();
+['b-date1','b-n','b-dir','b-date2','b-date3'].forEach(id => $('#'+id).addEventListener('input', bCalc));
+bCalc();
+
+/* ================= 和暦西暦 ================= */
+const ERAS = [ // [name, startYear, endYear(含む), start detail]
+  ['令和', 2019, 9999, '2019年5月1日〜'],
+  ['平成', 1989, 2019, '1989年1月8日〜2019年4月30日'],
+  ['昭和', 1926, 1989, '1926年12月25日〜1989年1月7日'],
+  ['大正', 1912, 1926, '1912年7月30日〜1926年12月24日'],
+  ['明治', 1868, 1912, '1868年1月25日〜1912年7月29日'],
+];
+const ETO = ['子（ね）','丑（うし）','寅（とら）','卯（う）','辰（たつ）','巳（み）','午（うま）','未（ひつじ）','申（さる）','酉（とり）','戌（いぬ）','亥（い）'];
+let jMode = 'toWareki';
+$$('#j-modes button').forEach(b => b.addEventListener('click', () => {
+  jMode = b.dataset.m;
+  $$('#j-modes button').forEach(x => x.classList.toggle('active', x === b));
+  $('#j-toWareki').style.display = jMode === 'toWareki' ? '' : 'none';
+  $('#j-toSeireki').style.display = jMode === 'toSeireki' ? '' : 'none';
+  jCalc();
+}));
+function warekiOf(y){
+  return ERAS.filter(([n, s, e]) => y >= s && y <= e)
+             .map(([n, s]) => `${n}${y - s + 1 === 1 ? '元' : y - s + 1}年`);
+}
+function jCalc(){
+  let y;
+  if (jMode === 'toWareki'){
+    y = +$('#j-year').value;
+    if (!y || y < 1868 || y > 2100){ $('#j-result').textContent = '–'; $('#j-cap').textContent = '1868〜2100年で入力してください'; $('#j-table').innerHTML=''; return; }
+    const w = warekiOf(y);
+    $('#j-result').textContent = w.join(' ／ ');
+    $('#j-cap').textContent = w.length > 1 ? '※改元年のため2つの元号にまたがります' : `西暦${y}年`;
+  } else {
+    const era = $('#j-era').value, n = +$('#j-eyear').value;
+    const e = ERAS.find(x => x[0] === era);
+    y = e[1] + n - 1;
+    const maxN = Math.min(e[2], 2100) - e[1] + 1;
+    if (!n || n < 1 || n > maxN){ $('#j-result').textContent = '–'; $('#j-cap').textContent = `${era}は${maxN}年までです`; $('#j-table').innerHTML=''; return; }
+    $('#j-result').textContent = `西暦${y}年`;
+    $('#j-cap').textContent = `${era}${n === 1 ? '元' : n}年`;
+  }
+  const now = new Date();
+  const ageThisYear = now.getFullYear() - y;
+  const eto = ETO[((y - 4) % 12 + 12) % 12];
+  $('#j-table').innerHTML = `<table class="res">
+    <tr><td>干支</td><td class="num">${eto}</td></tr>
+    <tr><td>年齢（誕生日前）</td><td class="num digits">${ageThisYear >= 1 ? (ageThisYear-1)+'歳' : '–'}</td></tr>
+    <tr><td>年齢（誕生日後）</td><td class="num digits">${ageThisYear >= 0 ? ageThisYear+'歳' : '–'}</td></tr>
+  </table>`;
+}
+$('#j-year').value = new Date().getFullYear();
+['j-year','j-era','j-eyear'].forEach(id => $('#'+id).addEventListener('input', jCalc));
+jCalc();
+
+/* ================= BMI ================= */
+function bmiCalc(){
+  const h = (+$('#m-height').value || 0) / 100, w = +$('#m-weight').value || 0;
+  if (h <= 0 || w <= 0){ $('#m-bmi').textContent = '–'; $('#m-cat').textContent=''; $('#m-table').innerHTML=''; return; }
+  const bmi = w / (h*h);
+  $('#m-bmi').textContent = bmi.toFixed(1);
+  const cats = [
+    [18.5, '低体重（やせ）', 'var(--accent2)'],
+    [25,   '普通体重',       'var(--green)'],
+    [30,   '肥満（1度）',    'var(--yellow)'],
+    [35,   '肥満（2度）',    'var(--orange)'],
+    [40,   '肥満（3度）',    'var(--red)'],
+    [1e9,  '肥満（4度）',    'var(--red)'],
+  ];
+  const [_, label, color] = cats.find(([lim]) => bmi < lim);
+  const badge = $('#m-cat');
+  badge.textContent = label;
+  badge.style.background = `color-mix(in srgb, ${color} 18%, transparent)`;
+  badge.style.color = color;
+  const ideal = 22 * h * h;
+  $('#m-table').innerHTML = `<table class="res">
+    <tr><td>適正体重（BMI 22）</td><td class="num digits">${ideal.toFixed(1)} kg</td></tr>
+    <tr><td>適正体重との差</td><td class="num digits">${(w-ideal) >= 0 ? '+' : ''}${(w-ideal).toFixed(1)} kg</td></tr>
+    <tr><td>普通体重の範囲</td><td class="num digits">${(18.5*h*h).toFixed(1)} 〜 ${(25*h*h).toFixed(1)} kg</td></tr>
+  </table>`;
+}
+['m-height','m-weight'].forEach(id => $('#'+id).addEventListener('input', bmiCalc));
+bmiCalc();
+
+/* ================= ローン ================= */
+function loanCalc(){
+  const P = (+$('#l-amount').value || 0) * 10000;
+  const rate = (+$('#l-rate').value || 0) / 100 / 12;
+  const n = (+$('#l-years').value || 0) * 12;
+  if (P <= 0 || n <= 0){ $('#l-monthly').textContent='–'; $('#l-table').innerHTML=''; return; }
+  const monthly = rate === 0 ? P / n : P * rate * Math.pow(1+rate, n) / (Math.pow(1+rate, n) - 1);
+  const total = monthly * n;
+  $('#l-monthly').textContent = yen(monthly);
+  $('#l-table').innerHTML = `<table class="res">
+    <tr><td>総返済額</td><td class="num digits">${yen(total)}</td></tr>
+    <tr><td>うち利息</td><td class="num digits">${yen(total - P)}</td></tr>
+    <tr><td>返済回数</td><td class="num digits">${n}回（${n/12}年）</td></tr>
+    <tr><td>年間返済額</td><td class="num digits">${yen(monthly*12)}</td></tr>
+  </table>`;
+}
+['l-amount','l-rate','l-years'].forEach(id => $('#'+id).addEventListener('input', loanCalc));
+loanCalc();
+
+/* ================= ハッシュ ================= */
+/* compact MD5 (RFC 1321) */
+function md5(str){
+  const utf8 = new TextEncoder().encode(str);
+  const K = new Uint32Array(64).map((_, i) => Math.floor(Math.abs(Math.sin(i+1)) * 2**32));
+  const S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
+             4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  const len = utf8.length;
+  const nBlocks = ((len + 8) >> 6) + 1;
+  const buf = new Uint8Array(nBlocks * 64);
+  buf.set(utf8); buf[len] = 0x80;
+  const dv = new DataView(buf.buffer);
+  dv.setUint32(nBlocks*64 - 8, len << 3, true);
+  dv.setUint32(nBlocks*64 - 4, Math.floor(len / 536870912), true);
+  let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+  const rotl = (x, c) => (x << c) | (x >>> (32 - c));
+  for (let bl = 0; bl < nBlocks; bl++){
+    const M = new Uint32Array(16);
+    for (let i = 0; i < 16; i++) M[i] = dv.getUint32(bl*64 + i*4, true);
+    let A = a0, B = b0, C = c0, D = d0;
+    for (let i = 0; i < 64; i++){
+      let F, g;
+      if (i < 16){ F = (B & C) | (~B & D); g = i; }
+      else if (i < 32){ F = (D & B) | (~D & C); g = (5*i + 1) % 16; }
+      else if (i < 48){ F = B ^ C ^ D; g = (3*i + 5) % 16; }
+      else { F = C ^ (B | ~D); g = (7*i) % 16; }
+      F = (F + A + K[i] + M[g]) | 0;
+      A = D; D = C; C = B;
+      B = (B + rotl(F, S[i])) | 0;
+    }
+    a0 = (a0 + A) | 0; b0 = (b0 + B) | 0; c0 = (c0 + C) | 0; d0 = (d0 + D) | 0;
+  }
+  return [a0, b0, c0, d0].map(x => {
+    const b = new Uint8Array(4); new DataView(b.buffer).setUint32(0, x, true);
+    return [...b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }).join('');
+}
+const HASH_ALGOS = [['MD5', null], ['SHA-1','SHA-1'], ['SHA-256','SHA-256'], ['SHA-512','SHA-512']];
+(function(){
+  const box = $('#h-out');
+  HASH_ALGOS.forEach(([name]) => {
+    const row = document.createElement('div'); row.className = 'hash-row';
+    row.innerHTML = `<div class="a">${name}</div><div class="v" data-a="${name}">–</div><button class="cp">コピー</button>`;
+    row.querySelector('.cp').addEventListener('click', async e => {
+      const v = row.querySelector('.v').textContent;
+      if (v === '–') return;
+      try{ await navigator.clipboard.writeText(v); e.target.textContent = '✓'; setTimeout(() => e.target.textContent = 'コピー', 900); }catch(err){}
+    });
+    box.appendChild(row);
+  });
+})();
+let hashSeq = 0;
+async function hashCalc(){
+  const text = $('#h-input').value;
+  const seq = ++hashSeq;
+  const rows = Object.fromEntries($$('#h-out .v').map(el => [el.dataset.a, el]));
+  if (!text){ Object.values(rows).forEach(el => el.textContent = '–'); return; }
+  rows['MD5'].textContent = md5(text);
+  const data = new TextEncoder().encode(text);
+  for (const [name, algo] of HASH_ALGOS){
+    if (!algo) continue;
+    try{
+      const buf = await crypto.subtle.digest(algo, data);
+      if (seq !== hashSeq) return;
+      rows[name].textContent = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+    }catch(e){ rows[name].textContent = '(この環境では利用できません)'; }
+  }
+}
+$('#h-input').addEventListener('input', hashCalc);
+
+/* ---- init ---- */
+show(location.hash.slice(1) || 'calc');
+graphResize();
+</script>
+</body>
+</html>

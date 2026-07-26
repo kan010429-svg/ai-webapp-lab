@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <a href="../../index.html" class="back-btn">← Back</a>
+      <h1>🔍 Regex Lab</h1>
+    </div>
+    <div class="toolbar-right">
+      <button id="btn-save" title="保存">💾</button>
+      <button id="btn-saved" title="保存済み">⭐</button>
+      <select id="presets">
+        <option value="">プリセット...</option>
+      </select>
+      <button id="btn-cheat" title="チートシート">📖</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="input-section">
+      <div class="regex-row">
+        <span class="regex-slash">/</span>
+        <input type="text" id="regex-input" placeholder="正規表現を入力..." spellcheck="false">
+        <span class="regex-slash">/</span>
+        <input type="text" id="flags-input" value="g" placeholder="flags" spellcheck="false" class="flags-input">
+      </div>
+      <div id="regex-error" class="regex-error"></div>
+      <div id="regex-explain" class="regex-explain"></div>
+      <div class="info-bar">
+        <span id="match-count">0 マッチ</span>
+        <span id="group-count">0 グループ</span>
+        <span id="exec-time">0ms</span>
+      </div>
+    </div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="test">🔍 テスト</button>
+      <button class="mode-tab" data-mode="replace">🔄 置換</button>
+    </div>
+    <div class="panels">
+      <div id="testMode" class="mode-content">
+        <div class="panel test-panel">
+          <div class="panel-header">テスト文字列</div>
+          <div id="test-display" class="test-display"></div>
+          <textarea id="test-input" spellcheck="false" placeholder="テスト文字列を入力..."></textarea>
+        </div>
+        <div class="panel match-panel">
+          <div class="panel-header">マッチ結果</div>
+          <div id="match-results" class="match-results"></div>
+        </div>
+      </div>
+      <div id="replaceMode" class="mode-content" style="display: none;">
+        <div class="panel replace-panel">
+          <div class="panel-header">置換</div>
+          <div class="replace-controls">
+            <input type="text" id="replace-input" placeholder="置換後の文字列（$1, $2でグループ参照）" spellcheck="false">
+            <button id="btn-replace" class="btn-replace">置換実行</button>
+          </div>
+          <div class="panel-header">元の文字列</div>
+          <textarea id="replace-source" spellcheck="false" placeholder="置換する文字列を入力..."></textarea>
+          <div class="panel-header">置換結果</div>
+          <div id="replace-result" class="replace-result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="savedModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>保存済み正規表現</h2>
+        <button id="btn-close-saved">✕</button>
+      </div>
+      <div id="saved-list" class="saved-list"></div>
+    </div>
+  </div>
+  <div id="cheatsheet" class="cheatsheet">
+    <div class="cheat-content">
+      <div class="cheat-header">
+        <h2>正規表現チートシート</h2>
+        <button id="btn-close-cheat">✕</button>
+      </div>
+      <div class="cheat-body" id="cheat-body"></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

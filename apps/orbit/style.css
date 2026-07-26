@@ -1,0 +1,11 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050510;color:#e8e8f0;font-family:system-ui,sans-serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh}
+header{padding:12px 20px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:16px;flex-wrap:wrap;z-index:10}
+h1{font-size:1.2rem;white-space:nowrap}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+select,button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#e8e8f0;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem}
+label{font-size:.75rem;display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.6)}
+input[type=range]{width:80px;accent-color:#cba6f7}
+canvas{flex:1;display:block}
+#info{position:fixed;bottom:16px;left:16px;font-size:.75rem;color:rgba(255,255,255,.4)}

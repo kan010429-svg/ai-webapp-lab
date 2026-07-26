@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Roller</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎲 Dice Roller</h1>
+    <div class="dice-display" id="diceDisplay"></div>
+    <div class="result" id="result">0</div>
+    <div class="stats" id="stats"></div>
+    <div class="controls">
+      <div class="dice-selector">
+        <button class="dice-btn" data-sides="4">D4</button>
+        <button class="dice-btn active" data-sides="6">D6</button>
+        <button class="dice-btn" data-sides="8">D8</button>
+        <button class="dice-btn" data-sides="10">D10</button>
+        <button class="dice-btn" data-sides="12">D12</button>
+        <button class="dice-btn" data-sides="20">D20</button>
+        <button class="dice-btn" data-sides="100">D100</button>
+        <button class="dice-btn" id="customBtn">Custom</button>
+      </div>
+      <div class="count-control">
+        <label>個数:</label>
+        <button id="decreaseCount">-</button>
+        <span id="diceCount">1</span>
+        <button id="increaseCount">+</button>
+      </div>
+      <div class="modifier-control">
+        <label>修正値:</label>
+        <button id="decreaseModifier">-</button>
+        <span id="modifier">0</span>
+        <button id="increaseModifier">+</button>
+      </div>
+      <button id="rollBtn" class="roll-btn">🎲 振る</button>
+    </div>
+    <div class="presets">
+      <button id="savePreset">💾 保存</button>
+      <button id="loadPreset">📂 読込</button>
+      <button id="exportHistory">📥 履歴出力</button>
+    </div>
+    <div class="history" id="history"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

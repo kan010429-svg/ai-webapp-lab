@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClockTools — 時計・タイマー</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%8F%B0%3C/text%3E%3C/svg%3E" />
+<meta name="description" content="時計・世界時計・ストップウォッチ・タイマー・ポモドーロ・インターバルタイマーを1つにまとめた時間管理アプリ。" />
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#161a26; --panel2:#1c2130;
+    --border:#252b3b; --border2:#333b52;
+    --text:#e7ebf5; --muted:#9aa3b8; --muted2:#6b7488;
+    --accent:#7c8cff; --accent2:#4dd0e1;
+    --green:#3ddc84; --red:#ff6b6b; --yellow:#ffcc55;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;
+    background:
+      radial-gradient(900px 480px at 20% -10%, rgba(124,140,255,.13), transparent 60%),
+      radial-gradient(800px 400px at 100% 0%, rgba(77,208,225,.09), transparent 55%),
+      var(--bg);
+    color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+  }
+  button{font-family:inherit;color:inherit}
+  .wrap{width:100%;max-width:860px;margin:0 auto;padding:0 20px}
+
+  header{padding:20px 0 0;flex:none}
+  .titlebar{display:flex;align-items:center;gap:10px}
+  .titlebar h1{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .titlebar .sub{color:var(--muted2);font-size:13px;font-weight:600}
+  .titlebar .back{margin-left:auto;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:8px}
+  .titlebar .back:hover{background:var(--panel2);color:var(--text)}
+
+  nav.tabs{display:flex;gap:2px;overflow-x:auto;margin-top:14px;border-bottom:1px solid var(--border);scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  .tab{
+    position:relative;background:none;border:0;color:var(--muted);
+    font-size:14px;font-weight:600;padding:10px 15px 12px;cursor:pointer;
+    white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:color .15s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab::after{content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2.5px;border-radius:2px;background:transparent;transition:background .15s}
+  .tab.active{color:var(--text)}
+  .tab.active::after{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+  main{flex:1;padding:30px 0 60px}
+  .view{display:none}
+  .view.active{display:block;animation:fadein .18s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+  .card + .card{margin-top:16px}
+  .card h2{font-size:15px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.02em}
+
+  /* segmented control */
+  .seg{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px}
+  .seg button{background:none;border:0;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;padding:6px 14px;cursor:pointer;transition:all .12s}
+  .seg button:hover{color:var(--text)}
+  .seg button.active{background:var(--accent);color:#fff}
+
+  .btn{
+    background:var(--panel2);border:1px solid var(--border2);border-radius:12px;
+    color:var(--text);font-size:14px;font-weight:700;padding:11px 22px;cursor:pointer;transition:all .12s;
+  }
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:linear-gradient(120deg,var(--accent),#6d7bff);border-color:transparent;color:#fff}
+  .btn.primary:hover{filter:brightness(1.1)}
+  .btn.danger{color:var(--red)}
+  .btn.big{font-size:16px;padding:14px 34px;border-radius:14px}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btnrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+  .chip{background:var(--panel2);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12.5px;font-weight:600;padding:6px 14px;cursor:pointer;transition:all .12s}
+  .chip:hover{color:var(--text);border-color:var(--border2)}
+  .chip.active{background:var(--accent);border-color:transparent;color:#fff}
+  .chiprow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+
+  input[type=number],select{
+    background:var(--panel2);border:1px solid var(--border2);border-radius:10px;
+    color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:inherit;
+  }
+  input[type=number]:focus,select:focus{border-color:var(--accent)}
+  input[type=number]{width:90px;text-align:center}
+  label.fld{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13.5px;font-weight:600}
+
+  .digits{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+  /* ==== clock view ==== */
+  .clock-main{text-align:center;padding:36px 24px}
+  .clock-time{font-size:clamp(48px,11vw,92px);font-weight:800;letter-spacing:.01em;line-height:1.1}
+  .clock-time small{font-size:.45em;color:var(--muted);font-weight:700}
+  .clock-date{color:var(--muted);font-size:16px;margin-top:6px}
+  .clock-modes{margin-bottom:18px}
+
+  .wordclock{font-size:clamp(30px,6.5vw,52px);font-weight:800;line-height:1.4;padding:10px 0}
+  .wordclock .dim{color:var(--muted2);font-weight:600}
+
+  /* clock color themes */
+  #view-clock{--ck:var(--text);--ck-glow:transparent}
+  .clock-time,.wordclock,#ck-bin-digits{color:var(--ck);text-shadow:0 0 24px var(--ck-glow)}
+  .wc-card .time{color:var(--ck)}
+  .theme-dots{display:flex;gap:10px;justify-content:center;margin-top:22px}
+  .tdot{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;transition:transform .12s}
+  .tdot:hover{transform:scale(1.15)}
+  .tdot.active{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
+
+  .binclock{display:flex;gap:26px;justify-content:center;padding:16px 0 6px}
+  .bincol{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .bincol .lbl{color:var(--muted2);font-size:12px;font-weight:700}
+  .binpair{display:flex;gap:8px}
+  .bindots{display:flex;flex-direction:column-reverse;gap:8px}
+  .bit{width:22px;height:22px;border-radius:7px;background:var(--panel2);border:1px solid var(--border);display:grid;place-items:center;font-size:10px;color:var(--muted2);font-weight:700;transition:all .1s}
+  .bit.on{background:var(--ck,var(--accent));border-color:transparent;color:#fff;box-shadow:0 0 10px var(--ck-glow,rgba(124,140,255,.5))}
+
+  .wc-add{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .wc-add select{flex:1;min-width:180px}
+  .wc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .wc-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;position:relative}
+  .wc-card .city{font-weight:700;font-size:14px}
+  .wc-card .zone{color:var(--muted2);font-size:11.5px}
+  .wc-card .time{font-size:26px;font-weight:800;margin-top:4px}
+  .wc-card .diff{color:var(--muted);font-size:12px;margin-top:2px}
+  .wc-card .del{position:absolute;top:8px;right:8px;background:none;border:0;color:var(--muted2);cursor:pointer;font-size:14px;padding:4px 7px;border-radius:6px}
+  .wc-card .del:hover{background:var(--panel);color:var(--red)}
+
+  /* ==== ring timers ==== */
+  .ringbox{display:flex;flex-direction:column;align-items:center;gap:18px;padding:10px 0}
+  .ringwrap{position:relative;width:min(270px,70vw)}
+  .ringwrap svg{width:100%;height:auto;display:block;transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:var(--panel2);stroke-width:9}
+  .ring-fg{fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;transition:stroke .3s}
+  .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .ring-label .t{font-size:clamp(38px,8vw,54px);font-weight:800}
+  .ring-label .s{color:var(--muted);font-size:14px;font-weight:600}
+
+  /* ==== stopwatch ==== */
+  .sw-time{text-align:center;font-size:clamp(44px,10vw,76px);font-weight:800;padding:22px 0 6px}
+  .sw-time small{font-size:.5em;color:var(--muted);font-weight:700}
+  .laps{margin-top:18px;max-height:280px;overflow-y:auto;border-top:1px solid var(--border)}
+  .lap{display:flex;justify-content:space-between;padding:9px 8px;border-bottom:1px solid var(--border);font-size:14px}
+  .lap .n{color:var(--muted2);font-weight:700}
+  .lap.best .d{color:var(--green);font-weight:700}
+  .lap.worst .d{color:var(--red);font-weight:700}
+  .lap .cum{color:var(--muted2)}
+
+  /* ==== timer multi-alarm ==== */
+  .alarm-box{width:100%;max-width:460px;border-top:1px solid var(--border);padding-top:16px;text-align:center}
+  .alarm-box .cap{color:var(--muted);font-size:13px;font-weight:700;margin-bottom:10px}
+  .alarm-add{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:12px}
+  .alarm-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .achip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--panel2);border:1px solid var(--border2);border-radius:999px;
+    font-size:13px;font-weight:700;padding:6px 8px 6px 14px;
+  }
+  .achip.fired{border-color:var(--green);color:var(--green);opacity:.75}
+  .achip.next{border-color:var(--accent)}
+  .achip button{background:none;border:0;color:var(--muted2);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:50%}
+  .achip button:hover{color:var(--red)}
+  .alarm-note{color:var(--muted2);font-size:12px;margin-top:10px}
+
+  /* ==== pomodoro ==== */
+  .pomo-stats{display:flex;gap:24px;justify-content:center;margin-top:4px}
+  .pomo-stats .st{text-align:center}
+  .pomo-stats b{display:block;font-size:22px;font-weight:800}
+  .pomo-stats span{color:var(--muted2);font-size:12px;font-weight:600}
+  .dots{display:flex;gap:7px;justify-content:center}
+  .dots .dot{width:9px;height:9px;border-radius:50%;background:var(--panel2);border:1px solid var(--border)}
+  .dots .dot.done{background:var(--red);border-color:transparent}
+
+  /* ==== interval ==== */
+  .phase-banner{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .cfg-grid{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+
+  .settings{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+
+  footer{flex:none;padding:0 0 26px;text-align:center;color:var(--muted2);font-size:12.5px}
+  @media (max-width:560px){
+    .card{padding:18px 14px}
+    .binclock{gap:14px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="titlebar">
+        <h1>⏰ ClockTools</h1><span class="sub">時計・タイマー</span>
+        <a class="back" href="../../index.html">← 一覧へ戻る</a>
+      </div>
+      <nav class="tabs" id="tabs" role="tablist">
+        <button class="tab" data-v="clock">🕐 クロック</button>
+        <button class="tab" data-v="stopwatch">⏱️ ストップウォッチ</button>
+        <button class="tab" data-v="timer">⏳ タイマー</button>
+        <button class="tab" data-v="pomodoro">🍅 ポモドーロ</button>
+        <button class="tab" data-v="interval">🔁 インターバル</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+
+      <!-- クロック -->
+      <section class="view" id="view-clock">
+        <div class="card clock-main">
+          <div class="clock-modes seg" id="clock-modes">
+            <button data-m="digital" class="active">デジタル</button>
+            <button data-m="word">ワード</button>
+            <button data-m="binary">2進数</button>
+          </div>
+          <div id="clock-digital">
+            <div class="clock-time digits" id="ck-time">--:--:--</div>
+            <div class="clock-date" id="ck-date"></div>
+          </div>
+          <div id="clock-word" style="display:none">
+            <div class="wordclock" id="ck-word"></div>
+            <div class="clock-date" id="ck-date2"></div>
+          </div>
+          <div id="clock-binary" style="display:none">
+            <div class="binclock" id="ck-bin"></div>
+            <div class="clock-date digits" id="ck-bin-digits" style="margin-top:10px"></div>
+          </div>
+          <div class="theme-dots" id="ck-themes"></div>
+        </div>
+        <div class="card">
+          <h2>🌍 世界時計</h2>
+          <div class="wc-add">
+            <select id="wc-select"></select>
+            <button class="btn" id="wc-addbtn">追加</button>
+          </div>
+          <div class="wc-grid" id="wc-grid"></div>
+        </div>
+      </section>
+
+      <!-- ストップウォッチ -->
+      <section class="view" id="view-stopwatch">
+        <div class="card">
+          <div class="sw-time digits" id="sw-time">00:00<small>.00</small></div>
+          <div class="btnrow">
+            <button class="btn primary big" id="sw-start">スタート</button>
+            <button class="btn big" id="sw-lap" disabled>ラップ</button>
+            <button class="btn big danger" id="sw-reset">リセット</button>
+          </div>
+          <div class="laps" id="sw-laps" style="display:none"></div>
+        </div>
+      </section>
+
+      <!-- タイマー -->
+      <section class="view" id="view-timer">
+        <div class="card ringbox">
+          <div class="chiprow" id="tm-presets"></div>
+          <div class="settings" id="tm-custom">
+            <label class="fld"><input type="number" id="tm-min" min="0" max="999" value="5"> 分</label>
+            <label class="fld"><input type="number" id="tm-sec" min="0" max="59" value="0"> 秒</label>
+          </div>
+          <div class="ringwrap">
+            <svg viewBox="0 0 200 200">
+              <circle class="ring-bg" cx="100" cy="100" r="90"/>
+              <circle class="ring-fg" id="tm-ring" cx="100" cy="100" r="90"/>
+            </svg>
+            <div class="ring-label">
+              <div class="t digits" id="tm-time">05:00</div>
+              <div class="s" id="tm-state">停止中</div>
+            </div>
+          </div>
+          <div class="btnrow">
+            <button class="btn primary big" id="tm-start">スタート</button>
+            <button class="btn big danger" id="tm-reset">リセット</button>
+          </div>
+          <div class="alarm-box">
+            <div class="cap">🔔 マルチアラーム</div>
+            <div class="alarm-add">
+              <label class="fld"><input type="number" id="al-min" min="1" max="999" value="5"> 分後</label>
+              <button class="btn" id="al-add">＋ 追加</button>
+            </div>
+            <div class="alarm-chips" id="al-chips"></div>
+            <div class="alarm-note" id="al-note">「5分後」「10分後」のように複数追加すると、最長の時点までカウントしながら各時点でチャイムが鳴ります。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ポモドーロ -->
+      <section class="view" id="view-pomodoro">
+        <div class="card ringbox">
+          <div class="seg" id="po-modes">
+            <button data-m="focus" class="active">集中</button>
+            <button data-m="short">小休憩</button>
+            <button data-m="long">大休憩</button>
+          </div>
+          <div class="ringwrap">
+            <svg viewBox="0 0 200 200">
+              <circle class="ring-bg" cx="100" cy="100" r="90"/>
+              <circle class="ring-fg" id="po-ring" cx="100" cy="100" r="90"/>
+            </svg>
+            <div class="ring-label">
+              <div class="t digits" id="po-time">25:00</div>
+              <div class="s" id="po-state">集中する時間</div>
+            </div>
+          </div>
+          <div class="dots" id="po-dots"></div>
+          <div class="btnrow">
+            <button class="btn primary big" id="po-start">スタート</button>
+            <button class="btn big" id="po-skip">スキップ ▸</button>
+            <button class="btn big danger" id="po-reset">リセット</button>
+          </div>
+          <div class="pomo-stats">
+            <div class="st"><b class="digits" id="po-count">0</b><span>完了セッション</span></div>
+            <div class="st"><b class="digits" id="po-total">0<small style="font-size:.6em">分</small></b><span>今日の集中時間</span></div>
+          </div>
+          <div class="settings">
+            <label class="fld">集中 <input type="number" id="po-focus" min="1" max="120" value="25"> 分</label>
+            <label class="fld">小休憩 <input type="number" id="po-short" min="1" max="60" value="5"> 分</label>
+            <label class="fld">大休憩 <input type="number" id="po-long" min="1" max="90" value="15"> 分</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- インターバル -->
+      <section class="view" id="view-interval">
+        <div class="card ringbox">
+          <div class="chiprow" id="iv-presets"></div>
+          <div class="phase-banner" id="iv-phase">READY</div>
+          <div class="ringwrap">
+            <svg viewBox="0 0 200 200">
+              <circle class="ring-bg" cx="100" cy="100" r="90"/>
+              <circle class="ring-fg" id="iv-ring" cx="100" cy="100" r="90"/>
+            </svg>
+            <div class="ring-label">
+              <div class="t digits" id="iv-time">00:20</div>
+              <div class="s digits" id="iv-round">ラウンド – / –</div>
+            </div>
+          </div>
+          <div class="btnrow">
+            <button class="btn primary big" id="iv-start">スタート</button>
+            <button class="btn big danger" id="iv-reset">リセット</button>
+          </div>
+          <div class="cfg-grid">
+            <label class="fld">準備 <input type="number" id="iv-prep" min="0" max="120" value="10"> 秒</label>
+            <label class="fld">ワーク <input type="number" id="iv-work" min="5" max="600" value="20"> 秒</label>
+            <label class="fld">レスト <input type="number" id="iv-rest" min="0" max="600" value="10"> 秒</label>
+            <label class="fld">ラウンド <input type="number" id="iv-rounds" min="1" max="50" value="8"> 回</label>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+  <footer>ClockTools — AI App Lab</footer>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const pad = n => String(n).padStart(2, '0');
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('clocktools.'+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('clocktools.'+k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---- beep (Web Audio) ---- */
+let actx = null;
+function beep(freq=880, dur=.14, when=0, vol=.25){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const t = actx.currentTime + when;
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = freq; o.type = 'sine';
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(.001, t + dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(t); o.stop(t + dur + .02);
+  }catch(e){}
+}
+const chime = () => { beep(880,.15,0); beep(1175,.15,.18); beep(1568,.3,.36); };
+
+/* ---- tabs ---- */
+const VIEWS = ['clock','stopwatch','timer','pomodoro','interval'];
+function show(v){
+  if (!VIEWS.includes(v)) v = 'clock';
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.v === v));
+  VIEWS.forEach(x => $('#view-'+x).classList.toggle('active', x === v));
+  history.replaceState(null, '', '#'+v);
+}
+$$('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.v)));
+show(location.hash.slice(1) || store.get('view','clock'));
+addEventListener('pagehide', () => store.set('view', location.hash.slice(1) || 'clock'));
+
+/* ================= クロック ================= */
+const KANJI_NUM = ['','一','二','三','四','五','六','七','八','九','十','十一','十二'];
+function kanjiNum(n){ // 0-59
+  if (n === 0) return '零';
+  const t = Math.floor(n/10), o = n%10;
+  return (t>1?KANJI_NUM[t]:'') + (t>0?'十':'') + (o>0?KANJI_NUM[o]:'');
+}
+let clockMode = store.get('clockMode','digital');
+function setClockMode(m){
+  clockMode = m; store.set('clockMode', m);
+  $$('#clock-modes button').forEach(b => b.classList.toggle('active', b.dataset.m === m));
+  $('#clock-digital').style.display = m==='digital' ? '' : 'none';
+  $('#clock-word').style.display   = m==='word'    ? '' : 'none';
+  $('#clock-binary').style.display = m==='binary'  ? '' : 'none';
+  renderClock();
+}
+$$('#clock-modes button').forEach(b => b.addEventListener('click', () => setClockMode(b.dataset.m)));
+
+/* ---- clock color themes ---- */
+const CK_THEMES = [
+  ['ホワイト',   '',        ''],
+  ['インディゴ', '#7c8cff', 'rgba(124,140,255,.45)'],
+  ['シアン',     '#4dd0e1', 'rgba(77,208,225,.45)'],
+  ['グリーン',   '#3ddc84', 'rgba(61,220,132,.45)'],
+  ['アンバー',   '#ffcc55', 'rgba(255,204,85,.45)'],
+  ['ピンク',     '#f472b6', 'rgba(244,114,182,.45)'],
+  ['レッド',     '#ff6b6b', 'rgba(255,107,107,.45)'],
+];
+let ckTheme = store.get('clockTheme', 0);
+function setClockTheme(i){
+  ckTheme = i; store.set('clockTheme', i);
+  const [, color, glow] = CK_THEMES[i] || CK_THEMES[0];
+  const view = $('#view-clock');
+  if (color){ view.style.setProperty('--ck', color); view.style.setProperty('--ck-glow', glow); }
+  else { view.style.removeProperty('--ck'); view.style.removeProperty('--ck-glow'); }
+  $$('#ck-themes .tdot').forEach((d, di) => d.classList.toggle('active', di === i));
+}
+(function(){
+  const box = $('#ck-themes');
+  CK_THEMES.forEach(([name, color], i) => {
+    const b = document.createElement('button');
+    b.className = 'tdot'; b.title = name;
+    b.setAttribute('aria-label', 'テーマ: ' + name);
+    b.style.background = color || 'var(--text)';
+    b.addEventListener('click', () => setClockTheme(i));
+    box.appendChild(b);
+  });
+  setClockTheme(ckTheme);
+})();
+
+// binary clock structure: 6 columns (H H M M S S), each BCD
+const binBits = [];
+(function(){
+  const box = $('#ck-bin');
+  const groups = [['時',[2,4]],['分',[3,4]],['秒',[3,4]]];
+  groups.forEach(([lbl, [b1,b2]]) => {
+    const col = document.createElement('div'); col.className = 'bincol';
+    const pair = document.createElement('div'); pair.className = 'binpair';
+    [b1,b2].forEach(nbits => {
+      const d = document.createElement('div'); d.className = 'bindots';
+      const arr = [];
+      for (let i = 0; i < nbits; i++){
+        const bit = document.createElement('div');
+        bit.className = 'bit'; bit.textContent = 2**i;
+        d.appendChild(bit); arr.push(bit);
+      }
+      pair.appendChild(d); binBits.push(arr);
+    });
+    col.appendChild(pair);
+    const l = document.createElement('div'); l.className = 'lbl'; l.textContent = lbl;
+    col.appendChild(l);
+    box.appendChild(col);
+  });
+})();
+const WDAYS = ['日','月','火','水','木','金','土'];
+function renderClock(){
+  const d = new Date();
+  const h = d.getHours(), m = d.getMinutes(), s = d.getSeconds();
+  if (clockMode === 'digital'){
+    $('#ck-time').innerHTML = `${pad(h)}:${pad(m)}<small>:${pad(s)}</small>`;
+    $('#ck-date').textContent = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${WDAYS[d.getDay()]}）`;
+  } else if (clockMode === 'word'){
+    const ampm = h < 12 ? '午前' : '午後';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    $('#ck-word').innerHTML =
+      `<span class="dim">${ampm}</span> ${KANJI_NUM[h12]}時` +
+      (m === 0 ? '<span class="dim">ちょうど</span>'
+       : m === 30 ? '<span class="dim">半</span>'
+       : ` ${kanjiNum(m)}分`);
+    $('#ck-date2').textContent = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${WDAYS[d.getDay()]}）`;
+  } else {
+    const digs = [Math.floor(h/10), h%10, Math.floor(m/10), m%10, Math.floor(s/10), s%10];
+    digs.forEach((v, i) => binBits[i].forEach((bit, b) => bit.classList.toggle('on', (v >> b & 1) === 1)));
+    $('#ck-bin-digits').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+}
+
+/* ---- 世界時計 ---- */
+const CITIES = [
+  ['東京','Asia/Tokyo'],['ソウル','Asia/Seoul'],['北京','Asia/Shanghai'],['シンガポール','Asia/Singapore'],
+  ['デリー','Asia/Kolkata'],['ドバイ','Asia/Dubai'],['モスクワ','Europe/Moscow'],['ベルリン','Europe/Berlin'],
+  ['パリ','Europe/Paris'],['ロンドン','Europe/London'],['ニューヨーク','America/New_York'],
+  ['シカゴ','America/Chicago'],['ロサンゼルス','America/Los_Angeles'],['ホノルル','Pacific/Honolulu'],
+  ['シドニー','Australia/Sydney'],['オークランド','Pacific/Auckland'],['サンパウロ','America/Sao_Paulo'],
+];
+let wcZones = store.get('worldclock', ['Asia/Tokyo','Europe/London','America/New_York']);
+(function(){
+  const sel = $('#wc-select');
+  CITIES.forEach(([name, tz]) => {
+    const o = document.createElement('option'); o.value = tz; o.textContent = `${name} (${tz})`;
+    sel.appendChild(o);
+  });
+})();
+$('#wc-addbtn').addEventListener('click', () => {
+  const tz = $('#wc-select').value;
+  if (!wcZones.includes(tz)){ wcZones.push(tz); store.set('worldclock', wcZones); buildWC(); }
+});
+function zoneOffsetMin(tz, d){
+  const f = new Intl.DateTimeFormat('en-US',{timeZone:tz, hour12:false, year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const p = {}; f.formatToParts(d).forEach(x => p[x.type] = x.value);
+  const asUTC = Date.UTC(p.year, p.month-1, p.day, p.hour%24, p.minute, p.second);
+  return Math.round((asUTC - d.getTime()) / 60000);
+}
+let wcEls = [];
+function buildWC(){
+  const grid = $('#wc-grid'); grid.innerHTML = ''; wcEls = [];
+  wcZones.forEach(tz => {
+    const city = (CITIES.find(c => c[1] === tz) || [tz.split('/').pop().replace(/_/g,' ')])[0];
+    const el = document.createElement('div'); el.className = 'wc-card';
+    el.innerHTML = `<div class="city"></div><div class="zone"></div><div class="time digits">--:--</div><div class="diff"></div><button class="del" title="削除">✕</button>`;
+    el.querySelector('.city').textContent = city;
+    el.querySelector('.zone').textContent = tz;
+    el.querySelector('.del').addEventListener('click', () => {
+      wcZones = wcZones.filter(z => z !== tz); store.set('worldclock', wcZones); buildWC();
+    });
+    grid.appendChild(el);
+    wcEls.push([tz, el]);
+  });
+  renderWC();
+}
+function renderWC(){
+  const d = new Date();
+  const localOff = -d.getTimezoneOffset();
+  wcEls.forEach(([tz, el]) => {
+    try{
+      const t = new Intl.DateTimeFormat('ja-JP',{timeZone:tz, hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d);
+      el.querySelector('.time').textContent = t;
+      const diff = (zoneOffsetMin(tz, d) - localOff) / 60;
+      el.querySelector('.diff').textContent = diff === 0 ? '現地と同じ' : (diff > 0 ? '+' : '') + diff + '時間';
+    }catch(e){ el.querySelector('.time').textContent = '--:--'; }
+  });
+}
+buildWC();
+
+/* ================= ストップウォッチ ================= */
+const sw = { running:false, start:0, elapsed:0, laps:[], raf:0 };
+function swFmt(ms, cs=true){
+  const c = Math.floor(ms/10)%100, s = Math.floor(ms/1000)%60, m = Math.floor(ms/60000)%60, h = Math.floor(ms/3600000);
+  const base = (h>0 ? h+':'+pad(m) : pad(m)) + ':' + pad(s);
+  return cs ? base + `<small>.${pad(c)}</small>` : base + '.' + pad(c);
+}
+function swNow(){ return sw.elapsed + (sw.running ? performance.now() - sw.start : 0); }
+function swRender(){
+  $('#sw-time').innerHTML = swFmt(swNow());
+  if (sw.running) sw.raf = requestAnimationFrame(swRender);
+}
+$('#sw-start').addEventListener('click', () => {
+  if (sw.running){
+    sw.elapsed = swNow(); sw.running = false;
+    cancelAnimationFrame(sw.raf);
+    $('#sw-start').textContent = '再開'; $('#sw-start').classList.remove('primary');
+    $('#sw-lap').disabled = true;
+  } else {
+    sw.start = performance.now(); sw.running = true;
+    $('#sw-start').textContent = 'ストップ'; $('#sw-start').classList.add('primary');
+    $('#sw-lap').disabled = false;
+    swRender();
+  }
+});
+$('#sw-lap').addEventListener('click', () => {
+  if (!sw.running) return;
+  const total = swNow();
+  const prev = sw.laps.length ? sw.laps[sw.laps.length-1].total : 0;
+  sw.laps.push({ n: sw.laps.length+1, d: total - prev, total });
+  renderLaps();
+});
+$('#sw-reset').addEventListener('click', () => {
+  sw.running = false; sw.elapsed = 0; sw.laps = [];
+  cancelAnimationFrame(sw.raf);
+  $('#sw-start').textContent = 'スタート'; $('#sw-start').classList.add('primary');
+  $('#sw-lap').disabled = true;
+  $('#sw-time').innerHTML = swFmt(0);
+  renderLaps();
+});
+function renderLaps(){
+  const box = $('#sw-laps');
+  if (!sw.laps.length){ box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = '';
+  let best = Infinity, worst = -1;
+  if (sw.laps.length >= 2) sw.laps.forEach(l => { best = Math.min(best, l.d); worst = Math.max(worst, l.d); });
+  box.innerHTML = [...sw.laps].reverse().map(l => {
+    const cls = sw.laps.length >= 2 ? (l.d === best ? ' best' : l.d === worst ? ' worst' : '') : '';
+    return `<div class="lap${cls}"><span class="n">Lap ${l.n}</span><span class="d digits">${swFmt(l.d,false)}</span><span class="cum digits">${swFmt(l.total,false)}</span></div>`;
+  }).join('');
+}
+
+/* ---- 共通リング ---- */
+const CIRC = 2 * Math.PI * 90;
+function setRing(el, ratio, color){
+  el.style.strokeDasharray = CIRC;
+  el.style.strokeDashoffset = CIRC * (1 - Math.max(0, Math.min(1, ratio)));
+  if (color) el.style.stroke = color;
+}
+
+/* ================= タイマー ================= */
+const tm = { running:false, total:300, left:300, endAt:0, int:0 };
+const TM_PRESETS = [[1,'1分'],[3,'3分'],[5,'5分'],[10,'10分'],[15,'15分'],[30,'30分'],[60,'60分']];
+(function(){
+  const box = $('#tm-presets');
+  TM_PRESETS.forEach(([min, label]) => {
+    const b = document.createElement('button'); b.className = 'chip'; b.textContent = label;
+    b.addEventListener('click', () => {
+      $('#tm-min').value = min; $('#tm-sec').value = 0;
+      tmStop(); tmSetFromInputs();
+      $$('#tm-presets .chip').forEach(c => c.classList.toggle('active', c === b));
+    });
+    box.appendChild(b);
+  });
+})();
+function tmSetFromInputs(){
+  if (tm.alarms.length){
+    tm.total = tm.left = Math.max(...tm.alarms.map(a => a.min)) * 60;
+  } else {
+    const m = Math.max(0, +$('#tm-min').value || 0), s = Math.max(0, Math.min(59, +$('#tm-sec').value || 0));
+    tm.total = tm.left = Math.max(1, m*60 + s);
+  }
+  tmRender();
+}
+['tm-min','tm-sec'].forEach(id => $('#'+id).addEventListener('input', () => { if (!tm.running) tmSetFromInputs(); }));
+function tmRender(){
+  const s = Math.ceil(tm.left);
+  $('#tm-time').textContent = `${pad(Math.floor(s/60))}:${pad(s%60)}`;
+  const next = tm.alarms.find(a => !a.fired);
+  $('#tm-state').textContent = tm.running
+    ? (next ? `次のアラーム: ${next.min}分後の時点` : '残り時間')
+    : (tm.left < tm.total ? '一時停止中' : '停止中');
+  setRing($('#tm-ring'), tm.total ? tm.left/tm.total : 0, tm.left <= 10 && tm.running ? 'var(--red)' : 'var(--accent)');
+  document.title = tm.running ? `(${pad(Math.floor(s/60))}:${pad(s%60)}) ClockTools` : 'ClockTools — 時計・タイマー';
+}
+function tmTick(){
+  tm.left = Math.max(0, (tm.endAt - performance.now()) / 1000);
+  const elapsed = tm.total - tm.left;
+  tm.alarms.forEach(a => {
+    if (!a.fired && a.min * 60 <= elapsed && a.min * 60 < tm.total){
+      a.fired = true;
+      beep(988,.14,0); beep(1319,.22,.17);
+      alRender();
+    }
+  });
+  if (tm.left <= 0){
+    tmStop(); tm.left = 0; chime();
+    tm.alarms.forEach(a => a.fired = true); alRender();
+    $('#tm-state').textContent = '時間です！';
+  }
+  tmRender();
+}
+function tmStop(){ tm.running = false; clearInterval(tm.int); $('#tm-start').textContent = tm.left < tm.total && tm.left > 0 ? '再開' : 'スタート'; }
+$('#tm-start').addEventListener('click', () => {
+  if (tm.running){ tmStop(); tmRender(); return; }
+  if (tm.left <= 0){ tmSetFromInputs(); alReset(); }
+  else if (tm.left === tm.total) alReset();
+  tm.endAt = performance.now() + tm.left * 1000;
+  tm.running = true; tm.int = setInterval(tmTick, 200);
+  $('#tm-start').textContent = '一時停止';
+  beep(660,.08);
+  tmRender();
+});
+$('#tm-reset').addEventListener('click', () => { tmStop(); alReset(); tmSetFromInputs(); $('#tm-start').textContent = 'スタート'; });
+
+/* ---- マルチアラーム ---- */
+tm.alarms = (store.get('alarms', [])).map(min => ({min, fired:false}));
+function alSave(){ store.set('alarms', tm.alarms.map(a => a.min)); }
+function alReset(){ tm.alarms.forEach(a => a.fired = false); alRender(); }
+function alRender(){
+  const box = $('#al-chips'); box.innerHTML = '';
+  const next = tm.alarms.find(a => !a.fired);
+  tm.alarms.forEach((a, i) => {
+    const chip = document.createElement('span');
+    chip.className = 'achip' + (a.fired ? ' fired' : a === next ? ' next' : '');
+    chip.innerHTML = `${a.fired ? '✓ ' : '🔔 '}${a.min}分後<button title="削除">✕</button>`;
+    chip.querySelector('button').addEventListener('click', () => {
+      tm.alarms.splice(i, 1); alSave(); alRender();
+      if (!tm.running) tmSetFromInputs();
+    });
+    box.appendChild(chip);
+  });
+  $('#tm-custom').style.display = tm.alarms.length ? 'none' : '';
+  $('#tm-presets').style.display = tm.alarms.length ? 'none' : '';
+  $('#al-note').textContent = tm.alarms.length
+    ? `${tm.alarms.map(a => a.min + '分後').join('・')}にチャイムが鳴ります（最長 ${Math.max(...tm.alarms.map(a => a.min))}分でカウント終了）。`
+    : '「5分後」「10分後」のように複数追加すると、最長の時点までカウントしながら各時点でチャイムが鳴ります。';
+}
+$('#al-add').addEventListener('click', () => {
+  const min = Math.max(1, Math.min(999, Math.round(+$('#al-min').value || 0)));
+  if (!min || tm.alarms.some(a => a.min === min) || tm.alarms.length >= 8) return;
+  tm.alarms.push({min, fired: tm.running && (tm.total - tm.left) >= min * 60});
+  tm.alarms.sort((a, b) => a.min - b.min);
+  alSave(); alRender();
+  if (!tm.running) tmSetFromInputs();
+});
+alRender();
+tmSetFromInputs();
+
+/* ================= ポモドーロ ================= */
+const po = {
+  mode:'focus', running:false, left:25*60, endAt:0, int:0,
+  count: store.get('pomoCount', 0), totalMin: store.get('pomoMin', 0),
+  day: store.get('pomoDay', ''),
+};
+(function(){ // reset daily stats
+  const today = new Date().toISOString().slice(0,10);
+  if (po.day !== today){ po.count = 0; po.totalMin = 0; po.day = today; poSaveStats(); }
+})();
+function poSaveStats(){ store.set('pomoCount', po.count); store.set('pomoMin', po.totalMin); store.set('pomoDay', po.day); }
+const PO_LABEL = { focus:'集中する時間', short:'小休憩', long:'大休憩' };
+const PO_COLOR = { focus:'var(--red)', short:'var(--green)', long:'var(--accent2)' };
+function poDur(m){ return Math.max(1, +($('#po-'+(m==='focus'?'focus':m==='short'?'short':'long')).value) || 1) * 60; }
+function poSet(mode){
+  po.mode = mode; poStop(); po.left = poDur(mode);
+  $$('#po-modes button').forEach(b => b.classList.toggle('active', b.dataset.m === mode));
+  poRender();
+}
+$$('#po-modes button').forEach(b => b.addEventListener('click', () => poSet(b.dataset.m)));
+['po-focus','po-short','po-long'].forEach(id => $('#'+id).addEventListener('input', () => { if (!po.running) poSet(po.mode); }));
+function poRender(){
+  const s = Math.ceil(po.left);
+  $('#po-time').textContent = `${pad(Math.floor(s/60))}:${pad(s%60)}`;
+  $('#po-state').textContent = PO_LABEL[po.mode];
+  setRing($('#po-ring'), po.left / poDur(po.mode), PO_COLOR[po.mode]);
+  $('#po-count').textContent = po.count;
+  $('#po-total').innerHTML = po.totalMin + '<small style="font-size:.6em">分</small>';
+  const dots = $('#po-dots'); dots.innerHTML = '';
+  for (let i = 0; i < 4; i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < po.count % 4 || (po.count > 0 && po.count % 4 === 0) ? ' done' : '');
+    dots.appendChild(d);
+  }
+}
+function poStop(){ po.running = false; clearInterval(po.int); $('#po-start').textContent = 'スタート'; }
+function poAdvance(){
+  chime();
+  if (po.mode === 'focus'){
+    po.count++; po.totalMin += Math.round(poDur('focus')/60); poSaveStats();
+    poSet(po.count % 4 === 0 ? 'long' : 'short');
+  } else {
+    poSet('focus');
+  }
+}
+function poTick(){
+  po.left = Math.max(0, (po.endAt - performance.now()) / 1000);
+  if (po.left <= 0){ poStop(); poAdvance(); return; }
+  poRender();
+}
+$('#po-start').addEventListener('click', () => {
+  if (po.running){ poStop(); poRender(); return; }
+  po.endAt = performance.now() + po.left * 1000;
+  po.running = true; po.int = setInterval(poTick, 200);
+  $('#po-start').textContent = '一時停止';
+  beep(660,.08);
+});
+$('#po-skip').addEventListener('click', () => { poStop(); poAdvance(); });
+$('#po-reset').addEventListener('click', () => poSet(po.mode));
+poSet('focus');
+
+/* ================= インターバル ================= */
+const iv = { running:false, phase:'ready', round:0, left:0, endAt:0, int:0 };
+const IV_PRESETS = {
+  'Tabata': {prep:10, work:20, rest:10, rounds:8},
+  'HIIT':   {prep:10, work:40, rest:20, rounds:10},
+  'EMOM':   {prep:10, work:60, rest:0,  rounds:10},
+  '30-30':  {prep:10, work:30, rest:30, rounds:10},
+};
+(function(){
+  const box = $('#iv-presets');
+  Object.entries(IV_PRESETS).forEach(([name, p]) => {
+    const b = document.createElement('button'); b.className = 'chip'; b.textContent = name;
+    b.addEventListener('click', () => {
+      ivStopAll();
+      $('#iv-prep').value = p.prep; $('#iv-work').value = p.work;
+      $('#iv-rest').value = p.rest; $('#iv-rounds').value = p.rounds;
+      $$('#iv-presets .chip').forEach(c => c.classList.toggle('active', c === b));
+      ivRenderIdle();
+    });
+    box.appendChild(b);
+  });
+})();
+const IV_META = {
+  ready: ['READY',  'var(--muted)'],
+  prep:  ['準備',    'var(--yellow)'],
+  work:  ['ワーク',  'var(--red)'],
+  rest:  ['レスト',  'var(--green)'],
+  done:  ['完了 🎉', 'var(--accent2)'],
+};
+function ivCfg(){
+  return {
+    prep: Math.max(0, +$('#iv-prep').value || 0),
+    work: Math.max(1, +$('#iv-work').value || 1),
+    rest: Math.max(0, +$('#iv-rest').value || 0),
+    rounds: Math.max(1, +$('#iv-rounds').value || 1),
+  };
+}
+function ivPhaseDur(){ const c = ivCfg(); return iv.phase === 'prep' ? c.prep : iv.phase === 'work' ? c.work : iv.phase === 'rest' ? c.rest : 0; }
+function ivRender(){
+  const [label, color] = IV_META[iv.phase];
+  $('#iv-phase').textContent = label;
+  $('#iv-phase').style.color = color;
+  const s = Math.ceil(iv.left);
+  $('#iv-time').textContent = `${pad(Math.floor(s/60))}:${pad(s%60)}`;
+  const c = ivCfg();
+  $('#iv-round').textContent = iv.phase === 'ready' || iv.phase === 'done'
+    ? `ラウンド – / ${c.rounds}` : `ラウンド ${iv.round} / ${c.rounds}`;
+  const dur = ivPhaseDur();
+  setRing($('#iv-ring'), dur ? iv.left/dur : 1, color);
+}
+function ivRenderIdle(){
+  iv.phase = 'ready'; iv.round = 0; iv.left = ivCfg().work; ivRender();
+}
+function ivEnter(phase){
+  const c = ivCfg();
+  iv.phase = phase;
+  if (phase === 'work') beep(1175,.18);
+  else if (phase === 'rest') beep(587,.18);
+  else if (phase === 'prep') beep(880,.12);
+  else if (phase === 'done'){ chime(); ivStopAll(); iv.left = 0; ivRender(); return; }
+  iv.left = phase === 'prep' ? c.prep : phase === 'work' ? c.work : c.rest;
+  if (iv.left <= 0){ ivNext(); return; }
+  iv.endAt = performance.now() + iv.left * 1000;
+  ivRender();
+}
+function ivNext(){
+  const c = ivCfg();
+  if (iv.phase === 'prep'){ iv.round = 1; ivEnter('work'); }
+  else if (iv.phase === 'work'){
+    if (iv.round >= c.rounds) ivEnter('done');
+    else ivEnter('rest');
+  }
+  else if (iv.phase === 'rest'){ iv.round++; ivEnter('work'); }
+}
+function ivTick(){
+  iv.left = Math.max(0, (iv.endAt - performance.now()) / 1000);
+  if (iv.left <= 0){ ivNext(); if (!iv.running) return; }
+  ivRender();
+}
+function ivStopAll(){ iv.running = false; clearInterval(iv.int); $('#iv-start').textContent = 'スタート'; }
+$('#iv-start').addEventListener('click', () => {
+  if (iv.running){ // pause
+    ivStopAll(); $('#iv-start').textContent = '再開'; ivRender(); return;
+  }
+  if (iv.phase === 'ready' || iv.phase === 'done'){
+    iv.round = 0;
+    iv.running = true; iv.int = setInterval(ivTick, 150);
+    ivEnter(ivCfg().prep > 0 ? 'prep' : (iv.round = 1, 'work'));
+  } else { // resume
+    iv.endAt = performance.now() + iv.left * 1000;
+    iv.running = true; iv.int = setInterval(ivTick, 150);
+  }
+  $('#iv-start').textContent = '一時停止';
+});
+$('#iv-reset').addEventListener('click', () => { ivStopAll(); ivRenderIdle(); });
+['iv-prep','iv-work','iv-rest','iv-rounds'].forEach(id =>
+  $('#'+id).addEventListener('input', () => { if (!iv.running) ivRenderIdle(); }));
+ivRenderIdle();
+
+/* ---- global 1s tick for clock ---- */
+setClockMode(clockMode);
+setInterval(() => { renderClock(); renderWC(); }, 1000);
+</script>
+</body>
+</html>

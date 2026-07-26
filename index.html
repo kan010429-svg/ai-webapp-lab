@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI App Lab — ブラウザで動く34のバニラJSアプリ</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AA%3C/text%3E%3C/svg%3E" />
+<meta name="description" content="AIエージェントが作った、ビルド不要・依存ゼロのバニラJavaScriptブラウザアプリ集。ゲーム・ツール・ビジュアライゼーション・シミュレーション・音楽・ジェネラティブアートなど厳選34本を検索・カテゴリで探せます。" />
+<style>
+  :root{
+    --bg:#0b0d12; --bg2:#111420; --panel:#161a26; --panel2:#1c2130;
+    --border:#252b3b; --border2:#333b52;
+    --text:#e7ebf5; --muted:#9aa3b8; --muted2:#6b7488;
+    --accent:#7c8cff; --accent2:#4dd0e1; --star:#ffcc55;
+    --shadow:0 6px 24px rgba(0,0,0,.35);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(124,140,255,.14), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, rgba(77,208,225,.10), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+
+  /* Header / hero */
+  header.hero{padding:64px 0 34px;text-align:center}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--panel);border:1px solid var(--border);
+    color:var(--muted);font-size:13px;font-weight:600;
+    padding:6px 14px;border-radius:999px;margin-bottom:22px;
+  }
+  .badge .dot{width:8px;height:8px;border-radius:50%;background:#3ddc84;box-shadow:0 0 8px #3ddc84}
+  h1.title{
+    font-size:clamp(38px,7vw,68px);font-weight:800;letter-spacing:-.02em;
+    background:linear-gradient(120deg,#fff 10%,var(--accent) 55%,var(--accent2) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1.05;
+  }
+  .lead{color:var(--muted);font-size:clamp(15px,2.4vw,19px);margin:16px auto 0;max-width:620px}
+  .hero-stats{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+  .hstat{text-align:center}
+  .hstat b{display:block;font-size:26px;font-weight:800;color:var(--text)}
+  .hstat span{font-size:12.5px;color:var(--muted2);letter-spacing:.03em}
+
+  /* Controls */
+  .controls{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,13,18,.82);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:14px 0;margin-top:20px;
+  }
+  .controls-inner{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .search{position:relative;flex:1;min-width:220px}
+  .search input{
+    width:100%;background:var(--panel);border:1px solid var(--border2);
+    color:var(--text);font-size:15px;padding:12px 40px 12px 42px;border-radius:12px;
+    outline:none;transition:border-color .15s,box-shadow .15s;
+  }
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,140,255,.18)}
+  .search .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.6}
+  .search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;
+    padding:6px;border-radius:8px;display:none}
+  .search .clr:hover{background:var(--panel2);color:var(--text)}
+  .count{color:var(--muted2);font-size:14px;white-space:nowrap}
+  .count b{color:var(--text)}
+
+  /* Category tabs */
+  .tabs-wrap{position:sticky;top:70px;z-index:40;background:var(--bg);padding-top:18px;margin-bottom:4px}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;overflow-x:auto;border-bottom:1px solid var(--border);scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    position:relative;background:none;border:0;color:var(--muted);
+    font-size:14px;font-weight:600;padding:10px 16px 12px;
+    cursor:pointer;transition:color .15s;display:inline-flex;align-items:center;gap:7px;
+    white-space:nowrap;
+  }
+  .tab:hover{color:var(--text)}
+  .tab::after{
+    content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2.5px;
+    border-radius:2px;background:transparent;transition:background .15s;
+  }
+  .tab.active{color:var(--text)}
+  .tab.active::after{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .tab .n{
+    opacity:.75;font-weight:700;font-size:11.5px;color:var(--muted2);
+    background:var(--panel2);padding:1px 7px;border-radius:999px;
+  }
+  .tab.active .n{color:var(--text);opacity:1}
+
+  /* Sections */
+  section.block{padding:34px 0 8px}
+  .block-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .block-head h2{font-size:22px;font-weight:800;letter-spacing:-.01em}
+  .block-head .star{color:var(--star)}
+  .block-sub{color:var(--muted2);font-size:14px;margin-bottom:18px}
+
+  /* Grid */
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));
+    gap:16px;padding-bottom:8px;
+  }
+  .card{
+    position:relative;background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:20px 18px 18px;overflow:hidden;
+    transition:transform .16s ease,border-color .16s,box-shadow .16s;
+    display:flex;flex-direction:column;min-height:158px;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:3px;
+    background:var(--ac,#7c8cff);opacity:.85;
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:var(--shadow)}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .card-ico{
+    width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+    font-size:24px;background:color-mix(in srgb,var(--ac) 16%,var(--panel2));
+    border:1px solid color-mix(in srgb,var(--ac) 30%,transparent);flex:none;
+  }
+  .card-score{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--star);font-weight:700}
+  .card-title{font-size:17px;font-weight:700;margin-top:12px;color:var(--text)}
+  .card-desc{color:var(--muted);font-size:13.2px;line-height:1.55;margin-top:6px;flex:1}
+  .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .tag{font-size:11px;color:var(--muted2);background:var(--panel2);border:1px solid var(--border);
+    padding:3px 8px;border-radius:6px}
+  .fav-badge{position:absolute;top:14px;right:14px;font-size:12px}
+
+  .empty{text-align:center;color:var(--muted);padding:70px 0}
+  .empty .big{font-size:40px;margin-bottom:10px}
+
+  footer{border-top:1px solid var(--border);margin-top:50px;padding:34px 0 60px;color:var(--muted2);font-size:13.5px;text-align:center}
+  footer a{color:var(--accent);font-weight:600}
+  footer .fnote{margin-top:8px;font-size:12.5px}
+
+  @media (max-width:640px){
+    header.hero{padding:44px 0 24px}
+    .grid{grid-template-columns:1fr;gap:12px}
+    .hero-stats{gap:20px}
+    .controls-inner{gap:10px}
+    .count{order:3;width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <span class="badge"><span class="dot"></span> ビルド不要 · 依存ゼロ · バニラJS</span>
+      <h1 class="title">AI App Lab</h1>
+      <p class="lead">ゲーム・音楽・シミュレーション・ツールなど、公開向けに厳選した34のバニラJSアプリ。ビルド不要、依存ゼロ。</p>
+      <div class="hero-stats">
+        <div class="hstat"><b id="stat-total">–</b><span>APPS</span></div>
+        <div class="hstat"><b>9</b><span>CATEGORIES</span></div>
+        <div class="hstat"><b>0</b><span>DEPENDENCIES</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="wrap controls-inner">
+      <div class="search">
+        <span class="ico">🔍</span>
+        <input type="text" id="search" placeholder="アプリを検索（名前・説明）…" autocomplete="off" spellcheck="false" />
+        <button class="clr" id="clear" title="クリア" aria-label="検索をクリア">✕</button>
+      </div>
+      <div class="count"><b id="count">0</b> / <span id="total">0</span> 個</div>
+    </div>
+  </div>
+
+  <div class="tabs-wrap">
+    <div class="wrap"><nav class="tabs" id="tabs" role="tablist"></nav></div>
+  </div>
+
+  <main class="wrap">
+
+    <section class="block" id="featured-block">
+      <div class="block-head"><span class="star">★</span><h2>おすすめ</h2></div>
+      <div class="block-sub">公開向けに選んだ注目のアプリ</div>
+      <div class="grid" id="featured-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2 id="all-title">すべてのアプリ</h2></div>
+      <div class="block-sub" id="all-sub"></div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" style="display:none">
+        <div class="big">🔍</div>
+        <div>該当するアプリが見つかりませんでした</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>AI App Lab — <a href="https://github.com/kan010429-svg/ai-app-lab-gallery-gallery" target="_blank" rel="noopener">github.com/kan010429-svg/ai-app-lab-gallery</a></div>
+      <div class="fnote">各アプリは <code>apps/&lt;name&gt;/index.html</code> にあります。すべてビルド不要でそのまま動きます。</div>
+    </div>
+  </footer>
+
+<script>
+/* === App catalog data (embedded, no external deps) === */
+const CATS = {"tools":{"label":"ツール・生産性","icon":"🧰"},"clock":{"label":"時計・タイマー","icon":"⏰"},"calc":{"label":"計算機","icon":"🧮"},"dataviz":{"label":"ビジュアライゼーション","icon":"📊"},"simulation":{"label":"シミュレーション","icon":"🔬"},"music":{"label":"音楽・オーディオ","icon":"🎵"},"genart":{"label":"ジェネラティブアート","icon":"🎨"},"devtools":{"label":"開発ツール","icon":"💻"},"education":{"label":"学習・教育","icon":"📚"}};
+const APPS = [{"n":"cosmos","t":"Cosmos","d":"プロシージャル宇宙ジェネレーター。星雲・星・流れ星をシード値で生成。5種のカラーパレット、PNG保存対応。","c":"genart","i":"🌌","a":"#818cf8","s":5,"f":1,"g":["ジェネラティブ","アート","プロシージャル"]},{"n":"fourier","t":"Fourier Draw","d":"フーリエ変換お絵かき。手描き図形をエピサイクル（回転円の連鎖）で再現。ハート・星・π等プリセット。","c":"education","i":"🎡","a":"#ff6ac0","s":5,"f":1,"g":["フーリエ変換","数学","アート"]},{"n":"life","t":"Life","d":"Conway's Game of Life。セルオートマトンをインタラクティブに操作。グライダー銃など有名パターンのプリセット付き。","c":"simulation","i":"🦠","a":"#10b981","s":5,"f":1,"g":["セルオートマトン","シミュレーション","数学"]},{"n":"matrix","t":"Matrix Rain","d":"マトリックスデジタルレイン。カタカナ・バイナリ・HEX・漢字の4文字セット、5カラースキーム。","c":"genart","i":"🟩","a":"#00ff41","s":5,"f":1,"g":["マトリックス","アニメーション","サイバー"]},{"n":"metronome","t":"Metronome","d":"音楽練習用メトロノーム。BPM調整、タップテンポ、プリセット、アクセント設定。","c":"music","i":"🎶","a":"#ff6b6b","s":5,"f":0,"g":["音楽","メトロノーム","練習"]},{"n":"orbit","t":"Orbit Simulator","d":"軌道シミュレーター。太陽系・連星系・トロヤ群・8の字軌道。トレイル描画、速度調整。","c":"simulation","i":"🛸","a":"#cba6f7","s":5,"f":0,"g":["軌道","天体","シミュレーション"]},{"n":"pendulum","t":"Pendulum Wave","d":"振り子波シミュレーション。ウェーブ・二重振り子・自由モード、トレイル効果。","c":"simulation","i":"🔔","a":"#e879f9","s":5,"f":0,"g":["振り子","物理","シミュレーション"]},{"n":"probsim","t":"ProbSim","d":"確率シミュレーター。モンティ・ホール、誕生日のパラドックス、モンテカルロ法など5種の実験。","c":"education","i":"🎲","a":"#f472b6","s":5,"f":0,"g":["確率","統計","教育"]},{"n":"qrgen","t":"QR Generator","d":"QRコード生成ツール。テキスト・URL対応、カラー・サイズ調整、PNG保存。","c":"tools","i":"⬛","a":"#e879f9","s":5,"f":0,"g":["QRコード","ジェネレーター","ツール"]},{"n":"regex","t":"Regex Lab","d":"正規表現ビジュアルデバッガー。リアルタイムマッチハイライト、グループ表示、7プリセット、チートシート付き。","c":"devtools","i":"🔍","a":"#f59e0b","s":5,"f":1,"g":["正規表現","デバッガー","開発ツール"]},{"n":"solar-system","t":"Solar System","d":"太陽系ビューアー。惑星の軌道アニメーション、詳細情報表示。直径・質量・公転周期・温度・衛星数などのデータ付き。","c":"dataviz","i":"☀️","a":"#89b4fa","s":5,"f":1,"g":["天文","太陽系","教育"]},{"n":"sortviz","t":"SortViz","d":"8種類のソートアルゴリズムをリアルタイムで可視化。比較・交換回数の統計、計算量の表示付き。","c":"dataviz","i":"📊","a":"#6366f1","s":5,"f":1,"g":["アルゴリズム","可視化","教育"]},{"n":"synthy","t":"Synthy","d":"Web Audio APIシンセサイザー。4波形、フィルター、ADSR、波形ビジュアライザー付き。PCキーボードで演奏可能。","c":"music","i":"🎛️","a":"#a78bfa","s":5,"f":0,"g":["音楽","シンセサイザー","Web Audio"]},{"n":"tuner","t":"Tuner","d":"楽器チューナー。マイク入力で音程検出、セント表示、基準音再生。","c":"music","i":"🎸","a":"#89b4fa","s":5,"f":1,"g":["音楽","チューナー","Web Audio"]},{"n":"waveform","t":"Waveform","d":"マイク入力に反応するオーディオビジュアライザー。有機体・幾何学・パーティクル・波紋・オーロラの5モード。全画面没入体験。","c":"music","i":"📻","a":"#818cf8","s":5,"f":0,"g":["オーディオ","ビジュアライザー","没入体験"]},{"n":"weather","t":"Weather Art","d":"天気アート。晴れ・雨・雪・嵐・オーロラの5つの天気をビジュアル表現。","c":"genart","i":"🌤️","a":"#38bdf8","s":5,"f":0,"g":["天気","アート","アニメーション"]},{"n":"weather-sim","t":"Weather Simulator","d":"天気シミュレーター。晴れ・雨・雪・嵐・曇り、風速・強度調整、パーティクル物理。","c":"simulation","i":"🌦️","a":"#87ceeb","s":5,"f":0,"g":["天気","シミュレーション","パーティクル"]},{"n":"crypto","t":"Crypto Lab","d":"暗号ツールキット。シーザー/ヴィジュネル暗号、SHA-256ハッシュ、パスワード生成、ステガノグラフィー。","c":"devtools","i":"🔐","a":"#f59e0b","s":4,"f":0,"g":["暗号","セキュリティ","ツール"]},{"n":"dice","t":"Dice Roller","d":"サイコロシミュレーター。D4〜D20対応、複数個同時振り、履歴記録、アニメーション。","c":"tools","i":"🎰","a":"#764ba2","s":4,"f":0,"g":["サイコロ","ゲーム","ツール"]},{"n":"diffview","t":"Diff Viewer","d":"テキスト差分ビューア。2つのテキストを行単位で比較し、追加・削除をハイライト表示。サンプル読み込み付き。","c":"devtools","i":"🔀","a":"#38bdf8","s":4,"f":0,"g":["差分","テキスト","開発ツール"]},{"n":"fireworks","t":"Fireworks","d":"花火シミュレーション。クリックで打ち上げ、自動モード、パーティクル物理。","c":"genart","i":"🎆","a":"#ff6b6b","s":4,"f":0,"g":["花火","パーティクル","アニメーション"]},{"n":"glitch","t":"Glitch Art","d":"グリッチアートジェネレーター。RGBシフト、ピクセルソート、スキャンライン、VHS、色収差。7エフェクト。","c":"genart","i":"📺","a":"#ff3366","s":4,"f":0,"g":["グリッチ","アート","画像加工"]},{"n":"loremgen","t":"Lorem Generator","d":"ダミーテキスト生成ツール。Lorem Ipsumと日本語に対応し、段落・文・単語単位で数量を指定して生成。","c":"devtools","i":"📝","a":"#fb923c","s":4,"f":0,"g":["ダミーテキスト","ジェネレーター","開発ツール"]},{"n":"password-gen","t":"Password Generator","d":"パスワードジェネレーター。長さ・文字種（大文字/小文字/数字/記号）を指定して安全なパスワードを生成。強度表示とワンクリックコピー対応。","c":"tools","i":"🔑","a":"#38bdf8","s":4,"f":0,"g":[]},{"n":"random-gen","t":"Random Generator","d":"ランダム生成ツール。数値・文字列・リスト選択・サイコロ・コイン投げの5モード。パスワード生成やくじ引きに便利。","c":"tools","i":"🔀","a":"#cba6f7","s":4,"f":0,"g":["ランダム","ジェネレーター","ツール"]},{"n":"spectrum","t":"Spectrum","d":"オーディオスペクトラム。マイク入力、バー・サークル・ウェーブ・ドットの4モード。","c":"dataviz","i":"📊","a":"#cba6f7","s":4,"f":0,"g":["オーディオ","スペクトラム","可視化"]},{"n":"spirograph","t":"Spirograph","d":"スピログラフ。R/r/dパラメータで幾何学模様を描画。4カラーモード、PNG保存。","c":"genart","i":"🎪","a":"#e879f9","s":4,"f":0,"g":["スピログラフ","数学","アート"]},{"n":"charcount","t":"文字数カウンター","d":"文字数カウンター。改行・空白の扱い別カウントと全角・半角の内訳、原稿用紙換算・SNS文字数チェックに対応。","c":"tools","i":"🔤","a":"#4dd0e1","s":4,"f":0,"g":["文字数","ライティング","日本語"]},{"n":"imgresize","t":"画像リサイズ・圧縮","d":"画像リサイズ・圧縮ツール。JPEG/PNG/WebP出力と品質調整に対応。処理はすべてブラウザ内Canvasで完結。","c":"tools","i":"🖼️","a":"#818cf8","s":4,"f":0,"g":["画像","リサイズ","ツール"]},{"n":"contrast-checker","t":"Color Contrast Checker","d":"カラーコントラストチェッカー。前景色・背景色のコントラスト比を計算、WCAG AA/AAA基準の合否判定。アクセシビリティ対応に最適。","c":"devtools","i":"🔍","a":"#89b4fa","s":3,"f":0,"g":["アクセシビリティ","カラー","WCAG"]},{"n":"harmonograph","t":"Harmonograph","d":"ハーモノグラフ。振り子の合成運動で美しい幾何学模様を描画。","c":"genart","i":"🎼","a":"#a78bfa","s":3,"f":0,"g":["ハーモノグラフ","数学","アート"]},{"n":"starfield","t":"Starfield","d":"スターフィールド。ワープスピード風の星空アニメーション。マウスで方向操作。","c":"genart","i":"⭐","a":"#818cf8","s":3,"f":0,"g":["星空","ワープ","アニメーション"]},{"n":"clocktools","t":"ClockTools","d":"時計・タイマー統合アプリ。クロック（デジタル・ワード・2進数）・世界時計・ストップウォッチ・タイマー・ポモドーロ・インターバルの5機能。","c":"clock","i":"⏰","a":"#7c8cff","s":5,"f":1,"g":["時計","タイマー","ツール集"]},{"n":"calctools","t":"CalcTools","d":"計算機統合アプリ。電卓・関数グラフ・単位変換・割り勘・営業日・和暦西暦・BMI・ローン・ハッシュの9機能を1画面で。","c":"calc","i":"🧮","a":"#4dd0e1","s":5,"f":1,"g":["計算機","変換","ツール集"]}];
+
+const $ = s => document.querySelector(s);
+const catOrder = ["all", "tools", "clock", "calc", "dataviz", "simulation", "music", "genart", "devtools", "education"];
+
+const state = { cat: 'all', q: '' };
+
+function catCount(cat){
+  return cat === 'all' ? APPS.length : APPS.filter(a => a.c === cat).length;
+}
+
+function buildTabs(){
+  const tabs = $('#tabs');
+  const frag = document.createDocumentFragment();
+  catOrder.forEach(cat => {
+    const meta = cat === 'all' ? {label:'すべて', icon:'✨'} : CATS[cat];
+    const el = document.createElement('button');
+    el.className = 'tab' + (cat === state.cat ? ' active' : '');
+    el.dataset.cat = cat;
+    el.setAttribute('role', 'tab');
+    el.setAttribute('aria-selected', cat === state.cat ? 'true' : 'false');
+    el.innerHTML = `<span>${meta.icon}</span> ${meta.label} <span class="n">${catCount(cat)}</span>`;
+    el.addEventListener('click', () => { state.cat = cat; render(); syncTabs(); });
+    frag.appendChild(el);
+  });
+  tabs.appendChild(frag);
+}
+function syncTabs(){
+  document.querySelectorAll('.tab').forEach(t => {
+    const active = t.dataset.cat === state.cat;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+}
+
+function stars(n){ return '★'.repeat(n); }
+
+function cardHTML(a){
+  const tags = (a.g || []).slice(0,3).map(t => `<span class="tag">${esc(t)}</span>`).join('');
+  const fav = a.f ? '<span class="fav-badge" title="おすすめ">⭐</span>' : '';
+  return `<a class="card" href="apps/${a.n}/index.html" style="--ac:${a.a}">
+    ${fav}
+    <div class="card-top">
+      <div class="card-ico">${a.i}</div>
+      <div class="card-score" title="監査スコア ${a.s}/5">${stars(a.s)}</div>
+    </div>
+    <div class="card-title">${esc(a.t)}</div>
+    <div class="card-desc">${esc(a.d)}</div>
+    <div class="card-tags">${tags}</div>
+  </a>`;
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function matches(a){
+  if (state.cat !== 'all' && a.c !== state.cat) return false;
+  if (!state.q) return true;
+  const q = state.q;
+  const hay = (a.t + ' ' + a.n + ' ' + a.d + ' ' + (a.g||[]).join(' ')).toLowerCase();
+  return q.split(/\s+/).every(term => hay.includes(term));
+}
+
+function render(){
+  const list = APPS.filter(matches);
+  const grid = $('#grid');
+  grid.innerHTML = list.map(cardHTML).join('');
+  $('#empty').style.display = list.length ? 'none' : 'block';
+  $('#count').textContent = list.length;
+
+  // Featured only when no active search/filter
+  const showFeatured = state.cat === 'all' && !state.q;
+  $('#featured-block').style.display = showFeatured ? '' : 'none';
+  if (showFeatured && !$('#featured-grid').dataset.done){
+    $('#featured-grid').innerHTML = APPS.filter(a => a.f).map(cardHTML).join('');
+    $('#featured-grid').dataset.done = '1';
+  }
+
+  const allTitle = state.cat === 'all'
+    ? 'すべてのアプリ'
+    : `${CATS[state.cat].icon} ${CATS[state.cat].label}`;
+  $('#all-title').textContent = allTitle;
+  $('#all-sub').textContent = state.q
+    ? `「${state.q}」の検索結果 ${list.length} 件`
+    : (state.cat === 'all' ? '全アプリ一覧' : `${list.length} 個のアプリ`);
+}
+
+function init(){
+  $('#total').textContent = APPS.length;
+  $('#stat-total').textContent = APPS.length;
+  buildTabs();
+  render();
+
+  const search = $('#search');
+  const clr = $('#clear');
+  search.addEventListener('input', () => {
+    state.q = search.value.trim().toLowerCase();
+    clr.style.display = search.value ? 'block' : 'none';
+    render();
+  });
+  clr.addEventListener('click', () => {
+    search.value = ''; state.q = ''; clr.style.display = 'none';
+    search.focus(); render();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== search){ e.preventDefault(); search.focus(); }
+    if (e.key === 'Escape' && document.activeElement === search){ search.value=''; state.q=''; clr.style.display='none'; render(); }
+  });
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎲 Random Generator</h1>
+      <p class="subtitle">ランダム生成ツール</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="number">数値</button>
+      <button class="tab" data-tab="string">文字列</button>
+      <button class="tab" data-tab="list">リスト</button>
+      <button class="tab" data-tab="dice">サイコロ</button>
+      <button class="tab" data-tab="coin">コイン</button>
+    </div>
+
+    <div class="tab-content active" id="number-tab">
+      <div class="input-group">
+        <label>最小値</label>
+        <input type="number" id="min-num" value="1">
+      </div>
+      <div class="input-group">
+        <label>最大値</label>
+        <input type="number" id="max-num" value="100">
+      </div>
+      <button class="btn" id="gen-number">生成</button>
+      <div class="result" id="number-result">-</div>
+    </div>
+
+    <div class="tab-content" id="string-tab">
+      <div class="input-group">
+        <label>文字数</label>
+        <input type="number" id="string-length" value="12" min="1" max="100">
+      </div>
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="use-upper" checked> 大文字 (A-Z)</label>
+        <label><input type="checkbox" id="use-lower" checked> 小文字 (a-z)</label>
+        <label><input type="checkbox" id="use-numbers" checked> 数字 (0-9)</label>
+        <label><input type="checkbox" id="use-symbols"> 記号 (!@#$%)</label>
+      </div>
+      <button class="btn" id="gen-string">生成</button>
+      <div class="result" id="string-result">-</div>
+    </div>
+
+    <div class="tab-content" id="list-tab">
+      <div class="input-group">
+        <label>リスト（1行に1項目）</label>
+        <textarea id="list-items" rows="8" placeholder="りんご&#10;バナナ&#10;オレンジ&#10;ぶどう"></textarea>
+      </div>
+      <button class="btn" id="gen-list">ランダム選択</button>
+      <div class="result" id="list-result">-</div>
+    </div>
+
+    <div class="tab-content" id="dice-tab">
+      <div class="input-group">
+        <label>サイコロの数</label>
+        <input type="number" id="dice-count" value="2" min="1" max="10">
+      </div>
+      <div class="input-group">
+        <label>面の数</label>
+        <select id="dice-sides">
+          <option value="4">D4</option>
+          <option value="6" selected>D6</option>
+          <option value="8">D8</option>
+          <option value="10">D10</option>
+          <option value="12">D12</option>
+          <option value="20">D20</option>
+        </select>
+      </div>
+      <button class="btn" id="roll-dice">振る</button>
+      <div class="dice-results" id="dice-results"></div>
+      <div class="result" id="dice-total">-</div>
+    </div>
+
+    <div class="tab-content" id="coin-tab">
+      <div class="input-group">
+        <label>コインの数</label>
+        <input type="number" id="coin-count" value="1" min="1" max="10">
+      </div>
+      <button class="btn" id="flip-coin">投げる</button>
+      <div class="coin-results" id="coin-results"></div>
+      <div class="result" id="coin-summary">-</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

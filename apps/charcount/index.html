@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文字数カウンター - Char Count</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%A4%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔤 文字数カウンター</h1>
+      <p class="subtitle">原稿用紙・SNS投稿向けの文字数カウントツール</p>
+    </header>
+
+    <div class="editor-card">
+      <textarea id="text" placeholder="ここに文章を入力・貼り付けしてください..." spellcheck="false"></textarea>
+      <div class="editor-actions">
+        <button id="sampleBtn" class="btn-ghost" type="button">サンプル文を入力</button>
+        <button id="clearBtn" class="btn-ghost" type="button">クリア</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card highlight">
+        <div class="stat-label">文字数(すべて含む)</div>
+        <div class="stat-value" id="statAll">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">行数</div>
+        <div class="stat-value" id="statLines">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">段落数</div>
+        <div class="stat-value" id="statParagraphs">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">バイト数 (UTF-8)</div>
+        <div class="stat-value" id="statBytes">0</div>
+      </div>
+    </div>
+
+    <section class="section-card">
+      <h2>改行・空白の扱い別 文字数</h2>
+      <div class="table-wrap">
+        <table class="detail-table">
+          <thead>
+            <tr><th></th><th>空白を含む</th><th>空白を除く</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>改行を含む</th><td id="cntAllAll">0</td><td id="cntAllNoSpace">0</td></tr>
+            <tr><th>改行を除く</th><td id="cntNoNlAll">0</td><td id="cntNoNlNoSpace">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">「空白」は半角スペース・タブ・全角スペースを対象としています。</p>
+    </section>
+
+    <section class="section-card">
+      <h2>全角・半角の内訳</h2>
+      <div class="breakdown-row">
+        <div class="breakdown-item"><span class="dot dot-zen"></span>全角 <strong id="zenCount">0</strong> 文字</div>
+        <div class="breakdown-item"><span class="dot dot-han"></span>半角 <strong id="hanCount">0</strong> 文字</div>
+      </div>
+      <div class="bar"><div class="bar-fill zen" id="zenBar" style="width:0%"></div></div>
+    </section>
+
+    <section class="section-card">
+      <h2>原稿用紙換算 (400字詰め)</h2>
+      <p class="genko-result"><strong id="genkoPages">0</strong> 枚 <span class="dim">(目安 <span id="genkoExact">0.00</span> 枚 / 改行含む文字数から算出)</span></p>
+    </section>
+
+    <section class="section-card">
+      <h2>SNS文字数換算</h2>
+      <div class="sns-row">
+        <div class="sns-label">X (Twitter) <span class="dim">全角=2 / 半角=1 / URL=23文字換算</span></div>
+        <div class="sns-count"><strong id="xCount">0</strong> / 280</div>
+      </div>
+      <div class="bar"><div class="bar-fill x" id="xBar" style="width:0%"></div></div>
+    </section>
+
+    <footer>
+      <a href="../../index.html" class="back-link">← アプリ一覧に戻る</a>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
