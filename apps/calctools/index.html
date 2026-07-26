@@ -16,7 +16,7 @@
     display:flex;flex-direction:column;
   }
   button{font-family:inherit;color:inherit}
-  .wrap{width:100%;max-width:860px;margin:0 auto;padding:0 20px}
+  .wrap{width:100%;max-width:920px;margin:0 auto;padding:0 20px}
 
   header{padding:20px 0 0;flex:none}
   .titlebar{display:flex;align-items:center;gap:10px}
@@ -42,111 +42,240 @@
   .view.active{display:block;animation:fadein .18s ease}
   @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
-  .card + .card{margin-top:16px}
-  .card h2{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.02em}
+  .card{
+    background:transparent;border:0;border-radius:0;padding:24px 8px 28px;
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  }
+  .card + .card{margin-top:18px}
+  .card h2{
+    font-size:11px;font-weight:700;color:var(--muted2);margin-bottom:14px;
+    letter-spacing:.16em;text-transform:uppercase;
+  }
 
   .btn{
-    background:var(--panel2);border:1px solid var(--border2);border-radius:12px;
-    color:var(--text);font-size:14px;font-weight:700;padding:10px 20px;cursor:pointer;transition:all .12s;
+    background:none;border:0;border-radius:0;
+    color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;padding:10px 12px;cursor:pointer;
   }
-  .btn:hover{border-color:var(--accent)}
-  .btn.primary{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
-  .btn.primary:hover{filter:brightness(1.1)}
-  .btn.sm{font-size:12.5px;padding:6px 12px;border-radius:9px}
+  .btn:hover{color:var(--text)}
+  .btn.primary{background:none;border-color:transparent;color:var(--text);position:relative}
+  .btn.primary::after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:1px;background:var(--accent)}
+  .btn.sm{font-size:11px;padding:6px 10px;letter-spacing:.12em}
 
-  input[type=number],input[type=text],select,textarea{
-    background:var(--panel2);border:1px solid var(--border2);border-radius:10px;
-    color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:inherit;
+  input[type=number],input[type=text],input[type=date],select,textarea{
+    background:transparent;border:0;border-bottom:1px solid var(--border2);border-radius:0;
+    color:var(--text);font-size:15px;padding:8px 4px;outline:none;font-family:inherit;
   }
-  input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-  textarea{width:100%;resize:vertical;min-height:90px;line-height:1.5}
-  label.fld{display:flex;flex-direction:column;gap:5px;color:var(--muted);font-size:12.5px;font-weight:700}
-  label.fld > span{padding-left:2px}
-  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  input:focus,select:focus,textarea:focus{border-bottom-color:var(--accent)}
+  textarea{width:100%;resize:vertical;min-height:90px;line-height:1.5;border:1px solid var(--border);padding:10px}
+  label.fld{display:flex;flex-direction:column;gap:6px;color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  label.fld > span{padding-left:0}
+  .row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
   .row > .fld{flex:1;min-width:120px}
 
-  .seg{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
-  .seg button{background:none;border:0;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;padding:6px 13px;cursor:pointer;transition:all .12s}
-  .seg button:hover{color:var(--text)}
-  .seg button.active{background:var(--accent);color:var(--accent-ink)}
+  .mode-row{
+    display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;
+  }
+  .mode-row button{
+    background:none;border:0;border-radius:0;color:var(--muted);
+    font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:8px 10px;cursor:pointer;
+  }
+  .mode-row button:hover{color:var(--text)}
+  .mode-row button.active{color:var(--text);position:relative}
+  .mode-row button.active::after{
+    content:"";position:absolute;left:10px;right:10px;bottom:2px;height:1px;background:var(--accent);
+  }
 
   .digits{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 
-  .result-hero{text-align:center;padding:18px 10px}
-  .result-hero .v{font-size:clamp(30px,7vw,44px);font-weight:800}
-  .result-hero .u{font-size:.55em;color:var(--muted);font-weight:700}
-  .result-hero .cap{color:var(--muted);font-size:13.5px;margin-top:2px}
-  .badge{display:inline-block;font-size:13px;font-weight:700;padding:4px 14px;border-radius:999px;margin-top:8px}
+  .result-hero{text-align:left;padding:8px 0 4px}
+  .result-hero .v{
+    font-family:var(--font-display);font-size:clamp(36px,8vw,56px);font-weight:800;
+    letter-spacing:-.03em;line-height:1;color:var(--title-color);text-shadow:var(--title-glow);
+  }
+  .result-hero .u{font-size:.4em;color:var(--muted);font-weight:700;letter-spacing:.06em}
+  .result-hero .cap{color:var(--muted2);font-size:11px;margin-top:8px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .badge{
+    display:inline-block;font-size:11px;font-weight:700;padding:0;border-radius:0;margin-top:10px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:none;
+  }
 
-  table.res{width:100%;border-collapse:collapse;font-size:14px}
-  table.res th,table.res td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left}
-  table.res th{color:var(--muted2);font-size:12px;font-weight:700}
+  table.res{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+  table.res th,table.res td{padding:9px 4px;border-bottom:1px solid var(--border);text-align:left}
+  table.res th{color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
   table.res td.num{text-align:right;font-variant-numeric:tabular-nums}
   table.res tr:last-child td{border-bottom:0}
 
-  .note{color:var(--muted2);font-size:12.5px;margin-top:10px}
+  .note{color:var(--muted2);font-size:12px;margin-top:12px;line-height:1.5}
 
-  /* ==== 電卓 ==== */
-  .calc-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:16px}
+  /* ==== shared dossier ==== */
+  .dossier{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start;
+  }
+  .dossier-fields{min-width:0}
+  .dossier-out{
+    min-width:0;border-left:1px solid var(--border);padding-left:28px;
+  }
+  .dossier-out .result-hero{padding-top:0}
+  @media (max-width:720px){
+    .dossier{grid-template-columns:1fr;gap:18px}
+    .dossier-out{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:18px}
+  }
+
+  /* ==== Calc C — Pad ==== */
+  .calc-layout{
+    display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,1.2fr);gap:22px;align-items:stretch;
+  }
   @media (max-width:680px){.calc-layout{grid-template-columns:1fr}}
-  .calc-display{
-    background:var(--panel2);border:1px solid var(--border);border-radius:14px;
-    padding:14px 18px;text-align:right;margin-bottom:14px;overflow:hidden;
+  .calc-hist{
+    background:transparent;border:0;border-right:1px solid var(--border);border-radius:0;
+    padding:0 18px 0 0;display:flex;flex-direction:column;min-height:220px;max-height:460px;
   }
-  .calc-expr{color:var(--muted2);font-size:14px;min-height:21px;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
-  .calc-cur{font-size:clamp(30px,6vw,42px);font-weight:800;line-height:1.2;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
-  .calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-  .ckey{
-    background:var(--panel2);border:1px solid var(--border);border-radius:12px;
-    font-size:19px;font-weight:700;padding:15px 0;cursor:pointer;transition:all .1s;
+  @media (max-width:680px){.calc-hist{border-right:0;border-bottom:1px solid var(--border);padding:0 0 16px;max-height:220px}}
+  .calc-hist .h{
+    display:flex;justify-content:space-between;align-items:center;
+    color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;
   }
-  .ckey:hover{border-color:var(--border2);filter:brightness(1.15)}
-  .ckey:active{transform:scale(.96)}
-  .ckey.op{color:var(--accent2)}
-  .ckey.eq{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
-  .ckey.fn{color:var(--muted);font-size:16px}
-  .calc-hist{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;flex-direction:column;min-height:200px;max-height:430px}
-  .calc-hist .h{display:flex;justify-content:space-between;align-items:center;color:var(--muted2);font-size:12px;font-weight:700;margin-bottom:6px}
   .calc-hist .list{flex:1;overflow-y:auto}
-  .hitem{padding:7px 8px;border-radius:8px;cursor:pointer;font-size:13px}
-  .hitem:hover{background:var(--panel)}
-  .hitem .e{color:var(--muted2);font-size:12px}
-  .hitem .r{font-weight:700}
-  .hempty{color:var(--muted2);font-size:12.5px;text-align:center;padding:30px 0}
+  .hitem{padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
+  .hitem:hover .r{color:var(--accent)}
+  .hitem .e{color:var(--muted2);font-size:11px;letter-spacing:.04em}
+  .hitem .r{font-weight:700;font-family:var(--font-display);font-size:16px;margin-top:2px}
+  .hempty{color:var(--muted2);font-size:12px;text-align:left;padding:20px 0}
+  .calc-display{
+    background:transparent;border:0;border-radius:0;border-bottom:1px solid var(--border);
+    padding:8px 4px 16px;text-align:right;margin-bottom:16px;overflow:hidden;
+  }
+  .calc-expr{color:var(--muted2);font-size:13px;min-height:20px;white-space:nowrap;overflow-x:auto;scrollbar-width:none;letter-spacing:.04em}
+  .calc-cur{
+    font-family:var(--font-display);font-size:clamp(40px,9vw,64px);font-weight:800;
+    line-height:.95;letter-spacing:-.03em;color:var(--title-color);text-shadow:var(--title-glow);
+    white-space:nowrap;overflow-x:auto;scrollbar-width:none;
+  }
+  .calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .ckey{
+    background:transparent;border:1px solid var(--border);border-radius:0;
+    font-size:18px;font-weight:700;padding:14px 0;cursor:pointer;transition:color .1s,border-color .1s;
+  }
+  .ckey:hover{border-color:var(--border2);color:var(--text)}
+  .ckey:active{color:var(--accent)}
+  .ckey.op{color:var(--muted)}
+  .ckey.eq{background:transparent;border-color:var(--accent);color:var(--accent)}
+  .ckey.fn{color:var(--muted2);font-size:14px;letter-spacing:.06em}
 
-  /* ==== グラフ ==== */
+  /* ==== Graph C — Sheet ==== */
+  .sheet-layout{
+    display:grid;grid-template-columns:minmax(0,1.4fr) minmax(180px,.7fr);gap:18px;align-items:start;
+  }
+  @media (max-width:720px){.sheet-layout{grid-template-columns:1fr}}
+  .sheet-plot{min-width:0}
+  #graph-canvas{
+    width:100%;height:min(420px,56vh);border-radius:0;border:1px solid var(--border);
+    background:
+      linear-gradient(var(--border) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0 / 24px 24px,
+      var(--panel2);
+    touch-action:none;cursor:grab;
+  }
+  .sheet-legend{border-left:1px solid var(--border);padding-left:16px}
+  @media (max-width:720px){.sheet-legend{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:14px}}
+  .sheet-legend .legend-head{
+    font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin-bottom:12px;
+  }
   .fx-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-  .fx-row .sw{width:14px;height:14px;border-radius:4px;flex:none}
-  .fx-row input{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace}
-  .fx-row .del{background:none;border:0;color:var(--muted2);cursor:pointer;font-size:15px;padding:4px 8px;border-radius:6px}
-  .fx-row .del:hover{color:var(--red);background:var(--panel2)}
-  #graph-canvas{width:100%;height:380px;border-radius:12px;border:1px solid var(--border);background:var(--panel2);touch-action:none;cursor:grab}
-  .fx-err{color:var(--red);font-size:12px;min-height:16px;padding-left:24px}
+  .fx-row .sw{width:10px;height:10px;border-radius:0;flex:none}
+  .fx-row input{flex:1;font-family:var(--font-mono);font-size:13px}
+  .fx-row .del{background:none;border:0;color:var(--muted2);cursor:pointer;font-size:14px;padding:4px 6px}
+  .fx-row .del:hover{color:var(--red)}
+  .fx-err{color:var(--red);font-size:11px;min-height:14px;padding-left:18px}
+  .sheet-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 
-  /* ==== 割り勘 ==== */
-  .grp-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;padding:10px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:var(--panel2)}
+  /* ==== Unit C — Pair ==== */
+  .pair-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:8px;
+  }
+  .pair-col{padding:8px 18px 8px 0}
+  .pair-col + .pair-col{border-left:1px solid var(--border);padding:8px 0 8px 18px}
+  .pair-swap{
+    grid-column:1 / -1;justify-self:center;margin:4px 0 10px;
+  }
+  @media (max-width:560px){
+    .pair-grid{grid-template-columns:1fr}
+    .pair-col + .pair-col{border-left:0;border-top:1px solid var(--border);padding:16px 0 0}
+    .pair-col{padding:0}
+  }
+  .pair-value{
+    font-family:var(--font-display);font-size:clamp(32px,7vw,48px);font-weight:800;
+    letter-spacing:-.03em;color:var(--title-color);margin-top:8px;line-height:1;
+  }
+  .pair-value.accent{color:var(--accent);text-shadow:none}
+
+  /* ==== Warikan groups ==== */
+  .grp-row{
+    display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;
+    padding:12px 0;border:0;border-bottom:1px solid var(--border);border-radius:0;margin-bottom:0;background:transparent;
+  }
   .grp-row .fld{flex:1;min-width:90px}
-  .grp-row .del{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted2);cursor:pointer;padding:8px 12px}
-  .grp-row .del:hover{color:var(--red);border-color:var(--red)}
-  .grp-row label.radio{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;font-weight:600;padding-bottom:9px}
+  .grp-row .del{background:none;border:0;border-radius:0;color:var(--muted2);cursor:pointer;padding:8px 10px;letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:700}
+  .grp-row .del:hover{color:var(--red)}
+  .grp-row label.radio{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;font-weight:600;padding-bottom:8px;letter-spacing:.08em;text-transform:uppercase}
 
-  /* ==== サイコロ ==== */
-  .dz-display{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;min-height:74px;align-items:center;margin-bottom:6px}
-  .die{width:64px;height:64px;background:var(--panel2);border:1px solid var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--accent2);box-shadow:0 6px 16px rgba(0,0,0,.28);animation:diceroll .5s ease-out;font-variant-numeric:tabular-nums}
-  @keyframes diceroll{0%{transform:rotate(0) scale(.5)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
+  /* ==== Dice B — Table ==== */
+  .dice-table{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.85fr);gap:24px}
+  @media (max-width:720px){.dice-table{grid-template-columns:1fr}}
+  .dice-main{min-width:0}
+  .dice-log{
+    border-left:1px solid var(--border);padding-left:22px;min-height:240px;
+  }
+  @media (max-width:720px){.dice-log{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:16px}}
+  .dz-display{display:flex;gap:10px;justify-content:flex-start;flex-wrap:wrap;min-height:48px;align-items:center;margin-bottom:10px}
+  .die{
+    min-width:44px;height:44px;padding:0 10px;background:transparent;border:1px solid var(--border2);border-radius:0;
+    display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--text);
+    box-shadow:none;animation:diceroll .45s ease-out;font-variant-numeric:tabular-nums;
+  }
+  @keyframes diceroll{0%{opacity:.2;transform:translateY(6px)}100%{opacity:1;transform:none}}
+  .dice-table .result-hero .v{color:var(--accent);text-shadow:none}
   .stepper{display:flex;align-items:center;gap:10px}
-  .stepper button{background:var(--panel2);border:1px solid var(--border2);border-radius:9px;color:var(--text);width:34px;height:34px;font-size:18px;font-weight:700;cursor:pointer;transition:all .12s}
-  .stepper button:hover{border-color:var(--accent)}
-  .stepper span{font-size:19px;font-weight:800;min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
-  .dz-hitem{padding:7px 8px;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted)}
+  .stepper button{
+    background:none;border:1px solid var(--border);border-radius:0;color:var(--text);
+    width:34px;height:34px;font-size:16px;font-weight:700;cursor:pointer;
+  }
+  .stepper button:hover{border-color:var(--accent);color:var(--accent)}
+  .stepper span{font-size:18px;font-weight:800;min-width:36px;text-align:center;font-variant-numeric:tabular-nums}
+  .dz-hitem{
+    display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:baseline;
+    padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);
+  }
   .dz-hitem:last-child{border-bottom:0}
+  .dz-hitem .n{color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.08em}
+  .dz-hitem .t{color:var(--text);font-weight:700}
+  .dz-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
 
   footer{flex:none;padding:0 0 26px;text-align:center;color:var(--muted2);font-size:12.5px}
-  @media (max-width:560px){.card{padding:16px 13px}}
+  @media (max-width:560px){.card{padding:18px 4px}}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style></head>
-<body class="bt-themed"><header><div class="wrap"><div class="titlebar"><h1>CalcTools</h1><span class="sub">計算機ボックス</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs"><button class="tab" data-v="calc">電卓</button><button class="tab" data-v="graph">グラフ</button><button class="tab" data-v="unit">単位変換</button><button class="tab" data-v="warikan">割り勘</button><button class="tab" data-v="bizdays">営業日</button><button class="tab" data-v="wareki">和暦西暦</button><button class="tab" data-v="bmi">BMI</button><button class="tab" data-v="loan">ローン</button><button class="tab" data-v="dice">サイコロ</button></nav></div></header><main><div class="wrap"><!-- 電卓 --><section class="view" id="view-calc"><div class="card"><div class="calc-layout"><div><div class="calc-display"><div class="calc-expr digits" id="c-expr">&nbsp;</div><div class="calc-cur digits" id="c-cur">0</div></div><div class="calc-keys" id="c-keys"></div><div class="note">キーボード対応: 数字・演算子・Enter(=)・Backspace・Esc(C)・%</div></div><div class="calc-hist"><div class="h"><span>履歴</span><button class="btn sm" id="c-clearhist">クリア</button></div><div class="list" id="c-hist"><div class="hempty">履歴はまだありません</div></div></div></div></div></section><!-- グラフ --><section class="view" id="view-graph"><div class="card"><div id="fx-list"></div><div style="display:flex;gap:8px;margin:4px 0 14px"><button class="btn sm" id="fx-add">+ 関数を追加</button><button class="btn sm" id="fx-fit">表示リセット</button></div><canvas id="graph-canvas"></canvas><div class="note">使える記法: x, +, -, *, /, ^, sin cos tan asin acos atan, log(=log10) ln, sqrt, abs, exp, pi, e ／ ドラッグで移動・ホイール/ピンチでズーム</div></div></section><!-- 単位変換 --><section class="view" id="view-unit"><div class="card"><div class="seg" id="u-cats" style="margin-bottom:16px"></div><div class="row"><label class="fld"><span>値</span><input type="number" id="u-value" value="1" step="any"></label><label class="fld"><span>変換元</span><select id="u-from"></select></label><label class="fld"><span>変換先</span><select id="u-to"></select></label><button class="btn" id="u-swap" title="入れ替え">Swap</button></div><div class="result-hero"><div class="v digits" id="u-result">–</div><div class="cap" id="u-cap"></div></div><div id="u-table"></div></div></section><!-- 割り勘 --><section class="view" id="view-warikan"><div class="card"><div class="row" style="margin-bottom:14px"><label class="fld" style="flex:2"><span>合計金額（円）</span><input type="number" id="w-total" value="10000" min="0" step="100"></label><label class="fld"><span>丸め単位</span><select id="w-unit"><option value="1">1円</option><option value="10">10円</option><option value="100" selected>100円</option><option value="500">500円</option><option value="1000">1000円</option></select></label><label class="fld"><span>丸め方式</span><select id="w-round"><option value="round">四捨五入</option><option value="ceil">切り上げ</option><option value="floor" selected>切り捨て</option></select></label></div><h2>グループ（傾斜配分）</h2><div id="w-groups"></div><button class="btn sm" id="w-addgrp">+ グループを追加</button><div class="note">端数は「幹事」に指定した1名の金額で調整するため、内訳の合計は必ず合計金額と一致します。</div></div><div class="card"><h2>計算結果</h2><div id="w-result"></div></div></section><!-- 営業日 --><section class="view" id="view-bizdays"><div class="card"><div class="seg" id="b-modes" style="margin-bottom:16px"><button data-m="after" class="active">N営業日後</button><button data-m="between">期間の営業日数</button></div><div id="b-after"><div class="row"><label class="fld"><span>基準日</span><input type="date" id="b-date1"></label><label class="fld"><span>営業日数</span><input type="number" id="b-n" value="5" min="1" max="365"></label><label class="fld"><span>方向</span><select id="b-dir"><option value="1">後</option><option value="-1">前</option></select></label></div></div><div id="b-between" style="display:none"><div class="row"><label class="fld"><span>開始日</span><input type="date" id="b-date2"></label><label class="fld"><span>終了日</span><input type="date" id="b-date3"></label></div></div><div class="result-hero"><div class="v digits" id="b-result">–</div><div class="cap" id="b-cap"></div></div><div id="b-detail"></div><div class="note">土日と日本の祝日（2025〜2027年・振替休日/国民の休日を含む）を除外して計算します。対象期間外の年は祝日なしとして扱われます。</div></div></section><!-- 和暦西暦 --><section class="view" id="view-wareki"><div class="card"><div class="seg" id="j-modes" style="margin-bottom:16px"><button data-m="toWareki" class="active">西暦 -> 和暦</button><button data-m="toSeireki">和暦 -> 西暦</button></div><div id="j-toWareki" class="row"><label class="fld"><span>西暦（年）</span><input type="number" id="j-year" min="1868" max="2100"></label></div><div id="j-toSeireki" class="row" style="display:none"><label class="fld"><span>元号</span><select id="j-era"><option value="令和">令和</option><option value="平成">平成</option><option value="昭和">昭和</option><option value="大正">大正</option><option value="明治">明治</option></select></label><label class="fld"><span>年</span><input type="number" id="j-eyear" min="1" value="1"></label></div><div class="result-hero"><div class="v" id="j-result">–</div><div class="cap" id="j-cap"></div></div><div id="j-table"></div></div></section><!-- BMI --><section class="view" id="view-bmi"><div class="card"><div class="row"><label class="fld"><span>身長（cm）</span><input type="number" id="m-height" value="170" min="80" max="250" step="0.1"></label><label class="fld"><span>体重（kg）</span><input type="number" id="m-weight" value="60" min="20" max="300" step="0.1"></label></div><div class="result-hero"><div class="v digits" id="m-bmi">–</div><div><span class="badge" id="m-cat"></span></div></div><div id="m-table"></div><div class="note">判定は日本肥満学会の基準（18.5未満: 低体重 / 18.5〜25: 普通体重 / 25以上: 肥満）。適正体重はBMI 22で算出。</div></div></section><!-- ローン --><section class="view" id="view-loan"><div class="card"><div class="row"><label class="fld"><span>借入額（万円）</span><input type="number" id="l-amount" value="3000" min="1" step="10"></label><label class="fld"><span>年利（%）</span><input type="number" id="l-rate" value="1.5" min="0" max="20" step="0.01"></label><label class="fld"><span>期間（年）</span><input type="number" id="l-years" value="35" min="1" max="50"></label></div><div class="result-hero"><div class="v digits" id="l-monthly">–</div><div class="cap">毎月の返済額（元利均等）</div></div><div id="l-table"></div></div></section><!-- サイコロ --><section class="view" id="view-dice"><div class="card"><div class="dz-display" id="dz-display"></div><div class="result-hero"><div class="v digits" id="dz-result">0</div><div class="cap" id="dz-stats"></div></div><h2>ダイスの種類</h2><div class="seg" id="dz-sides" style="margin-bottom:16px"><button data-s="4">D4</button><button data-s="6" class="active">D6</button><button data-s="8">D8</button><button data-s="10">D10</button><button data-s="12">D12</button><button data-s="20">D20</button><button data-s="100">D100</button><button id="dz-custom">Custom</button></div><div class="row"><label class="fld"><span>個数</span><div class="stepper"><button id="dz-cdec" type="button">−</button><span id="dz-count">1</span><button id="dz-cinc" type="button">＋</button></div></label><label class="fld"><span>修正値</span><div class="stepper"><button id="dz-mdec" type="button">−</button><span id="dz-mod">0</span><button id="dz-minc" type="button">＋</button></div></label><button class="btn primary" id="dz-roll" type="button" style="flex:1;min-width:140px">Roll</button></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn sm" id="dz-save" type="button">Save preset</button><button class="btn sm" id="dz-load" type="button">Load</button><button class="btn sm" id="dz-export" type="button">Export CSV</button></div><div class="note">乱数は crypto.getRandomValues による偏りのない整数です。Space / Enter でも振れます。</div></div><div class="card"><h2>履歴</h2><div id="dz-history"><div class="hempty">まだありません</div></div></div></section></div></main><footer>CalcTools — Browser Toys</footer><script src="../../theme.js"></script>
+<body class="bt-themed"><header><div class="wrap"><div class="titlebar"><h1>CalcTools</h1><span class="sub">計算機ボックス</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs"><button class="tab" data-v="calc">電卓</button><button class="tab" data-v="graph">グラフ</button><button class="tab" data-v="unit">単位変換</button><button class="tab" data-v="warikan">割り勘</button><button class="tab" data-v="bizdays">営業日</button><button class="tab" data-v="wareki">和暦西暦</button><button class="tab" data-v="bmi">BMI</button><button class="tab" data-v="loan">ローン</button><button class="tab" data-v="dice">サイコロ</button></nav></div></header><main><div class="wrap"><!-- 電卓 -->
+<section class="view" id="view-calc"><div class="card"><div class="calc-layout"><div class="calc-hist"><div class="h"><span>Tape</span><button class="btn sm" id="c-clearhist" type="button">Clear</button></div><div class="list" id="c-hist"><div class="hempty">履歴はまだありません</div></div></div><div><div class="calc-display"><div class="calc-expr digits" id="c-expr">&nbsp;</div><div class="calc-cur digits" id="c-cur">0</div></div><div class="calc-keys" id="c-keys"></div><div class="note">キーボード対応: 数字・演算子・Enter(=)・Backspace・Esc(C)・%</div></div></div></div></section>
+<!-- グラフ -->
+<section class="view" id="view-graph"><div class="card"><div class="sheet-layout"><div class="sheet-plot"><canvas id="graph-canvas"></canvas><div class="note">使える記法: x, +, -, *, /, ^, sin cos tan asin acos atan, log(=log10) ln, sqrt, abs, exp, pi, e ／ ドラッグで移動・ホイール/ピンチでズーム</div></div><aside class="sheet-legend"><div class="legend-head">Legend</div><div id="fx-list"></div><div class="sheet-actions"><button class="btn sm" id="fx-add" type="button">Add</button><button class="btn sm" id="fx-fit" type="button">Reset view</button></div></aside></div></div></section>
+<!-- 単位変換 -->
+<section class="view" id="view-unit"><div class="card"><div class="mode-row" id="u-cats"></div><div class="pair-grid"><div class="pair-col"><label class="fld"><span>From</span><select id="u-from"></select></label><label class="fld" style="margin-top:14px"><span>Value</span><input type="number" id="u-value" value="1" step="any"></label><div class="pair-value digits" id="u-value-mirror">1</div></div><div class="pair-col"><label class="fld"><span>To</span><select id="u-to"></select></label><div class="fld" style="margin-top:14px"><span style="display:block;margin-bottom:6px">Result</span><div class="pair-value accent digits" id="u-result">–</div></div><div class="cap" id="u-cap" style="margin-top:10px;color:var(--muted2);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700"></div></div><button class="btn pair-swap" id="u-swap" type="button" title="入れ替え">Swap</button></div><div id="u-table"></div></div></section>
+<!-- 割り勘 -->
+<section class="view" id="view-warikan"><div class="card"><div class="dossier"><div class="dossier-fields"><div class="row" style="margin-bottom:14px"><label class="fld" style="flex:2"><span>合計金額（円）</span><input type="number" id="w-total" value="10000" min="0" step="100"></label><label class="fld"><span>丸め単位</span><select id="w-unit"><option value="1">1円</option><option value="10">10円</option><option value="100" selected>100円</option><option value="500">500円</option><option value="1000">1000円</option></select></label><label class="fld"><span>丸め方式</span><select id="w-round"><option value="round">四捨五入</option><option value="ceil">切り上げ</option><option value="floor" selected>切り捨て</option></select></label></div><h2>Groups</h2><div id="w-groups"></div><button class="btn sm" id="w-addgrp" type="button">Add group</button><div class="note">端数は「幹事」に指定した1名の金額で調整するため、内訳の合計は必ず合計金額と一致します。</div></div><div class="dossier-out"><h2>Result</h2><div id="w-result"></div></div></div></div></section>
+<!-- 営業日 -->
+<section class="view" id="view-bizdays"><div class="card"><div class="dossier"><div class="dossier-fields"><div class="mode-row" id="b-modes"><button data-m="after" class="active" type="button">N営業日後</button><button data-m="between" type="button">期間の営業日数</button></div><div id="b-after"><div class="row"><label class="fld"><span>基準日</span><input type="date" id="b-date1"></label><label class="fld"><span>営業日数</span><input type="number" id="b-n" value="5" min="1" max="365"></label><label class="fld"><span>方向</span><select id="b-dir"><option value="1">後</option><option value="-1">前</option></select></label></div></div><div id="b-between" style="display:none"><div class="row"><label class="fld"><span>開始日</span><input type="date" id="b-date2"></label><label class="fld"><span>終了日</span><input type="date" id="b-date3"></label></div></div><div class="note">土日と日本の祝日（2025〜2027年・振替休日/国民の休日を含む）を除外して計算します。対象期間外の年は祝日なしとして扱われます。</div></div><div class="dossier-out"><div class="result-hero"><div class="v digits" id="b-result">–</div><div class="cap" id="b-cap"></div></div><div id="b-detail"></div></div></div></div></section>
+<!-- 和暦西暦 -->
+<section class="view" id="view-wareki"><div class="card"><div class="dossier"><div class="dossier-fields"><div class="mode-row" id="j-modes"><button data-m="toWareki" class="active" type="button">西暦 → 和暦</button><button data-m="toSeireki" type="button">和暦 → 西暦</button></div><div id="j-toWareki" class="row"><label class="fld"><span>西暦（年）</span><input type="number" id="j-year" min="1868" max="2100"></label></div><div id="j-toSeireki" class="row" style="display:none"><label class="fld"><span>元号</span><select id="j-era"><option value="令和">令和</option><option value="平成">平成</option><option value="昭和">昭和</option><option value="大正">大正</option><option value="明治">明治</option></select></label><label class="fld"><span>年</span><input type="number" id="j-eyear" min="1" value="1"></label></div></div><div class="dossier-out"><div class="result-hero"><div class="v" id="j-result">–</div><div class="cap" id="j-cap"></div></div><div id="j-table"></div></div></div></div></section>
+<!-- BMI -->
+<section class="view" id="view-bmi"><div class="card"><div class="dossier"><div class="dossier-fields"><div class="row"><label class="fld"><span>身長（cm）</span><input type="number" id="m-height" value="170" min="80" max="250" step="0.1"></label><label class="fld"><span>体重（kg）</span><input type="number" id="m-weight" value="60" min="20" max="300" step="0.1"></label></div><div class="note">判定は日本肥満学会の基準（18.5未満: 低体重 / 18.5〜25: 普通体重 / 25以上: 肥満）。適正体重はBMI 22で算出。</div></div><div class="dossier-out"><div class="result-hero"><div class="v digits" id="m-bmi">–</div><div><span class="badge" id="m-cat"></span></div></div><div id="m-table"></div></div></div></div></section>
+<!-- ローン -->
+<section class="view" id="view-loan"><div class="card"><div class="dossier"><div class="dossier-fields"><div class="row"><label class="fld"><span>借入額（万円）</span><input type="number" id="l-amount" value="3000" min="1" step="10"></label><label class="fld"><span>年利（%）</span><input type="number" id="l-rate" value="1.5" min="0" max="20" step="0.01"></label><label class="fld"><span>期間（年）</span><input type="number" id="l-years" value="35" min="1" max="50"></label></div></div><div class="dossier-out"><div class="result-hero"><div class="v digits" id="l-monthly">–</div><div class="cap">毎月の返済額（元利均等）</div></div><div id="l-table"></div></div></div></div></section>
+<!-- サイコロ -->
+<section class="view" id="view-dice"><div class="card"><div class="dice-table"><div class="dice-main"><div class="dz-display" id="dz-display"></div><div class="result-hero"><div class="v digits" id="dz-result">0</div><div class="cap" id="dz-stats"></div></div><h2>Dice</h2><div class="mode-row" id="dz-sides"><button data-s="4" type="button">D4</button><button data-s="6" class="active" type="button">D6</button><button data-s="8" type="button">D8</button><button data-s="10" type="button">D10</button><button data-s="12" type="button">D12</button><button data-s="20" type="button">D20</button><button data-s="100" type="button">D100</button><button id="dz-custom" type="button">Custom</button></div><div class="row"><label class="fld"><span>Count</span><div class="stepper"><button id="dz-cdec" type="button">−</button><span id="dz-count">1</span><button id="dz-cinc" type="button">＋</button></div></label><label class="fld"><span>Modifier</span><div class="stepper"><button id="dz-mdec" type="button">−</button><span id="dz-mod">0</span><button id="dz-minc" type="button">＋</button></div></label><button class="btn primary" id="dz-roll" type="button">Roll</button></div><div class="dz-actions"><button class="btn sm" id="dz-save" type="button">Save</button><button class="btn sm" id="dz-load" type="button">Load</button><button class="btn sm" id="dz-export" type="button">CSV</button></div><div class="note">乱数は crypto.getRandomValues による偏りのない整数です。Space / Enter でも振れます。</div></div><aside class="dice-log"><h2>Log</h2><div id="dz-history"><div class="hempty">まだありません</div></div></aside></div></div></section>
+</div></main></main><footer>CalcTools — Browser Toys</footer><script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -164,6 +293,7 @@ function show(v){
   if (v === 'graph') graphResize();
 }
 $$('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.v)));
+document.addEventListener('bt:theme', () => { if ($('#view-graph').classList.contains('active')) graphDraw(); });
 
 /* ================= 電卓 ================= */
 const calc = { cur:'0', prev:null, op:null, justEq:false, hist:[] };
@@ -259,7 +389,7 @@ document.addEventListener('keydown', e => {
 calcRender();
 
 /* ================= グラフ ================= */
-const FX_COLORS = ['#7c8cff','#4dd0e1','#3ddc84','#ff6b6b','#ffcc55','#e879f9'];
+const FX_COLORS = ['#3de0c5','#4dd0e1','#3ddc84','#ff6b6b','#ffcc55','#1d6fd8'];
 let fxs = [{expr:'sin(x)'},{expr:'x^2/8 - 2'}];
 const gview = { cx:0, cy:0, scale:40 }; // pixels per unit
 function fxCompile(src){
@@ -315,23 +445,27 @@ function graphDraw(){
   const scale = gview.scale * dpr;
   const ox = W/2 - gview.cx * scale, oy = H/2 + gview.cy * scale;
   gctx.clearRect(0,0,W,H);
+  const theme = document.documentElement.getAttribute('data-theme');
+  const gridA = theme === 'lab' ? 'rgba(20,40,80,.08)' : 'rgba(255,255,255,.05)';
+  const axisA = theme === 'lab' ? 'rgba(20,40,80,.28)' : 'rgba(255,255,255,.25)';
+  const labelA = theme === 'lab' ? 'rgba(20,40,80,.45)' : 'rgba(255,255,255,.35)';
   // grid
   const step = niceStep(scale);
   gctx.lineWidth = 1;
-  gctx.strokeStyle = 'rgba(255,255,255,.05)';
+  gctx.strokeStyle = gridA;
   gctx.beginPath();
   for (let x = ox % (step*scale); x < W; x += step*scale){ gctx.moveTo(x,0); gctx.lineTo(x,H); }
   for (let y = oy % (step*scale); y < H; y += step*scale){ gctx.moveTo(0,y); gctx.lineTo(W,y); }
   gctx.stroke();
   // axes
-  gctx.strokeStyle = 'rgba(255,255,255,.25)';
+  gctx.strokeStyle = axisA;
   gctx.beginPath();
   gctx.moveTo(0, oy); gctx.lineTo(W, oy);
   gctx.moveTo(ox, 0); gctx.lineTo(ox, H);
   gctx.stroke();
   // axis labels
-  gctx.fillStyle = 'rgba(255,255,255,.35)';
-  gctx.font = `${11*dpr}px system-ui`;
+  gctx.fillStyle = labelA;
+  gctx.font = `${11*dpr}px "IBM Plex Sans JP", system-ui`;
   for (let gx = Math.ceil((0-ox)/(step*scale))*step; ; gx += step){
     const px = ox + gx*scale;
     if (px > W) break;
@@ -402,6 +536,7 @@ let uCat = '長さ';
   const seg = $('#u-cats');
   Object.keys(UNITS).forEach(cat => {
     const b = document.createElement('button');
+    b.type = 'button';
     b.textContent = cat;
     b.className = cat === uCat ? 'active' : '';
     b.addEventListener('click', () => { uCat = cat; $$('#u-cats button').forEach(x => x.classList.toggle('active', x === b)); uBuild(); });
@@ -431,10 +566,18 @@ function uFmt(n){
 function uCalc(){
   const v = parseFloat($('#u-value').value);
   const from = $('#u-from').value, to = $('#u-to').value;
-  if (isNaN(v)){ $('#u-result').textContent = '–'; $('#u-cap').textContent=''; $('#u-table').innerHTML=''; return; }
+  const mirror = $('#u-value-mirror');
+  if (isNaN(v)){
+    $('#u-result').textContent = '–';
+    $('#u-cap').textContent='';
+    if (mirror) mirror.textContent = '–';
+    $('#u-table').innerHTML='';
+    return;
+  }
+  if (mirror) mirror.textContent = uFmt(v);
   const r = uConv(v, from, to);
-  $('#u-result').innerHTML = `${uFmt(r)} <span class="u">${esc(to)}</span>`;
-  $('#u-cap').textContent = `${uFmt(v)} ${from} =`;
+  $('#u-result').textContent = uFmt(r);
+  $('#u-cap').textContent = `${uFmt(v)} ${from} → ${to}`;
   const items = Object.keys(UNITS[uCat].items).filter(u => u !== from);
   $('#u-table').innerHTML = `<table class="res">` + items.map(u =>`<tr><td>${esc(u)}</td><td class="num digits">${uFmt(uConv(v, from, u))}</td></tr>`).join('') + `</table>`;
 }
@@ -684,7 +827,11 @@ loanCalc();
   }
   function renderHist(){
     histBox.innerHTML = hist.length
-      ? hist.map(h => `<div class="dz-hitem digits">${esc(h)}</div>`).join('')
+      ? hist.map((h, i) => {
+          const m = String(h).match(/^(.*?) — (.*?): \[(.*?)\] = (.*)$/);
+          if (!m) return `<div class="dz-hitem digits"><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(h)}</span><span></span></div>`;
+          return `<div class="dz-hitem digits"><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(m[2])}: [${esc(m[3])}]</span><span class="t">${esc(m[4])}</span></div>`;
+        }).join('')
       : '<div class="hempty">まだありません</div>';
   }
   function save(){ try{ localStorage.setItem('calctools_dice_history', JSON.stringify(hist.slice(0,20))); }catch(_){} }
