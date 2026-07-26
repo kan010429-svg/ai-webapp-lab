@@ -1,30 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja" data-theme="cyber">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matrix Rain — デジタルレイン</title>
-  <script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Matrix Rain — デジタルレイン</title><script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="../../theme.css" />
 <link rel="stylesheet" href="../../app-ui.css" />
-<link rel="stylesheet" href="style.css">
-</head>
-<body class="bt-themed bt-app bt-canvas-app">
-  <canvas id="canvas"></canvas>
-  <div id="controls">
-      <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-
-    <label>速度: <input type="range" id="speed" min="1" max="10" value="5"></label>
-    <label>密度: <input type="range" id="density" min="5" max="30" value="14"></label>
-    <select id="charset"><option value="katakana">カタカナ</option><option value="binary">バイナリ</option><option value="hex">16進数</option><option value="kanji">漢字</option></select>
-    <select id="color"><option value="green">Green</option><option value="blue">Blue</option><option value="red">Red</option><option value="purple">Purple</option><option value="rainbow">Rainbow</option></select>
-  </div>
-  <script src="app.js"></script>
-<script src="../../theme.js"></script>
-</body>
-</html>
+<link rel="stylesheet" href="style.css"></head>
+<body class="bt-themed bt-app bt-canvas-app"><canvas id="canvas"></canvas><div id="controls"><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><label>速度: <input type="range" id="speed" min="1" max="10" value="5"></label><label>密度: <input type="range" id="density" min="5" max="30" value="14"></label><select id="charset"><option value="katakana">カタカナ</option><option value="binary">バイナリ</option><option value="hex">16進数</option><option value="kanji">漢字</option></select><select id="color"><option value="green">Green</option><option value="blue">Blue</option><option value="red">Red</option><option value="purple">Purple</option><option value="rainbow">Rainbow</option></select></div><script src="app.js"></script>
+<script src="../../theme.js"></script></body></html>

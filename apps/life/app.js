@@ -162,7 +162,7 @@
         if (grid[y * cols + x]) {
           const neighbors = countNeighbors(grid, x, y);
           const brightness = 0.6 + Math.min(neighbors, 4) / 4 * 0.4;
-          // Color shift based on neighbors: green → cyan → blue
+          // Color shift based on neighbors: green -> cyan -> blue
           const hue = 150 + neighbors * 10;
           const sat = 60 + neighbors * 5;
           const light = 40 + brightness * 20;
@@ -183,7 +183,7 @@
     ctx.fillRect(4, 4, 180, 18);
     ctx.fillStyle = '#e0e0f0';
     ctx.font = '10px monospace';
-    ctx.fillText(`Gen:${generation.toLocaleString()} Pop:${population.toLocaleString()} ${running ? '▶' : '⏸'}`, 8, 16);
+    ctx.fillText(`Gen:${generation.toLocaleString()} Pop:${population.toLocaleString()} ${running ? 'RUN' : 'PAUSE'}`, 8, 16);
 
     genValueEl.textContent = generation.toLocaleString();
     popValueEl.textContent = population.toLocaleString();
@@ -233,7 +233,7 @@
   function startSim() {
     if (running) return;
     running = true;
-    playBtn.textContent = '⏸ 停止';
+    playBtn.textContent = 'Stop';
     const fps = Number(speedSlider.value);
     intervalId = setInterval(tick, 1000 / fps);
   }
@@ -242,7 +242,7 @@
     running = false;
     clearInterval(intervalId);
     intervalId = null;
-    playBtn.textContent = '▶ 開始';
+    playBtn.textContent = 'Start';
   }
 
   function clearGrid() {

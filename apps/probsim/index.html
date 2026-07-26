@@ -1,69 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja" data-theme="cyber">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ProbSim — 確率シミュレーター</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
-  <script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ProbSim — 確率シミュレーター</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Ccircle cx='50' cy='50' r='22' fill='none' stroke='%233de0c5' stroke-width='8'/%3E%3C/svg%3E"><script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="../../theme.css" />
 <link rel="stylesheet" href="../../app-ui.css" />
-<link rel="stylesheet" href="style.css">
-</head>
-<body class="bt-themed bt-app bt-canvas-app">
-  <div class="app">
-    <header class="toolbar">
-      <div class="toolbar-left">
-        <a href="../../index.html" class="back-link">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </a>
-        <span class="app-title">🎲 ProbSim</span>
-      
-      <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-    </div>
-      <div class="toolbar-center">
-        <div class="control-group">
-          <label>実験</label>
-          <select id="experiment">
-            <option value="monty">モンティ・ホール問題</option>
-            <option value="birthday">誕生日のパラドックス</option>
-            <option value="pi">モンテカルロ法 (π推定)</option>
-            <option value="dice">サイコロ分布</option>
-            <option value="coin">コイン投げ (大数の法則)</option>
-            <option value="gambler">ギャンブラーの誤謬</option>
-            <option value="petersburg">セントペテルブルク</option>
-            <option value="bayes">ベイズの定理</option>
-            <option value="coupon">クーポンコレクター</option>
-            <option value="random-walk">ランダムウォーク</option>
-            <option value="buffon">ビュフォンの針</option>
-            <option value="secretary">秘書問題</option>
-          </select>
-        </div>
-        <button class="btn" id="settingsBtn">⚙️ 設定</button>
-        <button class="btn btn-primary" id="runBtn">▶ 実行</button>
-        <button class="btn" id="run1000">×1000</button>
-        <button class="btn" id="resetBtn">🗑 リセット</button>
-        <span class="stat">試行: <b id="trials">0</b></span>
-      </div>
-    </header>
-    <main class="main-area">
-      <div class="viz-area">
-        <canvas id="canvas"></canvas>
-      </div>
-      <div class="info-panel" id="infoPanel">
-        <div class="info-title" id="infoTitle">モンティ・ホール問題</div>
-        <div class="info-desc" id="infoDesc">3つのドアの1つに賞品。1つ選んだ後、司会者がハズレのドアを開ける。変更すべき？</div>
-        <div class="settings-area" id="settingsArea" style="display:none;"></div>
-        <div class="results" id="results"></div>
-      </div>
-    </main>
-  </div>
-  <script src="app.js"></script>
-<script src="../../theme.js"></script>
-</body>
-</html>
+<link rel="stylesheet" href="style.css"></head>
+<body class="bt-themed bt-app bt-canvas-app"><div class="app"><header class="toolbar"><div class="toolbar-left"><a href="../../index.html" class="back-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></a><span class="app-title">ProbSim</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div></div><div class="toolbar-center"><div class="control-group"><label>実験</label><select id="experiment"><option value="monty">モンティ・ホール問題</option><option value="birthday">誕生日のパラドックス</option><option value="pi">モンテカルロ法 (π推定)</option><option value="dice">サイコロ分布</option><option value="coin">コイン投げ (大数の法則)</option><option value="gambler">ギャンブラーの誤謬</option><option value="petersburg">セントペテルブルク</option><option value="bayes">ベイズの定理</option><option value="coupon">クーポンコレクター</option><option value="random-walk">ランダムウォーク</option><option value="buffon">ビュフォンの針</option><option value="secretary">秘書問題</option></select></div><button class="btn" id="settingsBtn">Settings</button><button class="btn btn-primary" id="runBtn">Run</button><button class="btn" id="run1000">×1000</button><button class="btn" id="resetBtn">Reset</button><span class="stat">試行: <b id="trials">0</b></span></div></header><main class="main-area"><div class="viz-area"><canvas id="canvas"></canvas></div><div class="info-panel" id="infoPanel"><div class="info-title" id="infoTitle">モンティ・ホール問題</div><div class="info-desc" id="infoDesc">3つのドアの1つに賞品。1つ選んだ後、司会者がハズレのドアを開ける。変更すべき？</div><div class="settings-area" id="settingsArea" style="display:none;"></div><div class="results" id="results"></div></div></main></div><script src="app.js"></script>
+<script src="../../theme.js"></script></body></html>

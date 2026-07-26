@@ -4,14 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CalcTools — 計算機ボックス</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AE%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Ccircle cx='50' cy='50' r='22' fill='none' stroke='%233de0c5' stroke-width='8'/%3E%3C/svg%3E" />
 <meta name="description" content="電卓・関数グラフ・単位変換・BMI・ローン・割り勘・営業日・和暦西暦・サイコロを1つにまとめた計算アプリ。" />
-<script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="../../theme.css" />
-<style>
-  /* tokens: theme.css */
+<style>/* tokens: theme.css */
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
@@ -147,229 +145,8 @@
   footer{flex:none;padding:0 0 26px;text-align:center;color:var(--muted2);font-size:12.5px}
   @media (max-width:560px){.card{padding:16px 13px}}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-</style>
-</head>
-<body class="bt-themed">
-  <header>
-    <div class="wrap">
-      <div class="titlebar">
-        <h1>CalcTools</h1><span class="sub">計算機ボックス</span>
-        <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-      <a class="back" href="../../index.html">Apps</a>
-      </div>
-      <nav class="tabs" id="tabs">
-        <button class="tab" data-v="calc">🧮 電卓</button>
-        <button class="tab" data-v="graph">📈 グラフ</button>
-        <button class="tab" data-v="unit">📏 単位変換</button>
-        <button class="tab" data-v="warikan">🍻 割り勘</button>
-        <button class="tab" data-v="bizdays">📅 営業日</button>
-        <button class="tab" data-v="wareki">🗓️ 和暦西暦</button>
-        <button class="tab" data-v="bmi">⚖️ BMI</button>
-        <button class="tab" data-v="loan">💵 ローン</button>
-        <button class="tab" data-v="dice">🎲 サイコロ</button>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <div class="wrap">
-
-      <!-- 電卓 -->
-      <section class="view" id="view-calc">
-        <div class="card">
-          <div class="calc-layout">
-            <div>
-              <div class="calc-display">
-                <div class="calc-expr digits" id="c-expr">&nbsp;</div>
-                <div class="calc-cur digits" id="c-cur">0</div>
-              </div>
-              <div class="calc-keys" id="c-keys"></div>
-              <div class="note">キーボード対応: 数字・演算子・Enter(=)・Backspace・Esc(C)・%</div>
-            </div>
-            <div class="calc-hist">
-              <div class="h"><span>履歴</span><button class="btn sm" id="c-clearhist">クリア</button></div>
-              <div class="list" id="c-hist"><div class="hempty">履歴はまだありません</div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- グラフ -->
-      <section class="view" id="view-graph">
-        <div class="card">
-          <div id="fx-list"></div>
-          <div style="display:flex;gap:8px;margin:4px 0 14px">
-            <button class="btn sm" id="fx-add">＋ 関数を追加</button>
-            <button class="btn sm" id="fx-fit">表示リセット</button>
-          </div>
-          <canvas id="graph-canvas"></canvas>
-          <div class="note">使える記法: x, +, -, *, /, ^, sin cos tan asin acos atan, log(=log10) ln, sqrt, abs, exp, pi, e ／ ドラッグで移動・ホイール/ピンチでズーム</div>
-        </div>
-      </section>
-
-      <!-- 単位変換 -->
-      <section class="view" id="view-unit">
-        <div class="card">
-          <div class="seg" id="u-cats" style="margin-bottom:16px"></div>
-          <div class="row">
-            <label class="fld"><span>値</span><input type="number" id="u-value" value="1" step="any"></label>
-            <label class="fld"><span>変換元</span><select id="u-from"></select></label>
-            <label class="fld"><span>変換先</span><select id="u-to"></select></label>
-            <button class="btn" id="u-swap" title="入れ替え">⇄</button>
-          </div>
-          <div class="result-hero"><div class="v digits" id="u-result">–</div><div class="cap" id="u-cap"></div></div>
-          <div id="u-table"></div>
-        </div>
-      </section>
-
-      <!-- 割り勘 -->
-      <section class="view" id="view-warikan">
-        <div class="card">
-          <div class="row" style="margin-bottom:14px">
-            <label class="fld" style="flex:2"><span>合計金額（円）</span><input type="number" id="w-total" value="10000" min="0" step="100"></label>
-            <label class="fld"><span>丸め単位</span>
-              <select id="w-unit"><option value="1">1円</option><option value="10">10円</option><option value="100" selected>100円</option><option value="500">500円</option><option value="1000">1000円</option></select>
-            </label>
-            <label class="fld"><span>丸め方式</span>
-              <select id="w-round"><option value="round">四捨五入</option><option value="ceil">切り上げ</option><option value="floor" selected>切り捨て</option></select>
-            </label>
-          </div>
-          <h2>グループ（傾斜配分）</h2>
-          <div id="w-groups"></div>
-          <button class="btn sm" id="w-addgrp">＋ グループを追加</button>
-          <div class="note">端数は「幹事」に指定した1名の金額で調整するため、内訳の合計は必ず合計金額と一致します。</div>
-        </div>
-        <div class="card">
-          <h2>計算結果</h2>
-          <div id="w-result"></div>
-        </div>
-      </section>
-
-      <!-- 営業日 -->
-      <section class="view" id="view-bizdays">
-        <div class="card">
-          <div class="seg" id="b-modes" style="margin-bottom:16px">
-            <button data-m="after" class="active">N営業日後</button>
-            <button data-m="between">期間の営業日数</button>
-          </div>
-          <div id="b-after">
-            <div class="row">
-              <label class="fld"><span>基準日</span><input type="date" id="b-date1"></label>
-              <label class="fld"><span>営業日数</span><input type="number" id="b-n" value="5" min="1" max="365"></label>
-              <label class="fld"><span>方向</span><select id="b-dir"><option value="1">後</option><option value="-1">前</option></select></label>
-            </div>
-          </div>
-          <div id="b-between" style="display:none">
-            <div class="row">
-              <label class="fld"><span>開始日</span><input type="date" id="b-date2"></label>
-              <label class="fld"><span>終了日</span><input type="date" id="b-date3"></label>
-            </div>
-          </div>
-          <div class="result-hero"><div class="v digits" id="b-result">–</div><div class="cap" id="b-cap"></div></div>
-          <div id="b-detail"></div>
-          <div class="note">土日と日本の祝日（2025〜2027年・振替休日/国民の休日を含む）を除外して計算します。対象期間外の年は祝日なしとして扱われます。</div>
-        </div>
-      </section>
-
-      <!-- 和暦西暦 -->
-      <section class="view" id="view-wareki">
-        <div class="card">
-          <div class="seg" id="j-modes" style="margin-bottom:16px">
-            <button data-m="toWareki" class="active">西暦 → 和暦</button>
-            <button data-m="toSeireki">和暦 → 西暦</button>
-          </div>
-          <div id="j-toWareki" class="row">
-            <label class="fld"><span>西暦（年）</span><input type="number" id="j-year" min="1868" max="2100"></label>
-          </div>
-          <div id="j-toSeireki" class="row" style="display:none">
-            <label class="fld"><span>元号</span>
-              <select id="j-era"><option value="令和">令和</option><option value="平成">平成</option><option value="昭和">昭和</option><option value="大正">大正</option><option value="明治">明治</option></select>
-            </label>
-            <label class="fld"><span>年</span><input type="number" id="j-eyear" min="1" value="1"></label>
-          </div>
-          <div class="result-hero"><div class="v" id="j-result">–</div><div class="cap" id="j-cap"></div></div>
-          <div id="j-table"></div>
-        </div>
-      </section>
-
-      <!-- BMI -->
-      <section class="view" id="view-bmi">
-        <div class="card">
-          <div class="row">
-            <label class="fld"><span>身長（cm）</span><input type="number" id="m-height" value="170" min="80" max="250" step="0.1"></label>
-            <label class="fld"><span>体重（kg）</span><input type="number" id="m-weight" value="60" min="20" max="300" step="0.1"></label>
-          </div>
-          <div class="result-hero">
-            <div class="v digits" id="m-bmi">–</div>
-            <div><span class="badge" id="m-cat"></span></div>
-          </div>
-          <div id="m-table"></div>
-          <div class="note">判定は日本肥満学会の基準（18.5未満: 低体重 / 18.5〜25: 普通体重 / 25以上: 肥満）。適正体重はBMI 22で算出。</div>
-        </div>
-      </section>
-
-      <!-- ローン -->
-      <section class="view" id="view-loan">
-        <div class="card">
-          <div class="row">
-            <label class="fld"><span>借入額（万円）</span><input type="number" id="l-amount" value="3000" min="1" step="10"></label>
-            <label class="fld"><span>年利（%）</span><input type="number" id="l-rate" value="1.5" min="0" max="20" step="0.01"></label>
-            <label class="fld"><span>期間（年）</span><input type="number" id="l-years" value="35" min="1" max="50"></label>
-          </div>
-          <div class="result-hero">
-            <div class="v digits" id="l-monthly">–</div>
-            <div class="cap">毎月の返済額（元利均等）</div>
-          </div>
-          <div id="l-table"></div>
-        </div>
-      </section>
-
-      <!-- サイコロ -->
-      <section class="view" id="view-dice">
-        <div class="card">
-          <div class="dz-display" id="dz-display"></div>
-          <div class="result-hero"><div class="v digits" id="dz-result">0</div><div class="cap" id="dz-stats"></div></div>
-          <h2>ダイスの種類</h2>
-          <div class="seg" id="dz-sides" style="margin-bottom:16px">
-            <button data-s="4">D4</button>
-            <button data-s="6" class="active">D6</button>
-            <button data-s="8">D8</button>
-            <button data-s="10">D10</button>
-            <button data-s="12">D12</button>
-            <button data-s="20">D20</button>
-            <button data-s="100">D100</button>
-            <button id="dz-custom">Custom</button>
-          </div>
-          <div class="row">
-            <label class="fld"><span>個数</span>
-              <div class="stepper"><button id="dz-cdec" type="button">−</button><span id="dz-count">1</span><button id="dz-cinc" type="button">＋</button></div>
-            </label>
-            <label class="fld"><span>修正値</span>
-              <div class="stepper"><button id="dz-mdec" type="button">−</button><span id="dz-mod">0</span><button id="dz-minc" type="button">＋</button></div>
-            </label>
-            <button class="btn primary" id="dz-roll" type="button" style="flex:1;min-width:140px">🎲 振る</button>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
-            <button class="btn sm" id="dz-save" type="button">💾 プリセット保存</button>
-            <button class="btn sm" id="dz-load" type="button">📂 読込</button>
-            <button class="btn sm" id="dz-export" type="button">📥 履歴CSV</button>
-          </div>
-          <div class="note">乱数は crypto.getRandomValues による偏りのない整数です。Space / Enter でも振れます。</div>
-        </div>
-        <div class="card">
-          <h2>履歴</h2>
-          <div id="dz-history"><div class="hempty">まだありません</div></div>
-        </div>
-      </section>
-
-    </div>
-  </main>
-  <footer>CalcTools — Browser Toys</footer>
-
-<script src="../../theme.js"></script>
+</style></head>
+<body class="bt-themed"><header><div class="wrap"><div class="titlebar"><h1>CalcTools</h1><span class="sub">計算機ボックス</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs"><button class="tab" data-v="calc">電卓</button><button class="tab" data-v="graph">グラフ</button><button class="tab" data-v="unit">単位変換</button><button class="tab" data-v="warikan">割り勘</button><button class="tab" data-v="bizdays">営業日</button><button class="tab" data-v="wareki">和暦西暦</button><button class="tab" data-v="bmi">BMI</button><button class="tab" data-v="loan">ローン</button><button class="tab" data-v="dice">サイコロ</button></nav></div></header><main><div class="wrap"><!-- 電卓 --><section class="view" id="view-calc"><div class="card"><div class="calc-layout"><div><div class="calc-display"><div class="calc-expr digits" id="c-expr">&nbsp;</div><div class="calc-cur digits" id="c-cur">0</div></div><div class="calc-keys" id="c-keys"></div><div class="note">キーボード対応: 数字・演算子・Enter(=)・Backspace・Esc(C)・%</div></div><div class="calc-hist"><div class="h"><span>履歴</span><button class="btn sm" id="c-clearhist">クリア</button></div><div class="list" id="c-hist"><div class="hempty">履歴はまだありません</div></div></div></div></div></section><!-- グラフ --><section class="view" id="view-graph"><div class="card"><div id="fx-list"></div><div style="display:flex;gap:8px;margin:4px 0 14px"><button class="btn sm" id="fx-add">+ 関数を追加</button><button class="btn sm" id="fx-fit">表示リセット</button></div><canvas id="graph-canvas"></canvas><div class="note">使える記法: x, +, -, *, /, ^, sin cos tan asin acos atan, log(=log10) ln, sqrt, abs, exp, pi, e ／ ドラッグで移動・ホイール/ピンチでズーム</div></div></section><!-- 単位変換 --><section class="view" id="view-unit"><div class="card"><div class="seg" id="u-cats" style="margin-bottom:16px"></div><div class="row"><label class="fld"><span>値</span><input type="number" id="u-value" value="1" step="any"></label><label class="fld"><span>変換元</span><select id="u-from"></select></label><label class="fld"><span>変換先</span><select id="u-to"></select></label><button class="btn" id="u-swap" title="入れ替え">Swap</button></div><div class="result-hero"><div class="v digits" id="u-result">–</div><div class="cap" id="u-cap"></div></div><div id="u-table"></div></div></section><!-- 割り勘 --><section class="view" id="view-warikan"><div class="card"><div class="row" style="margin-bottom:14px"><label class="fld" style="flex:2"><span>合計金額（円）</span><input type="number" id="w-total" value="10000" min="0" step="100"></label><label class="fld"><span>丸め単位</span><select id="w-unit"><option value="1">1円</option><option value="10">10円</option><option value="100" selected>100円</option><option value="500">500円</option><option value="1000">1000円</option></select></label><label class="fld"><span>丸め方式</span><select id="w-round"><option value="round">四捨五入</option><option value="ceil">切り上げ</option><option value="floor" selected>切り捨て</option></select></label></div><h2>グループ（傾斜配分）</h2><div id="w-groups"></div><button class="btn sm" id="w-addgrp">+ グループを追加</button><div class="note">端数は「幹事」に指定した1名の金額で調整するため、内訳の合計は必ず合計金額と一致します。</div></div><div class="card"><h2>計算結果</h2><div id="w-result"></div></div></section><!-- 営業日 --><section class="view" id="view-bizdays"><div class="card"><div class="seg" id="b-modes" style="margin-bottom:16px"><button data-m="after" class="active">N営業日後</button><button data-m="between">期間の営業日数</button></div><div id="b-after"><div class="row"><label class="fld"><span>基準日</span><input type="date" id="b-date1"></label><label class="fld"><span>営業日数</span><input type="number" id="b-n" value="5" min="1" max="365"></label><label class="fld"><span>方向</span><select id="b-dir"><option value="1">後</option><option value="-1">前</option></select></label></div></div><div id="b-between" style="display:none"><div class="row"><label class="fld"><span>開始日</span><input type="date" id="b-date2"></label><label class="fld"><span>終了日</span><input type="date" id="b-date3"></label></div></div><div class="result-hero"><div class="v digits" id="b-result">–</div><div class="cap" id="b-cap"></div></div><div id="b-detail"></div><div class="note">土日と日本の祝日（2025〜2027年・振替休日/国民の休日を含む）を除外して計算します。対象期間外の年は祝日なしとして扱われます。</div></div></section><!-- 和暦西暦 --><section class="view" id="view-wareki"><div class="card"><div class="seg" id="j-modes" style="margin-bottom:16px"><button data-m="toWareki" class="active">西暦 -> 和暦</button><button data-m="toSeireki">和暦 -> 西暦</button></div><div id="j-toWareki" class="row"><label class="fld"><span>西暦（年）</span><input type="number" id="j-year" min="1868" max="2100"></label></div><div id="j-toSeireki" class="row" style="display:none"><label class="fld"><span>元号</span><select id="j-era"><option value="令和">令和</option><option value="平成">平成</option><option value="昭和">昭和</option><option value="大正">大正</option><option value="明治">明治</option></select></label><label class="fld"><span>年</span><input type="number" id="j-eyear" min="1" value="1"></label></div><div class="result-hero"><div class="v" id="j-result">–</div><div class="cap" id="j-cap"></div></div><div id="j-table"></div></div></section><!-- BMI --><section class="view" id="view-bmi"><div class="card"><div class="row"><label class="fld"><span>身長（cm）</span><input type="number" id="m-height" value="170" min="80" max="250" step="0.1"></label><label class="fld"><span>体重（kg）</span><input type="number" id="m-weight" value="60" min="20" max="300" step="0.1"></label></div><div class="result-hero"><div class="v digits" id="m-bmi">–</div><div><span class="badge" id="m-cat"></span></div></div><div id="m-table"></div><div class="note">判定は日本肥満学会の基準（18.5未満: 低体重 / 18.5〜25: 普通体重 / 25以上: 肥満）。適正体重はBMI 22で算出。</div></div></section><!-- ローン --><section class="view" id="view-loan"><div class="card"><div class="row"><label class="fld"><span>借入額（万円）</span><input type="number" id="l-amount" value="3000" min="1" step="10"></label><label class="fld"><span>年利（%）</span><input type="number" id="l-rate" value="1.5" min="0" max="20" step="0.01"></label><label class="fld"><span>期間（年）</span><input type="number" id="l-years" value="35" min="1" max="50"></label></div><div class="result-hero"><div class="v digits" id="l-monthly">–</div><div class="cap">毎月の返済額（元利均等）</div></div><div id="l-table"></div></div></section><!-- サイコロ --><section class="view" id="view-dice"><div class="card"><div class="dz-display" id="dz-display"></div><div class="result-hero"><div class="v digits" id="dz-result">0</div><div class="cap" id="dz-stats"></div></div><h2>ダイスの種類</h2><div class="seg" id="dz-sides" style="margin-bottom:16px"><button data-s="4">D4</button><button data-s="6" class="active">D6</button><button data-s="8">D8</button><button data-s="10">D10</button><button data-s="12">D12</button><button data-s="20">D20</button><button data-s="100">D100</button><button id="dz-custom">Custom</button></div><div class="row"><label class="fld"><span>個数</span><div class="stepper"><button id="dz-cdec" type="button">−</button><span id="dz-count">1</span><button id="dz-cinc" type="button">＋</button></div></label><label class="fld"><span>修正値</span><div class="stepper"><button id="dz-mdec" type="button">−</button><span id="dz-mod">0</span><button id="dz-minc" type="button">＋</button></div></label><button class="btn primary" id="dz-roll" type="button" style="flex:1;min-width:140px">Roll</button></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn sm" id="dz-save" type="button">Save preset</button><button class="btn sm" id="dz-load" type="button">Load</button><button class="btn sm" id="dz-export" type="button">Export CSV</button></div><div class="note">乱数は crypto.getRandomValues による偏りのない整数です。Space / Enter でも振れます。</div></div><div class="card"><h2>履歴</h2><div id="dz-history"><div class="hempty">まだありません</div></div></div></section></div></main><footer>CalcTools — Browser Toys</footer><script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -395,7 +172,7 @@ const C_KEYS = [
   ['7',''],['8',''],['9',''],['×','op'],
   ['4',''],['5',''],['6',''],['−','op'],
   ['1',''],['2',''],['3',''],['＋','op'],
-  ['0',''],['.',''],['⌫','fn'],['=','eq'],
+  ['0',''],['.',''],['','fn'],['=','eq'],
 ];
 (function(){
   const box = $('#c-keys');
@@ -430,8 +207,7 @@ function calcRender(){
 function calcHistRender(){
   const list = $('#c-hist');
   if (!calc.hist.length){ list.innerHTML = '<div class="hempty">履歴はまだありません</div>'; return; }
-  list.innerHTML = calc.hist.slice().reverse().map((h,i) =>
-    `<div class="hitem" data-r="${h.r}"><div class="e digits">${esc(h.e)} =</div><div class="r digits">${esc(h.r)}</div></div>`).join('');
+  list.innerHTML = calc.hist.slice().reverse().map((h,i) =>`<div class="hitem" data-r="${h.r}"><div class="e digits">${esc(h.e)} =</div><div class="r digits">${esc(h.r)}</div></div>`).join('');
   list.querySelectorAll('.hitem').forEach(el => el.addEventListener('click', () => {
     calc.cur = el.dataset.r; calc.justEq = true; calcRender();
   }));
@@ -447,7 +223,7 @@ function calcKey(k){
     else if (!calc.cur.includes('.')) calc.cur += '.';
   }
   else if (k === 'C'){ calc.cur = '0'; calc.prev = null; calc.op = null; calc.justEq = false; }
-  else if (k === '⌫'){ if (!calc.justEq) calc.cur = calc.cur.length > 1 ? calc.cur.slice(0,-1) : '0'; }
+  else if (k === ''){ if (!calc.justEq) calc.cur = calc.cur.length > 1 ? calc.cur.slice(0,-1) : '0'; }
   else if (k === '±'){ calc.cur = calc.cur.startsWith('-') ? calc.cur.slice(1) : (calc.cur !== '0' ? '-'+calc.cur : calc.cur); }
   else if (k === '%'){ calc.cur = calcFmtNum(parseFloat(calc.cur) / 100); }
   else if (OPMAP[k] || '+-*/'.includes(k)){
@@ -477,7 +253,7 @@ document.addEventListener('keydown', e => {
   const k = e.key;
   if (/^[0-9]$/.test(k) || '+-*/.%'.includes(k)) { calcKey(k); e.preventDefault(); }
   else if (k === 'Enter' || k === '=') { calcKey('='); e.preventDefault(); }
-  else if (k === 'Backspace') { calcKey('⌫'); e.preventDefault(); }
+  else if (k === 'Backspace') { calcKey(''); e.preventDefault(); }
   else if (k === 'Escape') { calcKey('C'); e.preventDefault(); }
 });
 calcRender();
@@ -505,12 +281,7 @@ function fxListRender(){
   const box = $('#fx-list'); box.innerHTML = '';
   fxs.forEach((f, i) => {
     const row = document.createElement('div');
-    row.innerHTML = `<div class="fx-row">
-      <div class="sw" style="background:${FX_COLORS[i % FX_COLORS.length]}"></div>
-      <span style="color:var(--muted2);font-size:13px">y =</span>
-      <input type="text" value="${esc(f.expr)}" spellcheck="false" autocomplete="off">
-      <button class="del" title="削除">✕</button>
-    </div><div class="fx-err"></div>`;
+    row.innerHTML = `<div class="fx-row"><div class="sw" style="background:${FX_COLORS[i % FX_COLORS.length]}"></div><span style="color:var(--muted2);font-size:13px">y =</span><input type="text" value="${esc(f.expr)}" spellcheck="false" autocomplete="off"><button class="del" title="削除">×</button></div><div class="fx-err"></div>`;
     const input = row.querySelector('input'), err = row.querySelector('.fx-err');
     input.addEventListener('input', () => {
       f.expr = input.value;
@@ -665,8 +436,7 @@ function uCalc(){
   $('#u-result').innerHTML = `${uFmt(r)} <span class="u">${esc(to)}</span>`;
   $('#u-cap').textContent = `${uFmt(v)} ${from} =`;
   const items = Object.keys(UNITS[uCat].items).filter(u => u !== from);
-  $('#u-table').innerHTML = `<table class="res">` + items.map(u =>
-    `<tr><td>${esc(u)}</td><td class="num digits">${uFmt(uConv(v, from, u))}</td></tr>`).join('') + `</table>`;
+  $('#u-table').innerHTML = `<table class="res">` + items.map(u =>`<tr><td>${esc(u)}</td><td class="num digits">${uFmt(uConv(v, from, u))}</td></tr>`).join('') + `</table>`;
 }
 ['u-value','u-from','u-to'].forEach(id => $('#'+id).addEventListener('input', uCalc));
 $('#u-swap').addEventListener('click', () => {
@@ -681,11 +451,7 @@ function wGroupsRender(){
   wGroups.forEach((g, i) => {
     const row = document.createElement('div'); row.className = 'grp-row';
     row.innerHTML = `
-      <label class="fld"><span>グループ名</span><input type="text" data-k="name" value="${esc(g.name)}"></label>
-      <label class="fld"><span>人数</span><input type="number" data-k="count" value="${g.count}" min="1" max="99"></label>
-      <label class="fld"><span>重み（倍率）</span><input type="number" data-k="weight" value="${g.weight}" min="0" step="0.1"></label>
-      <label class="radio"><input type="radio" name="w-kanji" ${g.kanji?'checked':''}> 幹事（端数調整）</label>
-      <button class="del" ${wGroups.length===1?'disabled':''}>✕</button>`;
+      <label class="fld"><span>グループ名</span><input type="text" data-k="name" value="${esc(g.name)}"></label><label class="fld"><span>人数</span><input type="number" data-k="count" value="${g.count}" min="1" max="99"></label><label class="fld"><span>重み（倍率）</span><input type="number" data-k="weight" value="${g.weight}" min="0" step="0.1"></label><label class="radio"><input type="radio" name="w-kanji" ${g.kanji?'checked':''}> 幹事（端数調整）</label><button class="del" ${wGroups.length===1?'disabled':''}>×</button>`;
     row.querySelectorAll('input[data-k]').forEach(inp => inp.addEventListener('input', () => {
       g[inp.dataset.k] = inp.dataset.k === 'name' ? inp.value : +inp.value;
       wCalc();
@@ -725,13 +491,12 @@ function wCalc(){
       ? (g.count > 1 ? `${yen(g.pay)} × ${g.count-1}人 ＋ 幹事 ${yen(kanjiPay)}` : `幹事 ${yen(kanjiPay)}`)
       : `${yen(g.pay)} × ${g.count}人`;
     const sub = i === kanjiIdx ? g.pay * (g.count-1) + kanjiPay : g.pay * g.count;
-    return `<tr><td>${esc(g.name)}${i===kanjiIdx?' 👑':''}</td><td>${pays}</td><td class="num digits">${yen(sub)}</td></tr>`;
+    return `<tr><td>${esc(g.name)}${i===kanjiIdx?'':''}</td><td>${pays}</td><td class="num digits">${yen(sub)}</td></tr>`;
   }).join('');
   const diff = kanjiPay - per[kanjiIdx].pay;
   out.innerHTML = `
     <table class="res"><tr><th>グループ</th><th>支払い</th><th class="num">小計</th></tr>${rows}
-    <tr><td><b>合計</b></td><td></td><td class="num digits"><b>${yen(total)}</b></td></tr></table>
-    <div class="note">幹事の調整額: ${diff === 0 ? 'なし' : (diff > 0 ? '+' : '') + yen(diff).replace('¥', diff > 0 ? '¥' : '-¥').replace('--','-')}</div>`;
+    <tr><td><b>合計</b></td><td></td><td class="num digits"><b>${yen(total)}</b></td></tr></table><div class="note">幹事の調整額: ${diff === 0 ? 'なし' : (diff > 0 ? '+' : '') + yen(diff).replace('¥', diff > 0 ? '¥' : '-¥').replace('--','-')}</div>`;
 }
 ['w-total','w-unit','w-round'].forEach(id => $('#'+id).addEventListener('input', wCalc));
 wGroupsRender(); wCalc();
@@ -855,11 +620,7 @@ function jCalc(){
   const now = new Date();
   const ageThisYear = now.getFullYear() - y;
   const eto = ETO[((y - 4) % 12 + 12) % 12];
-  $('#j-table').innerHTML = `<table class="res">
-    <tr><td>干支</td><td class="num">${eto}</td></tr>
-    <tr><td>年齢（誕生日前）</td><td class="num digits">${ageThisYear >= 1 ? (ageThisYear-1)+'歳' : '–'}</td></tr>
-    <tr><td>年齢（誕生日後）</td><td class="num digits">${ageThisYear >= 0 ? ageThisYear+'歳' : '–'}</td></tr>
-  </table>`;
+  $('#j-table').innerHTML = `<table class="res"><tr><td>干支</td><td class="num">${eto}</td></tr><tr><td>年齢（誕生日前）</td><td class="num digits">${ageThisYear >= 1 ? (ageThisYear-1)+'歳' : '–'}</td></tr><tr><td>年齢（誕生日後）</td><td class="num digits">${ageThisYear >= 0 ? ageThisYear+'歳' : '–'}</td></tr></table>`;
 }
 $('#j-year').value = new Date().getFullYear();
 ['j-year','j-era','j-eyear'].forEach(id => $('#'+id).addEventListener('input', jCalc));
@@ -885,11 +646,7 @@ function bmiCalc(){
   badge.style.background = `color-mix(in srgb, ${color} 18%, transparent)`;
   badge.style.color = color;
   const ideal = 22 * h * h;
-  $('#m-table').innerHTML = `<table class="res">
-    <tr><td>適正体重（BMI 22）</td><td class="num digits">${ideal.toFixed(1)} kg</td></tr>
-    <tr><td>適正体重との差</td><td class="num digits">${(w-ideal) >= 0 ? '+' : ''}${(w-ideal).toFixed(1)} kg</td></tr>
-    <tr><td>普通体重の範囲</td><td class="num digits">${(18.5*h*h).toFixed(1)} 〜 ${(25*h*h).toFixed(1)} kg</td></tr>
-  </table>`;
+  $('#m-table').innerHTML = `<table class="res"><tr><td>適正体重（BMI 22）</td><td class="num digits">${ideal.toFixed(1)} kg</td></tr><tr><td>適正体重との差</td><td class="num digits">${(w-ideal) >= 0 ? '+' : ''}${(w-ideal).toFixed(1)} kg</td></tr><tr><td>普通体重の範囲</td><td class="num digits">${(18.5*h*h).toFixed(1)} 〜 ${(25*h*h).toFixed(1)} kg</td></tr></table>`;
 }
 ['m-height','m-weight'].forEach(id => $('#'+id).addEventListener('input', bmiCalc));
 bmiCalc();
@@ -903,12 +660,7 @@ function loanCalc(){
   const monthly = rate === 0 ? P / n : P * rate * Math.pow(1+rate, n) / (Math.pow(1+rate, n) - 1);
   const total = monthly * n;
   $('#l-monthly').textContent = yen(monthly);
-  $('#l-table').innerHTML = `<table class="res">
-    <tr><td>総返済額</td><td class="num digits">${yen(total)}</td></tr>
-    <tr><td>うち利息</td><td class="num digits">${yen(total - P)}</td></tr>
-    <tr><td>返済回数</td><td class="num digits">${n}回（${n/12}年）</td></tr>
-    <tr><td>年間返済額</td><td class="num digits">${yen(monthly*12)}</td></tr>
-  </table>`;
+  $('#l-table').innerHTML = `<table class="res"><tr><td>総返済額</td><td class="num digits">${yen(total)}</td></tr><tr><td>うち利息</td><td class="num digits">${yen(total - P)}</td></tr><tr><td>返済回数</td><td class="num digits">${n}回（${n/12}年）</td></tr><tr><td>年間返済額</td><td class="num digits">${yen(monthly*12)}</td></tr></table>`;
 }
 ['l-amount','l-rate','l-years'].forEach(id => $('#'+id).addEventListener('input', loanCalc));
 loanCalc();
@@ -1018,6 +770,4 @@ loanCalc();
 /* ---- init ---- */
 show(location.hash.slice(1) || 'calc');
 graphResize();
-</script>
-</body>
-</html>
+</script></body></html>

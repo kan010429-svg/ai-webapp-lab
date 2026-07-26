@@ -459,7 +459,7 @@
     running = true; aborted = false;
     comparisons = 0; swapCount = 0; particles = [];
     startTime = Date.now();
-    startBtn.textContent = '⏹ 停止';
+    startBtn.textContent = 'Stop';
     shuffleBtn.disabled = true; algoSelect.disabled = true; sizeSlider.disabled = true;
     let statsInterval = setInterval(updateStats, 50);
     const algo = algoSelect.value;
@@ -470,7 +470,7 @@
     updateStats();
     if (!aborted) await markAllSorted();
     running = false;
-    startBtn.textContent = '▶ 開始';
+    startBtn.textContent = 'Start';
     shuffleBtn.disabled = false; algoSelect.disabled = false; sizeSlider.disabled = false;
   }
 

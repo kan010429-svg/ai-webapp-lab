@@ -64,7 +64,7 @@
       analyser.smoothingTimeConstant = 0.8;
       source.connect(analyser);
       micActive = true;
-      micBtn.textContent = '🔴 マイクOFF';
+      micBtn.textContent = 'Mic OFF';
       micBtn.classList.add('active');
       startOverlay.classList.add('hidden');
     } catch (e) {
@@ -83,7 +83,7 @@
     }
     analyser = null;
     micActive = false;
-    micBtn.textContent = '🎤 マイクON';
+    micBtn.textContent = 'Mic ON';
     micBtn.classList.remove('active');
     bass = mid = treble = volume = 0;
     smoothBass = smoothMid = smoothTreble = smoothVol = 0;

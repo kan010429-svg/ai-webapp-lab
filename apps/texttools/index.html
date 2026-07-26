@@ -4,14 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TextTools — 文字・テキスト・ボックス</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9D%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Ccircle cx='50' cy='50' r='22' fill='none' stroke='%233de0c5' stroke-width='8'/%3E%3C/svg%3E" />
 <meta name="description" content="文字数カウンター・ダミーテキスト生成・差分ビューア・正規表現ラボを1画面で切り替えられるテキスト統合ハブ。" />
-<script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="../../theme.css" />
-<style>
-  /* tokens: theme.css */
+<style>/* tokens: theme.css */
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{display:flex;flex-direction:column}
@@ -42,40 +40,18 @@
   .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
   footer{flex:none;padding:8px 0;text-align:center;color:var(--muted2);font-size:12px;border-top:1px solid var(--border)}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-</head>
-<body class="bt-themed">
-  <header>
-    <div class="titlebar">
-      <h1>TextTools</h1><span class="sub">文字・テキスト・ボックス</span>
-      <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-      <a class="back" href="../../index.html">Apps</a>
-    </div>
-    <nav class="tabs" id="tabs" role="tablist"></nav>
-  </header>
-  <div class="toolbar">
-    <div class="cur"><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div>
-    <div class="spacer"></div>
-    <button class="btn" id="btn-full" type="button">⛶ 全画面</button>
-    <a class="btn primary" id="btn-open" href="#" target="_blank" rel="noopener">↗ 新しいタブで開く</a>
-  </div>
-  <main>
-    <div class="stage" id="stage"><iframe id="frame" title="プレビュー" allow="fullscreen" allowfullscreen></iframe></div>
-  </main>
-  <footer>TextTools — Browser Toys</footer>
+</style></head>
+<body class="bt-themed"><header><div class="titlebar"><h1>TextTools</h1><span class="sub">文字・テキスト・ボックス</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs" role="tablist"></nav></header><div class="toolbar"><div class="cur"><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div><div class="spacer"></div><button class="btn" id="btn-full" type="button">Fullscreen</button><a class="btn primary" id="btn-open" href="#" target="_blank" rel="noopener">Open in new tab</a></div><main><div class="stage" id="stage"><iframe id="frame" title="プレビュー" allow="fullscreen" allowfullscreen></iframe></div></main><footer>TextTools — Browser Toys</footer>
 <script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ITEMS = [
-  {n:'charcount', t:'文字数カウンター', i:'🔤', d:'文字数・原稿用紙換算'},
-  {n:'loremgen',  t:'Lorem Generator', i:'📝', d:'ダミーテキスト生成'},
-  {n:'diffview',  t:'Diff Viewer',     i:'🔀', d:'テキスト差分'},
-  {n:'regex',     t:'Regex Lab',       i:'🔍', d:'正規表現デバッガ'},
+  {n:'charcount', t:'文字数カウンター', i:'', d:'文字数・原稿用紙換算'},
+  {n:'loremgen',  t:'Lorem Generator', i:'', d:'ダミーテキスト生成'},
+  {n:'diffview',  t:'Diff Viewer',     i:'', d:'テキスト差分'},
+  {n:'regex',     t:'Regex Lab',       i:'', d:'正規表現デバッガ'},
 ];
 const frame = $('#frame');
 let current = null;
@@ -107,6 +83,4 @@ $('#btn-full').addEventListener('click', () => {
 });
 select(location.hash.slice(1) || ITEMS[0].n, false);
 window.addEventListener('hashchange', () => select(location.hash.slice(1) || ITEMS[0].n, false));
-</script>
-</body>
-</html>
+</script></body></html>

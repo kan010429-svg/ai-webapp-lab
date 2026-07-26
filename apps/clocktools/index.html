@@ -4,14 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ClockTools — 時計・タイマー</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%8F%B0%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Ccircle cx='50' cy='50' r='22' fill='none' stroke='%233de0c5' stroke-width='8'/%3E%3C/svg%3E" />
 <meta name="description" content="時計・世界時計・ストップウォッチ・タイマー・ポモドーロ・インターバルタイマーを1つにまとめた時間管理アプリ。" />
-<script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="../../theme.css" />
-<style>
-  /* tokens: theme.css */
+<style>/* tokens: theme.css */
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
@@ -176,180 +174,8 @@
     .binclock{gap:14px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-</style>
-</head>
-<body class="bt-themed">
-  <header>
-    <div class="wrap">
-      <div class="titlebar">
-        <h1>ClockTools</h1><span class="sub">時計・タイマー</span>
-        <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-      <a class="back" href="../../index.html">Apps</a>
-      </div>
-      <nav class="tabs" id="tabs" role="tablist">
-        <button class="tab" data-v="clock">クロック</button>
-        <button class="tab" data-v="stopwatch">ストップウォッチ</button>
-        <button class="tab" data-v="timer">タイマー</button>
-        <button class="tab" data-v="pomodoro">ポモドーロ</button>
-        <button class="tab" data-v="interval">インターバル</button>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <div class="wrap">
-
-      <!-- クロック -->
-      <section class="view" id="view-clock">
-        <div class="card clock-main">
-          <div class="clock-modes seg" id="clock-modes">
-            <button data-m="digital" class="active">デジタル</button>
-            <button data-m="word">ワード</button>
-            <button data-m="binary">2進数</button>
-          </div>
-          <div id="clock-digital">
-            <div class="clock-time digits" id="ck-time">--:--:--</div>
-            <div class="clock-date" id="ck-date"></div>
-          </div>
-          <div id="clock-word" style="display:none">
-            <div class="wordclock" id="ck-word"></div>
-            <div class="clock-date" id="ck-date2"></div>
-          </div>
-          <div id="clock-binary" style="display:none">
-            <div class="binclock" id="ck-bin"></div>
-            <div class="clock-date digits" id="ck-bin-digits" style="margin-top:10px"></div>
-          </div>
-          <div class="theme-dots" id="ck-themes"></div>
-        </div>
-        <div class="card">
-          <h2>世界時計</h2>
-          <div class="wc-add">
-            <select id="wc-select"></select>
-            <button class="btn" id="wc-addbtn">追加</button>
-          </div>
-          <div class="wc-grid" id="wc-grid"></div>
-        </div>
-      </section>
-
-      <!-- ストップウォッチ -->
-      <section class="view" id="view-stopwatch">
-        <div class="card">
-          <div class="sw-time digits" id="sw-time">00:00<small>.00</small></div>
-          <div class="btnrow">
-            <button class="btn primary big" id="sw-start">スタート</button>
-            <button class="btn big" id="sw-lap" disabled>ラップ</button>
-            <button class="btn big danger" id="sw-reset">リセット</button>
-          </div>
-          <div class="laps" id="sw-laps" style="display:none"></div>
-        </div>
-      </section>
-
-      <!-- タイマー -->
-      <section class="view" id="view-timer">
-        <div class="card ringbox">
-          <div class="chiprow" id="tm-presets"></div>
-          <div class="settings" id="tm-custom">
-            <label class="fld"><input type="number" id="tm-min" min="0" max="999" value="5"> 分</label>
-            <label class="fld"><input type="number" id="tm-sec" min="0" max="59" value="0"> 秒</label>
-          </div>
-          <div class="ringwrap">
-            <svg viewBox="0 0 200 200">
-              <circle class="ring-bg" cx="100" cy="100" r="90"/>
-              <circle class="ring-fg" id="tm-ring" cx="100" cy="100" r="90"/>
-            </svg>
-            <div class="ring-label">
-              <div class="t digits" id="tm-time">05:00</div>
-              <div class="s" id="tm-state">停止中</div>
-            </div>
-          </div>
-          <div class="btnrow">
-            <button class="btn primary big" id="tm-start">スタート</button>
-            <button class="btn big danger" id="tm-reset">リセット</button>
-          </div>
-          <div class="alarm-box">
-            <div class="cap">マルチアラーム</div>
-            <div class="alarm-add">
-              <label class="fld"><input type="number" id="al-min" min="1" max="999" value="5"> 分後</label>
-              <button class="btn" id="al-add">＋ 追加</button>
-            </div>
-            <div class="alarm-chips" id="al-chips"></div>
-            <div class="alarm-note" id="al-note">「5分後」「10分後」のように複数追加すると、最長の時点までカウントしながら各時点でチャイムが鳴ります。</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ポモドーロ -->
-      <section class="view" id="view-pomodoro">
-        <div class="card ringbox">
-          <div class="seg" id="po-modes">
-            <button data-m="focus" class="active">集中</button>
-            <button data-m="short">小休憩</button>
-            <button data-m="long">大休憩</button>
-          </div>
-          <div class="ringwrap">
-            <svg viewBox="0 0 200 200">
-              <circle class="ring-bg" cx="100" cy="100" r="90"/>
-              <circle class="ring-fg" id="po-ring" cx="100" cy="100" r="90"/>
-            </svg>
-            <div class="ring-label">
-              <div class="t digits" id="po-time">25:00</div>
-              <div class="s" id="po-state">集中する時間</div>
-            </div>
-          </div>
-          <div class="dots" id="po-dots"></div>
-          <div class="btnrow">
-            <button class="btn primary big" id="po-start">スタート</button>
-            <button class="btn big" id="po-skip">スキップ ▸</button>
-            <button class="btn big danger" id="po-reset">リセット</button>
-          </div>
-          <div class="pomo-stats">
-            <div class="st"><b class="digits" id="po-count">0</b><span>完了セッション</span></div>
-            <div class="st"><b class="digits" id="po-total">0<small style="font-size:.6em">分</small></b><span>今日の集中時間</span></div>
-          </div>
-          <div class="settings">
-            <label class="fld">集中 <input type="number" id="po-focus" min="1" max="120" value="25"> 分</label>
-            <label class="fld">小休憩 <input type="number" id="po-short" min="1" max="60" value="5"> 分</label>
-            <label class="fld">大休憩 <input type="number" id="po-long" min="1" max="90" value="15"> 分</label>
-          </div>
-        </div>
-      </section>
-
-      <!-- インターバル -->
-      <section class="view" id="view-interval">
-        <div class="card ringbox">
-          <div class="chiprow" id="iv-presets"></div>
-          <div class="phase-banner" id="iv-phase">READY</div>
-          <div class="ringwrap">
-            <svg viewBox="0 0 200 200">
-              <circle class="ring-bg" cx="100" cy="100" r="90"/>
-              <circle class="ring-fg" id="iv-ring" cx="100" cy="100" r="90"/>
-            </svg>
-            <div class="ring-label">
-              <div class="t digits" id="iv-time">00:20</div>
-              <div class="s digits" id="iv-round">ラウンド – / –</div>
-            </div>
-          </div>
-          <div class="btnrow">
-            <button class="btn primary big" id="iv-start">スタート</button>
-            <button class="btn big danger" id="iv-reset">リセット</button>
-          </div>
-          <div class="cfg-grid">
-            <label class="fld">準備 <input type="number" id="iv-prep" min="0" max="120" value="10"> 秒</label>
-            <label class="fld">ワーク <input type="number" id="iv-work" min="5" max="600" value="20"> 秒</label>
-            <label class="fld">レスト <input type="number" id="iv-rest" min="0" max="600" value="10"> 秒</label>
-            <label class="fld">ラウンド <input type="number" id="iv-rounds" min="1" max="50" value="8"> 回</label>
-          </div>
-        </div>
-      </section>
-
-    </div>
-  </main>
-  <footer>ClockTools — Browser Toys</footer>
-
-<script src="../../theme.js"></script>
+</style></head>
+<body class="bt-themed"><header><div class="wrap"><div class="titlebar"><h1>ClockTools</h1><span class="sub">時計・タイマー</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div><nav class="tabs" id="tabs" role="tablist"><button class="tab" data-v="clock">クロック</button><button class="tab" data-v="stopwatch">ストップウォッチ</button><button class="tab" data-v="timer">タイマー</button><button class="tab" data-v="pomodoro">ポモドーロ</button><button class="tab" data-v="interval">インターバル</button></nav></div></header><main><div class="wrap"><!-- クロック --><section class="view" id="view-clock"><div class="card clock-main"><div class="clock-modes seg" id="clock-modes"><button data-m="digital" class="active">デジタル</button><button data-m="word">ワード</button><button data-m="binary">2進数</button></div><div id="clock-digital"><div class="clock-time digits" id="ck-time">--:--:--</div><div class="clock-date" id="ck-date"></div></div><div id="clock-word" style="display:none"><div class="wordclock" id="ck-word"></div><div class="clock-date" id="ck-date2"></div></div><div id="clock-binary" style="display:none"><div class="binclock" id="ck-bin"></div><div class="clock-date digits" id="ck-bin-digits" style="margin-top:10px"></div></div><div class="theme-dots" id="ck-themes"></div></div><div class="card"><h2>世界時計</h2><div class="wc-add"><select id="wc-select"></select><button class="btn" id="wc-addbtn">追加</button></div><div class="wc-grid" id="wc-grid"></div></div></section><!-- ストップウォッチ --><section class="view" id="view-stopwatch"><div class="card"><div class="sw-time digits" id="sw-time">00:00<small>.00</small></div><div class="btnrow"><button class="btn primary big" id="sw-start">スタート</button><button class="btn big" id="sw-lap" disabled>ラップ</button><button class="btn big danger" id="sw-reset">リセット</button></div><div class="laps" id="sw-laps" style="display:none"></div></div></section><!-- タイマー --><section class="view" id="view-timer"><div class="card ringbox"><div class="chiprow" id="tm-presets"></div><div class="settings" id="tm-custom"><label class="fld"><input type="number" id="tm-min" min="0" max="999" value="5"> 分</label><label class="fld"><input type="number" id="tm-sec" min="0" max="59" value="0"> 秒</label></div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="tm-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="tm-time">05:00</div><div class="s" id="tm-state">停止中</div></div></div><div class="btnrow"><button class="btn primary big" id="tm-start">スタート</button><button class="btn big danger" id="tm-reset">リセット</button></div><div class="alarm-box"><div class="cap">マルチアラーム</div><div class="alarm-add"><label class="fld"><input type="number" id="al-min" min="1" max="999" value="5"> 分後</label><button class="btn" id="al-add">＋ 追加</button></div><div class="alarm-chips" id="al-chips"></div><div class="alarm-note" id="al-note">「5分後」「10分後」のように複数追加すると、最長の時点までカウントしながら各時点でチャイムが鳴ります。</div></div></div></section><!-- ポモドーロ --><section class="view" id="view-pomodoro"><div class="card ringbox"><div class="seg" id="po-modes"><button data-m="focus" class="active">集中</button><button data-m="short">小休憩</button><button data-m="long">大休憩</button></div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="po-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="po-time">25:00</div><div class="s" id="po-state">集中する時間</div></div></div><div class="dots" id="po-dots"></div><div class="btnrow"><button class="btn primary big" id="po-start">スタート</button><button class="btn big" id="po-skip">スキップ ▸</button><button class="btn big danger" id="po-reset">リセット</button></div><div class="pomo-stats"><div class="st"><b class="digits" id="po-count">0</b><span>完了セッション</span></div><div class="st"><b class="digits" id="po-total">0<small style="font-size:.6em">分</small></b><span>今日の集中時間</span></div></div><div class="settings"><label class="fld">集中 <input type="number" id="po-focus" min="1" max="120" value="25"> 分</label><label class="fld">小休憩 <input type="number" id="po-short" min="1" max="60" value="5"> 分</label><label class="fld">大休憩 <input type="number" id="po-long" min="1" max="90" value="15"> 分</label></div></div></section><!-- インターバル --><section class="view" id="view-interval"><div class="card ringbox"><div class="chiprow" id="iv-presets"></div><div class="phase-banner" id="iv-phase">READY</div><div class="ringwrap"><svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="iv-ring" cx="100" cy="100" r="90"/></svg><div class="ring-label"><div class="t digits" id="iv-time">00:20</div><div class="s digits" id="iv-round">ラウンド – / –</div></div></div><div class="btnrow"><button class="btn primary big" id="iv-start">スタート</button><button class="btn big danger" id="iv-reset">リセット</button></div><div class="cfg-grid"><label class="fld">準備 <input type="number" id="iv-prep" min="0" max="120" value="10"> 秒</label><label class="fld">ワーク <input type="number" id="iv-work" min="5" max="600" value="20"> 秒</label><label class="fld">レスト <input type="number" id="iv-rest" min="0" max="600" value="10"> 秒</label><label class="fld">ラウンド <input type="number" id="iv-rounds" min="1" max="50" value="8"> 回</label></div></div></section></div></main><footer>ClockTools — Browser Toys</footer><script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -517,7 +343,7 @@ function buildWC(){
   wcZones.forEach(tz => {
     const city = (CITIES.find(c => c[1] === tz) || [tz.split('/').pop().replace(/_/g,' ')])[0];
     const el = document.createElement('div'); el.className = 'wc-card';
-    el.innerHTML = `<div class="city"></div><div class="zone"></div><div class="time digits">--:--</div><div class="diff"></div><button class="del" title="削除">✕</button>`;
+    el.innerHTML = `<div class="city"></div><div class="zone"></div><div class="time digits">--:--</div><div class="diff"></div><button class="del" title="削除">×</button>`;
     el.querySelector('.city').textContent = city;
     el.querySelector('.zone').textContent = tz;
     el.querySelector('.del').addEventListener('click', () => {
@@ -677,7 +503,7 @@ function alRender(){
   tm.alarms.forEach((a, i) => {
     const chip = document.createElement('span');
     chip.className = 'achip' + (a.fired ? ' fired' : a === next ? ' next' : '');
-    chip.innerHTML = `${a.fired ? '✓ ' : '🔔 '}${a.min}分後<button title="削除">✕</button>`;
+    chip.innerHTML = `${a.fired ? ' ' : ''}${a.min}分後<button title="削除">×</button>`;
     chip.querySelector('button').addEventListener('click', () => {
       tm.alarms.splice(i, 1); alSave(); alRender();
       if (!tm.running) tmSetFromInputs();
@@ -789,7 +615,7 @@ const IV_META = {
   prep:  ['準備',    'var(--yellow)'],
   work:  ['ワーク',  'var(--red)'],
   rest:  ['レスト',  'var(--green)'],
-  done:  ['完了 🎉', 'var(--accent2)'],
+  done:  ['完了', 'var(--accent2)'],
 };
 function ivCfg(){
   return {
@@ -857,13 +683,10 @@ $('#iv-start').addEventListener('click', () => {
   $('#iv-start').textContent = '一時停止';
 });
 $('#iv-reset').addEventListener('click', () => { ivStopAll(); ivRenderIdle(); });
-['iv-prep','iv-work','iv-rest','iv-rounds'].forEach(id =>
-  $('#'+id).addEventListener('input', () => { if (!iv.running) ivRenderIdle(); }));
+['iv-prep','iv-work','iv-rest','iv-rounds'].forEach(id =>$('#'+id).addEventListener('input', () => { if (!iv.running) ivRenderIdle(); }));
 ivRenderIdle();
 
 /* ---- global 1s tick for clock ---- */
 setClockMode(clockMode);
 setInterval(() => { renderClock(); renderWC(); }, 1000);
-</script>
-</body>
-</html>
+</script></body></html>

@@ -4,14 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ArtLab — ジェネラティブアート・ランチャー</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A8%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Ccircle cx='50' cy='50' r='22' fill='none' stroke='%233de0c5' stroke-width='8'/%3E%3C/svg%3E" />
 <meta name="description" content="Cosmos・Matrix Rain・Fireworks・Spirograph・Starfield・Weather Art・Glitch Art のジェネラティブアートを1画面で切り替え・全画面表示できるランチャー。" />
-<script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="../../theme.css" />
-<style>
-  /* tokens: theme.css */
+<style>/* tokens: theme.css */
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
@@ -31,13 +29,13 @@
   aside{border-right:1px solid var(--border);overflow-y:auto;padding:14px}
   .aside-h{color:var(--muted2);font-size:12px;font-weight:700;letter-spacing:.03em;padding:4px 6px 10px}
   .item{
-    display:flex;gap:12px;align-items:center;width:100%;text-align:left;
+    display:flex;gap:10px;align-items:center;width:100%;text-align:left;
     background:var(--panel);border:1px solid var(--border);border-radius:12px;
     padding:11px 12px;margin-bottom:8px;cursor:pointer;transition:all .13s;
   }
   .item:hover{border-color:var(--border2);transform:translateX(2px)}
   .item.active{border-color:var(--ac,var(--accent));background:var(--panel2)}
-  .item .ico{font-size:24px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex:none;
+  .item .ico{display:none;font-size:24px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex:none;
     border-radius:9px;background:color-mix(in srgb,var(--ac,var(--accent)) 15%,transparent)}
   .item .meta{min-width:0}
   .item .t{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -71,53 +69,21 @@
     .stage{min-height:52vh}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-</head>
-<body class="bt-themed">
-  <header>
-    <div class="titlebar">
-      <h1>ArtLab</h1><span class="sub">ジェネラティブアート・ランチャー</span>
-      <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-      <a class="back" href="../../index.html">Apps</a>
-    </div>
-  </header>
-
-  <div class="layout">
-    <aside id="list" role="tablist" aria-label="ジェネラティブアート作品一覧">
-      <div class="aside-h">作品を選ぶ</div>
-    </aside>
-    <main>
-      <div class="toolbar">
-        <div class="cur"><span class="dot" id="cur-dot"></span><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div>
-        <div class="spacer"></div>
-        <button class="btn" id="btn-random" type="button">🔀 ランダム</button>
-        <button class="btn" id="btn-full" type="button">⛶ 全画面</button>
-        <a class="btn primary" id="btn-open" href="#" target="_blank" rel="noopener">↗ 新しいタブで開く</a>
-      </div>
-      <div class="stage" id="stage">
-        <iframe id="frame" title="ジェネラティブアート プレビュー" allow="fullscreen; autoplay" allowfullscreen></iframe>
-      </div>
-    </main>
-  </div>
-  <footer>ArtLab — Browser Toys</footer>
-
-<script src="../../theme.js"></script>
+</style></head>
+<body class="bt-themed"><header><div class="titlebar"><h1>ArtLab</h1><span class="sub">ジェネラティブアート・ランチャー</span><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div><a class="back" href="../../index.html">Apps</a></div></header><div class="layout"><aside id="list" role="tablist" aria-label="ジェネラティブアート作品一覧"><div class="aside-h">作品を選ぶ</div></aside><main><div class="toolbar"><div class="cur"><span class="dot" id="cur-dot"></span><span id="cur-name">–</span><span class="cd" id="cur-desc"></span></div><div class="spacer"></div><button class="btn" id="btn-random" type="button">Random</button><button class="btn" id="btn-full" type="button">Fullscreen</button><a class="btn primary" id="btn-open" href="#" target="_blank" rel="noopener">Open in new tab</a></div><div class="stage" id="stage"><iframe id="frame" title="ジェネラティブアート プレビュー" allow="fullscreen; autoplay" allowfullscreen></iframe></div></main></div><footer>ArtLab — Browser Toys</footer><script src="../../theme.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 const ARTS = [
-  {n:'cosmos',    t:'Cosmos',      i:'🌌', a:'#818cf8', d:'プロシージャル宇宙ジェネレーター'},
-  {n:'starfield', t:'Starfield',   i:'⭐', a:'#818cf8', d:'ワープスピードの星空'},
-  {n:'matrix',    t:'Matrix Rain', i:'🟩', a:'#00ff41', d:'デジタルレイン'},
-  {n:'fireworks', t:'Fireworks',   i:'🎆', a:'#ff6b6b', d:'花火シミュレーション'},
-  {n:'spirograph',t:'Spirograph',  i:'🎪', a:'#e879f9', d:'幾何学模様ドローイング'},
-  {n:'weather',   t:'Weather Art', i:'🌤️', a:'#38bdf8', d:'天気のビジュアル表現'},
-  {n:'glitch',    t:'Glitch Art',  i:'📺', a:'#ff3366', d:'グリッチエフェクト'},
+  {n:'cosmos',    t:'Cosmos',      i:'', a:'#818cf8', d:'プロシージャル宇宙ジェネレーター'},
+  {n:'starfield', t:'Starfield',   i:'', a:'#818cf8', d:'ワープスピードの星空'},
+  {n:'matrix',    t:'Matrix Rain', i:'', a:'#00ff41', d:'デジタルレイン'},
+  {n:'fireworks', t:'Fireworks',   i:'', a:'#ff6b6b', d:'花火シミュレーション'},
+  {n:'spirograph',t:'Spirograph',  i:'', a:'#e879f9', d:'幾何学模様ドローイング'},
+  {n:'weather',   t:'Weather Art', i:'', a:'#38bdf8', d:'天気のビジュアル表現'},
+  {n:'glitch',    t:'Glitch Art',  i:'', a:'#ff3366', d:'グリッチエフェクト'},
 ];
 
 const frame = $('#frame');
@@ -152,8 +118,7 @@ function select(n, push){
     b.setAttribute('role', 'tab');
     b.setAttribute('aria-selected', 'false');
     b.style.setProperty('--ac', a.a);
-    b.innerHTML = `<span class="ico"></span>
-      <span class="meta"><span class="t">${esc(a.t)}</span><span class="d">${esc(a.d)}</span></span>`;
+    b.innerHTML = `<span class="meta"><span class="t">${esc(a.t)}</span><span class="d">${esc(a.d)}</span></span>`;
     b.addEventListener('click', () => select(a.n));
     box.appendChild(b);
   });
@@ -171,6 +136,4 @@ $('#btn-random').addEventListener('click', () => {
 
 select(location.hash.slice(1) || ARTS[0].n, false);
 window.addEventListener('hashchange', () => select(location.hash.slice(1) || ARTS[0].n, false));
-</script>
-</body>
-</html>
+</script></body></html>

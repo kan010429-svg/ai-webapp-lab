@@ -148,15 +148,7 @@ function renderSaved() {
     const div = document.createElement('div');
     div.className = 'saved-item';
     div.innerHTML = `
-      <div class="saved-content">
-        <div class="saved-name">${escapeHtml(item.name)}</div>
-        <div class="saved-regex">/${escapeHtml(item.regex)}/${item.flags}</div>
-      </div>
-      <div class="saved-actions">
-        <button class="use-btn" data-index="${index}">Use</button>
-        <button class="delete-btn" data-index="${index}">Delete</button>
-      </div>
-    `;
+      <div class="saved-content"><div class="saved-name">${escapeHtml(item.name)}</div><div class="saved-regex">/${escapeHtml(item.regex)}/${item.flags}</div></div><div class="saved-actions"><button class="use-btn" data-index="${index}">Use</button><button class="delete-btn" data-index="${index}">Delete</button></div>`;
     
     div.querySelector('.use-btn').addEventListener('click', () => {
       regexInput.value = item.regex;

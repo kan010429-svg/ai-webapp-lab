@@ -326,16 +326,14 @@
     if (exp === 'monty') {
       const sw = totalTrials ? (data.switchWin / totalTrials * 100).toFixed(1) : '—';
       const st = totalTrials ? (data.stayWin / totalTrials * 100).toFixed(1) : '—';
-      html = `<div class="result-row"><span class="label">変更して勝ち</span><span class="value">${sw}%</span></div>
-              <div class="result-row"><span class="label">固定して勝ち</span><span class="value">${st}%</span></div>`;
+      html = `<div class="result-row"><span class="label">変更して勝ち</span><span class="value">${sw}%</span></div><div class="result-row"><span class="label">固定して勝ち</span><span class="value">${st}%</span></div>`;
     } else if (exp === 'birthday') {
       const rate = totalTrials ? (data.matches / totalTrials * 100).toFixed(1) : '—';
       html = `<div class="result-row"><span class="label">一致率 (${data.groupSize}人)</span><span class="value">${rate}%</span></div>`;
     } else if (exp === 'pi') {
       const pi = data.total ? (4 * data.inside / data.total).toFixed(6) : '—';
       const err = data.total ? (Math.abs(4 * data.inside / data.total - Math.PI)).toFixed(6) : '—';
-      html = `<div class="result-row"><span class="label">π推定値</span><span class="value">${pi}</span></div>
-              <div class="result-row"><span class="label">誤差</span><span class="value">${err}</span></div>`;
+      html = `<div class="result-row"><span class="label">π推定値</span><span class="value">${pi}</span></div><div class="result-row"><span class="label">誤差</span><span class="value">${err}</span></div>`;
     } else if (exp === 'dice') {
       const minSum = data.numDice;
       const maxSum = data.numDice * 6;
@@ -351,16 +349,12 @@
       const totalAfterBlack = data.afterBlack.red + data.afterBlack.black;
       const redAfterRed = totalAfterRed ? (data.afterRed.red / totalAfterRed * 100).toFixed(1) : '—';
       const blackAfterBlack = totalAfterBlack ? (data.afterBlack.black / totalAfterBlack * 100).toFixed(1) : '—';
-      html = `<div class="result-row"><span class="label">赤5連続後→赤</span><span class="value">${redAfterRed}%</span></div>
-              <div class="result-row"><span class="label">黒5連続後→黒</span><span class="value">${blackAfterBlack}%</span></div>
-              <div class="result-row"><span class="label">現在の連続</span><span class="value">${data.currentStreak} ${data.currentColor || ''}</span></div>`;
+      html = `<div class="result-row"><span class="label">赤5連続後->赤</span><span class="value">${redAfterRed}%</span></div><div class="result-row"><span class="label">黒5連続後->黒</span><span class="value">${blackAfterBlack}%</span></div><div class="result-row"><span class="label">現在の連続</span><span class="value">${data.currentStreak} ${data.currentColor || ''}</span></div>`;
     } else if (exp === 'petersburg') {
       const avg = totalTrials ? (data.totalPayout / totalTrials).toFixed(2) : '—';
       const median = data.payouts.length ? [...data.payouts].sort((a,b) => a-b)[Math.floor(data.payouts.length/2)] : '—';
       const max = data.payouts.length ? Math.max(...data.payouts) : '—';
-      html = `<div class="result-row"><span class="label">平均獲得額</span><span class="value">¥${avg}</span></div>
-              <div class="result-row"><span class="label">中央値</span><span class="value">¥${median}</span></div>
-              <div class="result-row"><span class="label">最高額</span><span class="value">¥${max}</span></div>`;
+      html = `<div class="result-row"><span class="label">平均獲得額</span><span class="value">¥${avg}</span></div><div class="result-row"><span class="label">中央値</span><span class="value">¥${median}</span></div><div class="result-row"><span class="label">最高額</span><span class="value">¥${max}</span></div>`;
     } else if (exp === 'bayes') {
       const totalPos = data.truePositive + data.falsePositive;
       const probDis = totalPos ? (data.truePositive / totalPos * 100).toFixed(1) : '—';
@@ -368,38 +362,28 @@
         (data.truePositive / (data.truePositive + data.falseNegative) * 100).toFixed(1) : '—';
       const specificity = (data.trueNegative + data.falsePositive) ? 
         (data.trueNegative / (data.trueNegative + data.falsePositive) * 100).toFixed(1) : '—';
-      html = `<div class="result-row"><span class="label">陽性時の病気確率</span><span class="value">${probDis}%</span></div>
-              <div class="result-row"><span class="label">感度(真陽性率)</span><span class="value">${sensitivity}%</span></div>
-              <div class="result-row"><span class="label">特異度(真陰性率)</span><span class="value">${specificity}%</span></div>`;
+      html = `<div class="result-row"><span class="label">陽性時の病気確率</span><span class="value">${probDis}%</span></div><div class="result-row"><span class="label">感度(真陽性率)</span><span class="value">${sensitivity}%</span></div><div class="result-row"><span class="label">特異度(真陰性率)</span><span class="value">${specificity}%</span></div>`;
     } else if (exp === 'coupon') {
       const avg = data.attempts.length ? (data.attempts.reduce((a, b) => a + b, 0) / data.attempts.length).toFixed(1) : '—';
       const theory = (data.numCoupons * Math.log(data.numCoupons) + 0.5772 * data.numCoupons).toFixed(1);
       const min = data.attempts.length ? Math.min(...data.attempts) : '—';
       const max = data.attempts.length ? Math.max(...data.attempts) : '—';
-      html = `<div class="result-row"><span class="label">平均試行回数</span><span class="value">${avg}</span></div>
-              <div class="result-row"><span class="label">理論値</span><span class="value">${theory}</span></div>
-              <div class="result-row"><span class="label">最小/最大</span><span class="value">${min} / ${max}</span></div>`;
+      html = `<div class="result-row"><span class="label">平均試行回数</span><span class="value">${avg}</span></div><div class="result-row"><span class="label">理論値</span><span class="value">${theory}</span></div><div class="result-row"><span class="label">最小/最大</span><span class="value">${min} / ${max}</span></div>`;
     } else if (exp === 'random-walk') {
       const atOrigin = data.walks.filter(w => w[w.length - 1] === 0).length;
       const returnRate = totalTrials ? (atOrigin / totalTrials * 100).toFixed(1) : '—';
       const avgDist = data.walks.length ? 
         (data.walks.reduce((sum, w) => sum + Math.abs(w[w.length - 1]), 0) / data.walks.length).toFixed(1) : '—';
-      html = `<div class="result-row"><span class="label">原点復帰率</span><span class="value">${returnRate}%</span></div>
-              <div class="result-row"><span class="label">平均最終距離</span><span class="value">${avgDist}</span></div>
-              <div class="result-row"><span class="label">ステップ数</span><span class="value">${data.maxSteps}</span></div>`;
+      html = `<div class="result-row"><span class="label">原点復帰率</span><span class="value">${returnRate}%</span></div><div class="result-row"><span class="label">平均最終距離</span><span class="value">${avgDist}</span></div><div class="result-row"><span class="label">ステップ数</span><span class="value">${data.maxSteps}</span></div>`;
     } else if (exp === 'buffon') {
       const hitRate = data.total ? (data.hits / data.total) : 0;
       const piEst = hitRate > 0 ? (2 * data.needleLength / (data.lineSpacing * hitRate)).toFixed(6) : '—';
       const err = piEst !== '—' ? Math.abs(parseFloat(piEst) - Math.PI).toFixed(6) : '—';
-      html = `<div class="result-row"><span class="label">π推定値</span><span class="value">${piEst}</span></div>
-              <div class="result-row"><span class="label">誤差</span><span class="value">${err}</span></div>
-              <div class="result-row"><span class="label">交差率</span><span class="value">${(hitRate * 100).toFixed(1)}%</span></div>`;
+      html = `<div class="result-row"><span class="label">π推定値</span><span class="value">${piEst}</span></div><div class="result-row"><span class="label">誤差</span><span class="value">${err}</span></div><div class="result-row"><span class="label">交差率</span><span class="value">${(hitRate * 100).toFixed(1)}%</span></div>`;
     } else if (exp === 'secretary') {
       const successRate = totalTrials ? (data.bestFound / totalTrials * 100).toFixed(1) : '—';
       const theory = (1 / Math.E * 100).toFixed(1);
-      html = `<div class="result-row"><span class="label">最良選択率</span><span class="value">${successRate}%</span></div>
-              <div class="result-row"><span class="label">理論値</span><span class="value">${theory}%</span></div>
-              <div class="result-row"><span class="label">戦略</span><span class="value">${data.strategy}人目まで見送り</span></div>`;
+      html = `<div class="result-row"><span class="label">最良選択率</span><span class="value">${successRate}%</span></div><div class="result-row"><span class="label">理論値</span><span class="value">${theory}%</span></div><div class="result-row"><span class="label">戦略</span><span class="value">${data.strategy}人目まで見送り</span></div>`;
     }
     resultsEl.innerHTML = html;
   }

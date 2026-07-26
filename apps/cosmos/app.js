@@ -200,7 +200,7 @@
     ctx.fillStyle = 'rgba(255,255,255,0.15)';
     ctx.font = '10px monospace';
     ctx.textAlign = 'left';
-    ctx.fillText(`seed: ${seed} | ★ ${stars.length}`, 8, h - 8);
+    ctx.fillText(`seed: ${seed} | ${stars.length}`, 8, h - 8);
 
     animFrame = requestAnimationFrame(draw);
   }

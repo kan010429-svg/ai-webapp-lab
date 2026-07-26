@@ -71,13 +71,7 @@
   }
 
   function renderHistory() {
-    historyList.innerHTML = tuningHistory.map(h => 
-      `<div class="history-item">
-        <span>${h.timestamp}</span>
-        <span>${h.note}</span>
-        <span>${h.freq} Hz</span>
-        <span class="${Math.abs(h.cents) < 5 ? 'in-tune' : ''}">${h.cents > 0 ? '+' : ''}${h.cents}¢</span>
-      </div>`
+    historyList.innerHTML = tuningHistory.map(h =>`<div class="history-item"><span>${h.timestamp}</span><span>${h.note}</span><span>${h.freq} Hz</span><span class="${Math.abs(h.cents) < 5 ? 'in-tune' : ''}">${h.cents > 0 ? '+' : ''}${h.cents}¢</span></div>`
     ).join('') || '<div class="history-empty">履歴なし</div>';
   }
 

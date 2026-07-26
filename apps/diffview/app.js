@@ -135,7 +135,7 @@
     addedCount.textContent = added;
     removedCount.textContent = removed;
     unchangedCount.textContent = unchanged;
-    showStatus(`✓ 比較完了 (追加 ${added} / 削除 ${removed})`, 'success');
+    showStatus(` 比較完了 (追加 ${added} / 削除 ${removed})`, 'success');
   }
 
   function renderDiff(rows) {
@@ -161,7 +161,7 @@
   function loadSample() {
     inputA.value = SAMPLE_A;
     inputB.value = SAMPLE_B;
-    showStatus('✓ サンプルを読み込みました', 'success');
+    showStatus(' サンプルを読み込みました', 'success');
   }
 
   function clearAll() {
@@ -171,7 +171,7 @@
     addedCount.textContent = '0';
     removedCount.textContent = '0';
     unchangedCount.textContent = '0';
-    showStatus('✓ クリアしました', 'success');
+    showStatus(' クリアしました', 'success');
   }
 
   function showStatus(message, type = 'info') {

@@ -120,21 +120,21 @@
 
     resultOutput.value = text;
     charCount.textContent = `${text.length}文字`;
-    showStatus('✓ 生成完了', 'success');
+    showStatus(' 生成完了', 'success');
   }
 
   async function copyResult() {
     if (!resultOutput.value) {
-      showStatus('✗ コピーするテキストがありません', 'error');
+      showStatus(' コピーするテキストがありません', 'error');
       return;
     }
     try {
       await navigator.clipboard.writeText(resultOutput.value);
-      showStatus('✓ コピーしました', 'success');
+      showStatus(' コピーしました', 'success');
     } catch {
       resultOutput.select();
       document.execCommand('copy');
-      showStatus('✓ コピーしました', 'success');
+      showStatus(' コピーしました', 'success');
     }
   }
 

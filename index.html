@@ -6,12 +6,10 @@
 <title>Browser Toys — ブラウザで動くバニラJSアプリ</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307090d'/%3E%3Cpath d='M18 72 L50 18 L82 72 Z' fill='none' stroke='%233de0c5' stroke-width='6'/%3E%3C/svg%3E" />
 <meta name="description" content="ビルド不要・依存ゼロのバニラJavaScriptブラウザアプリ集。ツール・ビジュアル・シミュレーション・音をテーマ切替対応ギャラリーで探せます。" />
-<script>
-  (function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+<script>(function(){try{var t=localStorage.getItem('bt-theme');if(t==='cyber'||t==='lab')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="theme.css" />
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
+<style>*{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{min-height:100vh}
   a{color:inherit;text-decoration:none}
@@ -184,57 +182,8 @@
     *{transition:none!important;scroll-behavior:auto}
     .card:hover{transform:none}
   }
-</style>
-</head>
-<body class="bt-themed">
-  <div class="wrap">
-    <div class="topbar">
-      <div class="theme-switch" role="group" aria-label="テーマ切替">
-        <button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button>
-        <button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button>
-      </div>
-    </div>
-  </div>
-
-  <header class="hero">
-    <div class="wrap">
-      <h1 class="title">Browser Toys</h1>
-      <p class="lead">ビルド不要・依存ゼロのバニラJSアプリ。ツールと遊びを、そのままブラウザで。</p>
-    </div>
-  </header>
-
-  <div class="controls">
-    <div class="wrap">
-      <div class="controls-inner">
-        <div class="search">
-          <input type="text" id="search" placeholder="検索…" autocomplete="off" spellcheck="false" />
-          <button class="clr" id="clear" title="クリア" aria-label="検索をクリア">✕</button>
-        </div>
-        <div class="count"><b id="count">0</b> / <span id="total">0</span></div>
-      </div>
-      <nav class="tabs" id="tabs" role="tablist"></nav>
-    </div>
-  </div>
-
-  <main class="wrap">
-    <section class="block">
-      <div class="block-head">
-        <h2 id="all-title">Apps</h2>
-        <div class="block-sub" id="all-sub"></div>
-      </div>
-      <div class="grid" id="grid"></div>
-      <div class="empty" id="empty" style="display:none">該当するアプリが見つかりませんでした</div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap">
-      <div>Browser Toys — <a href="https://github.com/kantafukui/browser-toys" target="_blank" rel="noopener">github.com/kantafukui/browser-toys</a></div>
-      <div class="fnote">各アプリは <code>apps/&lt;name&gt;/index.html</code> にあります。テーマは Cyber / Lab を切替できます。</div>
-    </div>
-  </footer>
-
-<script src="theme.js"></script>
+</style></head>
+<body class="bt-themed"><div class="wrap"><div class="topbar"><div class="theme-switch" role="group" aria-label="テーマ切替"><button type="button" data-theme-toggle="cyber" aria-pressed="true">Cyber</button><button type="button" data-theme-toggle="lab" aria-pressed="false">Lab</button></div></div></div><header class="hero"><div class="wrap"><h1 class="title">Browser Toys</h1><p class="lead">ビルド不要・依存ゼロのバニラJSアプリ。ツールと遊びを、そのままブラウザで。</p></div></header><div class="controls"><div class="wrap"><div class="controls-inner"><div class="search"><input type="text" id="search" placeholder="検索…" autocomplete="off" spellcheck="false" /><button class="clr" id="clear" title="クリア" aria-label="検索をクリア">×</button></div><div class="count"><b id="count">0</b> / <span id="total">0</span></div></div><nav class="tabs" id="tabs" role="tablist"></nav></div></div><main class="wrap"><section class="block"><div class="block-head"><h2 id="all-title">Apps</h2><div class="block-sub" id="all-sub"></div></div><div class="grid" id="grid"></div><div class="empty" id="empty" style="display:none">該当するアプリが見つかりませんでした</div></section></main><footer><div class="wrap"><div>Browser Toys — <a href="https://github.com/kantafukui/browser-toys" target="_blank" rel="noopener">github.com/kantafukui/browser-toys</a></div><div class="fnote">各アプリは <code>apps/&lt;name&gt;/index.html</code> にあります。テーマは Cyber / Lab を切替できます。</div></div></footer><script src="theme.js"></script>
 <script>
 /* === App catalog data (embedded, no external deps) === */
 const CATS = {
@@ -243,7 +192,7 @@ const CATS = {
   science: { label: 'Science', ja: '科学' },
   audio: { label: 'Sound', ja: '音' }
 };
-const APPS = [{"n":"artlab","t":"ArtLab","d":"ジェネラティブアート・ランチャー。Cosmos・Matrix・Fireworks・Spirograph・Starfield・Weather・Glitchを1画面で切り替え、全画面表示できるハブ。","c":"visualart","i":"🎨","a":"#a78bfa","s":5,"f":1,"g":["ランチャー","アート","ギャラリー","星空","花火","グリッチ","cosmos","matrix","weather","fireworks","spirograph","starfield","glitch"]},{"n":"crypto","t":"Crypto Lab","d":"暗号・ハッシュ・パスワード生成ツール。古典暗号は学習用。SHAハッシュ、安全なパスワード生成、ステガノグラフィー対応。","c":"tools","i":"🔐","a":"#f59e0b","s":4,"f":0,"g":["暗号","ハッシュ","パスワード"]},{"n":"imgresize","t":"画像リサイズ・圧縮","d":"画像リサイズ・圧縮ツール。JPEG/PNG/WebP出力と品質調整に対応。処理はすべてブラウザ内Canvasで完結。","c":"tools","i":"🖼️","a":"#818cf8","s":4,"f":0,"g":["画像","リサイズ","ツール"]},{"n":"contrast-checker","t":"Color Contrast Checker","d":"カラーコントラストチェッカー。前景色・背景色のコントラスト比を計算、WCAG AA/AAA基準の合否判定。アクセシビリティ対応に最適。","c":"tools","i":"🔍","a":"#89b4fa","s":3,"f":0,"g":["アクセシビリティ","カラー","WCAG"]},{"n":"clocktools","t":"ClockTools","d":"時計・タイマー統合アプリ。クロック（デジタル・ワード・2進数）・世界時計・ストップウォッチ・タイマー・ポモドーロ・インターバルの5機能。","c":"tools","i":"⏰","a":"#7c8cff","s":5,"f":1,"g":["時計","タイマー","ツール集"]},{"n":"calctools","t":"CalcTools","d":"計算機統合アプリ。電卓・関数グラフ・単位変換・割り勘・営業日・和暦西暦・BMI・ローン・サイコロの9機能を1画面で。","c":"tools","i":"🧮","a":"#4dd0e1","s":5,"f":1,"g":["計算機","変換","サイコロ","ツール集"]},{"n":"soundlab","t":"SoundLab","d":"音・オーディオ統合ハブ。メトロノーム・チューナー・シンセ・波形ビジュアライザーを1画面で切り替え。","c":"audio","i":"🎵","a":"#ff6b6b","s":5,"f":1,"g":["音楽","オーディオ","ハブ","metronome","tuner","synthy","waveform"]},{"n":"texttools","t":"TextTools","d":"テキスト統合ハブ。文字数カウンター・ダミーテキスト生成・差分ビューア・正規表現ラボを1画面で切り替え。","c":"tools","i":"📝","a":"#fb923c","s":5,"f":1,"g":["テキスト","文字","ハブ","charcount","loremgen","diffview","regex","lorem"]},{"n":"physicslab","t":"PhysicsLab","d":"物理・天体シミュレーション統合ハブ。ライフゲーム・軌道・振り子波・太陽系を1画面で切り替え。","c":"science","i":"🪐","a":"#cba6f7","s":5,"f":1,"g":["物理","シミュレーション","ハブ","life","orbit","pendulum","solar-system","solar"]},{"n":"learnviz","t":"LearnViz","d":"学習・可視化統合ハブ。ソート可視化・確率シミュレーター・フーリエお絵かきを1画面で切り替え。","c":"science","i":"📈","a":"#6366f1","s":5,"f":1,"g":["学習","可視化","ハブ","sortviz","probsim","fourier"]}];
+const APPS = [{"n":"artlab","t":"ArtLab","d":"ジェネラティブアート・ランチャー。Cosmos・Matrix・Fireworks・Spirograph・Starfield・Weather・Glitchを1画面で切り替え、全画面表示できるハブ。","c":"visualart","i":"","a":"#a78bfa","s":5,"f":1,"g":["ランチャー","アート","ギャラリー","星空","花火","グリッチ","cosmos","matrix","weather","fireworks","spirograph","starfield","glitch"]},{"n":"crypto","t":"Crypto Lab","d":"暗号・ハッシュ・パスワード生成ツール。古典暗号は学習用。SHAハッシュ、安全なパスワード生成、ステガノグラフィー対応。","c":"tools","i":"","a":"#f59e0b","s":4,"f":0,"g":["暗号","ハッシュ","パスワード"]},{"n":"imgresize","t":"画像リサイズ・圧縮","d":"画像リサイズ・圧縮ツール。JPEG/PNG/WebP出力と品質調整に対応。処理はすべてブラウザ内Canvasで完結。","c":"tools","i":"","a":"#818cf8","s":4,"f":0,"g":["画像","リサイズ","ツール"]},{"n":"contrast-checker","t":"Color Contrast Checker","d":"カラーコントラストチェッカー。前景色・背景色のコントラスト比を計算、WCAG AA/AAA基準の合否判定。アクセシビリティ対応に最適。","c":"tools","i":"","a":"#89b4fa","s":3,"f":0,"g":["アクセシビリティ","カラー","WCAG"]},{"n":"clocktools","t":"ClockTools","d":"時計・タイマー統合アプリ。クロック（デジタル・ワード・2進数）・世界時計・ストップウォッチ・タイマー・ポモドーロ・インターバルの5機能。","c":"tools","i":"","a":"#7c8cff","s":5,"f":1,"g":["時計","タイマー","ツール集"]},{"n":"calctools","t":"CalcTools","d":"計算機統合アプリ。電卓・関数グラフ・単位変換・割り勘・営業日・和暦西暦・BMI・ローン・サイコロの9機能を1画面で。","c":"tools","i":"","a":"#4dd0e1","s":5,"f":1,"g":["計算機","変換","サイコロ","ツール集"]},{"n":"soundlab","t":"SoundLab","d":"音・オーディオ統合ハブ。メトロノーム・チューナー・シンセ・波形ビジュアライザーを1画面で切り替え。","c":"audio","i":"","a":"#ff6b6b","s":5,"f":1,"g":["音楽","オーディオ","ハブ","metronome","tuner","synthy","waveform"]},{"n":"texttools","t":"TextTools","d":"テキスト統合ハブ。文字数カウンター・ダミーテキスト生成・差分ビューア・正規表現ラボを1画面で切り替え。","c":"tools","i":"","a":"#fb923c","s":5,"f":1,"g":["テキスト","文字","ハブ","charcount","loremgen","diffview","regex","lorem"]},{"n":"physicslab","t":"PhysicsLab","d":"物理・天体シミュレーション統合ハブ。ライフゲーム・軌道・振り子波・太陽系を1画面で切り替え。","c":"science","i":"","a":"#cba6f7","s":5,"f":1,"g":["物理","シミュレーション","ハブ","life","orbit","pendulum","solar-system","solar"]},{"n":"learnviz","t":"LearnViz","d":"学習・可視化統合ハブ。ソート可視化・確率シミュレーター・フーリエお絵かきを1画面で切り替え。","c":"science","i":"","a":"#6366f1","s":5,"f":1,"g":["学習","可視化","ハブ","sortviz","probsim","fourier"]}];
 
 const $ = s => document.querySelector(s);
 const catOrder = ['all', 'tools', 'visualart', 'science', 'audio'];
@@ -286,15 +235,7 @@ function shortDesc(d){
 
 function cardHTML(a){
   const cat = CATS[a.c] ? CATS[a.c].label : a.c;
-  return `<a class="card" href="apps/${a.n}/index.html" style="--ac:${a.a}" data-app="${esc(a.n)}">
-    <div class="card-preview" aria-hidden="true">
-      <canvas data-preview="${esc(a.n)}"></canvas>
-      <span class="card-mark">${esc(cat)}</span>
-    </div>
-    <div class="card-title">${esc(a.t)}</div>
-    <div class="card-desc">${esc(shortDesc(a.d))}</div>
-    <div class="card-meta">${esc(a.n)}</div>
-  </a>`;
+  return `<a class="card" href="apps/${a.n}/index.html" style="--ac:${a.a}" data-app="${esc(a.n)}"><div class="card-preview" aria-hidden="true"><canvas data-preview="${esc(a.n)}"></canvas><span class="card-mark">${esc(cat)}</span></div><div class="card-title">${esc(a.t)}</div><div class="card-desc">${esc(shortDesc(a.d))}</div><div class="card-meta">${esc(a.n)}</div></a>`;
 }
 
 /* Mini live previews for gallery cards */
@@ -329,15 +270,13 @@ function drawPreview(canvas, id, accent){
   const ac = accent || '#3de0c5';
   const t = (performance.now() / 1000);
 
-  // base
-  const g = ctx.createLinearGradient(0, 0, w, h);
+  // base const g = ctx.createLinearGradient(0, 0, w, h);
   g.addColorStop(0, T.bg);
   g.addColorStop(1, hexAlpha(ac, T.dark ? 0.28 : 0.18));
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
 
-  // soft grid
-  ctx.strokeStyle = T.grid;
+  // soft grid ctx.strokeStyle = T.grid;
   ctx.lineWidth = 1;
   for (let x = 0; x < w; x += 18){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
   for (let y = 0; y < h; y += 18){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
@@ -460,8 +399,7 @@ function startPreviewLoop(){
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce){ paintPreviews(); return; }
   const tick = (now) => {
-    if (now - previewLast > 80){ // ~12fps
-      previewLast = now;
+    if (now - previewLast > 80){ // ~12fps previewLast = now;
       paintPreviews();
     }
     previewRaf = requestAnimationFrame(tick);
@@ -518,6 +456,4 @@ function init(){
   });
 }
 init();
-</script>
-</body>
-</html>
+</script></body></html>

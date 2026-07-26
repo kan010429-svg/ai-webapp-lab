@@ -28,7 +28,7 @@ document.getElementById('file-input').addEventListener('change', e => {
 
 document.getElementById('btn-glitch').addEventListener('click', applyGlitch);
 document.getElementById('btn-auto').addEventListener('click', function() {
-  autoMode = !autoMode; this.textContent = autoMode ? '⏸ 自動' : '▶ 自動';
+  autoMode = !autoMode; this.textContent = autoMode ? 'Auto' : 'Auto';
   if (autoMode) autoLoop();
 });
 document.getElementById('btn-save').addEventListener('click', () => {
