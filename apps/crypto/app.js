@@ -86,19 +86,38 @@ document.getElementById('hash-input').addEventListener('input', async function()
 // ── Password ──
 document.getElementById('pw-length').addEventListener('input', function() { document.getElementById('pw-len-val').textContent = this.value; });
 
+function randomFromCharset(chars, len) {
+  const out = [];
+  const buf = new Uint32Array(1);
+  const max = Math.floor(0x100000000 / chars.length) * chars.length;
+  for (let i = 0; i < len; i++) {
+    let x;
+    do {
+      crypto.getRandomValues(buf);
+      x = buf[0];
+    } while (x >= max);
+    out.push(chars[x % chars.length]);
+  }
+  return out.join('');
+}
+
 document.getElementById('btn-gen-pw').addEventListener('click', () => {
-  const len = parseInt(document.getElementById('pw-length').value);
+  const len = parseInt(document.getElementById('pw-length').value, 10);
   let chars = '';
   if (document.getElementById('pw-upper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   if (document.getElementById('pw-lower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
   if (document.getElementById('pw-digits').checked) chars += '0123456789';
   if (document.getElementById('pw-symbols').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
   if (!chars) chars = 'abcdefghijklmnopqrstuvwxyz';
-  const arr = new Uint32Array(len);
-  crypto.getRandomValues(arr);
-  const pw = Array.from(arr, v => chars[v % chars.length]).join('');
-  document.getElementById('pw-output').textContent = pw;
-  document.getElementById('pw-output').onclick = () => { navigator.clipboard.writeText(pw); };
+  const pw = randomFromCharset(chars, len);
+  const out = document.getElementById('pw-output');
+  out.textContent = pw + '  （クリックでコピー）';
+  out.onclick = () => {
+    navigator.clipboard.writeText(pw).then(() => {
+      out.textContent = pw + '  （コピーしました）';
+      setTimeout(() => { out.textContent = pw + '  （クリックでコピー）'; }, 1200);
+    });
+  };
   showStrength(pw, 'pw-strength');
 });
 
@@ -120,60 +139,101 @@ document.getElementById('pw-check').addEventListener('input', function() {
   else document.getElementById('pw-meter').innerHTML = '';
 });
 
-// ── Steganography ──
+// ── Steganography (UTF-8 LSB in red channel) ──
 const stegCanvas = document.getElementById('steg-canvas');
 const sctx = stegCanvas.getContext('2d');
 let stegImage = null;
+let stegObjectUrl = null;
+
+function bytesToBits(bytes) {
+  let bits = '';
+  for (let i = 0; i < bytes.length; i++) bits += bytes[i].toString(2).padStart(8, '0');
+  return bits;
+}
+
+function bitsToBytes(bits) {
+  const out = [];
+  for (let i = 0; i + 8 <= bits.length; i += 8) out.push(parseInt(bits.slice(i, i + 8), 2));
+  return new Uint8Array(out);
+}
 
 document.getElementById('btn-steg-upload').addEventListener('click', () => document.getElementById('steg-file').click());
 document.getElementById('steg-file').addEventListener('change', (e) => {
   const file = e.target.files[0]; if (!file) return;
+  if (stegObjectUrl) URL.revokeObjectURL(stegObjectUrl);
   const img = new Image();
   img.onload = () => {
-    stegCanvas.width = img.width; stegCanvas.height = img.height;
-    sctx.drawImage(img, 0, 0);
-    stegImage = sctx.getImageData(0, 0, img.width, img.height);
+    const maxSide = 1600;
+    let w = img.width, h = img.height;
+    if (Math.max(w, h) > maxSide) {
+      const scale = maxSide / Math.max(w, h);
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+    }
+    stegCanvas.width = w; stegCanvas.height = h;
+    sctx.drawImage(img, 0, 0, w, h);
+    stegImage = sctx.getImageData(0, 0, w, h);
     stegCanvas.classList.add('visible');
+    document.getElementById('steg-result').textContent = `容量目安: 約 ${Math.floor((w * h) / 8) - 1} バイト`;
   };
-  img.src = URL.createObjectURL(file);
+  stegObjectUrl = URL.createObjectURL(file);
+  img.src = stegObjectUrl;
 });
 
 document.getElementById('btn-steg-encode').addEventListener('click', () => {
-  if (!stegImage) return;
+  if (!stegImage) {
+    document.getElementById('steg-result').textContent = '先に画像を選択してください';
+    return;
+  }
   const text = document.getElementById('steg-text').value;
-  const binary = text.split('').map(c => c.charCodeAt(0).toString(2).padStart(8,'0')).join('') + '00000000';
+  const payload = new TextEncoder().encode(text);
+  const bits = bytesToBits(payload) + '00000000';
+  const capacity = stegImage.width * stegImage.height; // bits in red channel
+  if (bits.length > capacity) {
+    document.getElementById('steg-result').textContent =
+      `テキストが長すぎます（必要 ${bits.length} bit / 容量 ${capacity} bit）`;
+    return;
+  }
   const data = new Uint8ClampedArray(stegImage.data);
-  for (let i = 0; i < binary.length && i < data.length; i++) {
-    data[i * 4] = (data[i * 4] & 0xFE) | parseInt(binary[i]);
+  for (let i = 0; i < bits.length; i++) {
+    data[i * 4] = (data[i * 4] & 0xFE) | (bits[i] === '1' ? 1 : 0);
   }
   const imgData = new ImageData(data, stegImage.width, stegImage.height);
   sctx.putImageData(imgData, 0, 0);
-  document.getElementById('steg-result').textContent = `✓ ${text.length}文字を埋め込みました`;
+  stegImage = imgData;
+  document.getElementById('steg-result').textContent = `✓ ${payload.length} バイト（UTF-8）を埋め込みました`;
 });
 
 document.getElementById('btn-steg-decode').addEventListener('click', () => {
-  if (!stegCanvas.width) return;
+  if (!stegCanvas.width) {
+    document.getElementById('steg-result').textContent = '先に画像を選択してください';
+    return;
+  }
   const imgData = sctx.getImageData(0, 0, stegCanvas.width, stegCanvas.height);
-  let binary = '';
+  let bits = '';
   for (let i = 0; i < imgData.data.length / 4; i++) {
-    binary += (imgData.data[i * 4] & 1).toString();
-    if (binary.length % 8 === 0) {
-      const byte = binary.slice(-8);
-      if (byte === '00000000') { binary = binary.slice(0, -8); break; }
+    bits += (imgData.data[i * 4] & 1).toString();
+    if (bits.length % 8 === 0 && bits.slice(-8) === '00000000') {
+      bits = bits.slice(0, -8);
+      break;
     }
   }
-  let text = '';
-  for (let i = 0; i < binary.length; i += 8) text += String.fromCharCode(parseInt(binary.slice(i, i+8), 2));
-  document.getElementById('steg-result').textContent = text || '(テキストが見つかりません)';
+  try {
+    const text = new TextDecoder().decode(bitsToBytes(bits));
+    document.getElementById('steg-result').textContent = text || '(テキストが見つかりません)';
+  } catch (_) {
+    document.getElementById('steg-result').textContent = '(テキストを解読できませんでした)';
+  }
 });
 
 document.getElementById('btn-steg-save').addEventListener('click', () => {
-  const a = document.createElement('a'); a.download = 'steg.png'; a.href = stegCanvas.toDataURL(); a.click();
+  if (!stegCanvas.width) return;
+  const a = document.createElement('a'); a.download = 'steg.png'; a.href = stegCanvas.toDataURL('image/png'); a.click();
 });
 
-// Cleanup
 function cleanup() {
   if (stegCanvas) sctx.clearRect(0, 0, stegCanvas.width, stegCanvas.height);
+  if (stegObjectUrl) { URL.revokeObjectURL(stegObjectUrl); stegObjectUrl = null; }
   stegImage = null;
 }
 window.addEventListener('beforeunload', cleanup);

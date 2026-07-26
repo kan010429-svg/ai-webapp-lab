@@ -295,7 +295,10 @@
       if (data.needles.length < 500) data.needles.push({ center, angle, hit });
     } else if (exp === 'secretary') {
       const candidates = Array.from({ length: data.numCandidates }, (_, i) => i + 1);
-      candidates.sort(() => Math.random() - 0.5);
+      for (let i = candidates.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      }
       let maxSeen = 0;
       let selected = 0;
       for (let i = 0; i < data.numCandidates; i++) {
@@ -334,8 +337,9 @@
       html = `<div class="result-row"><span class="label">π推定値</span><span class="value">${pi}</span></div>
               <div class="result-row"><span class="label">誤差</span><span class="value">${err}</span></div>`;
     } else if (exp === 'dice') {
-      const max = Math.max(...data.counts.slice(2));
-      for (let i = 2; i <= 12; i++) {
+      const minSum = data.numDice;
+      const maxSum = data.numDice * 6;
+      for (let i = minSum; i <= maxSum; i++) {
         const pct = totalTrials ? (data.counts[i] / totalTrials * 100).toFixed(1) : '0';
         html += `<div class="result-row"><span class="label">${i}</span><span class="value">${pct}%</span></div>`;
       }
