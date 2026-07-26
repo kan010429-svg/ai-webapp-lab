@@ -171,10 +171,10 @@
     const pct = item.originalBytes ? Math.round((diff / item.originalBytes) * 100) : 0;
     item.ratioBadge.hidden = false;
     if (pct >= 0) {
-      item.ratioBadge.textContent = `▼ ${pct}% 削減`;
+      item.ratioBadge.textContent = `${pct}% 削減`;
       item.ratioBadge.classList.remove('negative');
     } else {
-      item.ratioBadge.textContent = `▲ ${Math.abs(pct)}% 増加`;
+      item.ratioBadge.textContent = `${Math.abs(pct)}% 増加`;
       item.ratioBadge.classList.add('negative');
     }
     item.downloadBtn.disabled = false;

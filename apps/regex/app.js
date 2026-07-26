@@ -153,8 +153,8 @@ function renderSaved() {
         <div class="saved-regex">/${escapeHtml(item.regex)}/${item.flags}</div>
       </div>
       <div class="saved-actions">
-        <button class="use-btn" data-index="${index}">使用</button>
-        <button class="delete-btn" data-index="${index}">×</button>
+        <button class="use-btn" data-index="${index}">Use</button>
+        <button class="delete-btn" data-index="${index}">Delete</button>
       </div>
     `;
     
@@ -214,7 +214,7 @@ function explainRegex(pattern) {
   if (pattern.includes('[') && pattern.includes(']')) explanations.push('文字クラス');
   if (pattern.includes('|')) explanations.push('OR条件');
   
-  return explanations.length > 0 ? '💡 ' + explanations.join(' / ') : '';
+  return explanations.length > 0 ? explanations.join(' / ') : '';
 }
 
 // Cheatsheet

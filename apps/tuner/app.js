@@ -144,7 +144,7 @@
       microphone.connect(analyser);
       
       isListening = true;
-      startBtn.textContent = '⏹ 停止';
+      startBtn.textContent = 'Stop';
       startBtn.classList.add('active');
       
       detectPitch();
@@ -165,7 +165,7 @@
     if (audioContext) {
       audioContext.close();
     }
-    startBtn.textContent = '🎤 開始';
+    startBtn.textContent = 'Start';
     startBtn.classList.remove('active');
     noteName.textContent = '-';
     frequency.textContent = '-- Hz';

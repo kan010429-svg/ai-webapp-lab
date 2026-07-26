@@ -67,7 +67,7 @@ document.getElementById('hash-input').addEventListener('input', async function()
   let html = '';
   for (const [name, algo] of algos) {
     const hash = await computeHash(algo, text);
-    html += `<div class="hash-item" style="transition:transform 0.2s,box-shadow 0.2s;cursor:pointer" onmouseenter="this.style.transform='translateX(4px)';this.style.boxShadow='0 0 12px rgba(137,180,250,0.2)'" onmouseleave="this.style.transform='';this.style.boxShadow=''" onclick="navigator.clipboard.writeText('${hash}')"><div class="hash-label" style="text-shadow:0 0 6px rgba(137,180,250,0.3)">${name}</div><span style="opacity:0;animation:hashFadeIn 0.3s ${algos.indexOf([name,algo]) * 0.05}s forwards">${hash}</span></div>`;
+    html += `<div class="hash-item" onclick="navigator.clipboard.writeText('${hash}')"><div class="hash-label">${name}</div><span>${hash}</span></div>`;
   }
   // Inject hash fade animation
   if (!document.getElementById('hashAnimStyle')) {
@@ -201,7 +201,7 @@ document.getElementById('btn-steg-encode').addEventListener('click', () => {
   const imgData = new ImageData(data, stegImage.width, stegImage.height);
   sctx.putImageData(imgData, 0, 0);
   stegImage = imgData;
-  document.getElementById('steg-result').textContent = `✓ ${payload.length} バイト（UTF-8）を埋め込みました`;
+  document.getElementById('steg-result').textContent = `${payload.length} バイト（UTF-8）を埋め込みました`;
 });
 
 document.getElementById('btn-steg-decode').addEventListener('click', () => {

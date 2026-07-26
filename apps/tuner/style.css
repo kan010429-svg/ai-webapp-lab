@@ -1,65 +1,66 @@
 *, *::before, *::after { box-sizing: border-box; }
 
-body.bt-canvas-app #app {
-  width: min(620px, 100%);
-}
-main {
+.tuner-main {
   display: grid;
   gap: 18px;
 }
-.note-display {
-  position: relative;
+
+.stage {
   display: grid;
+  gap: 16px;
   justify-items: center;
-  gap: 12px;
-  padding: 18px;
 }
+
 .waveform {
   width: 100%;
-  height: 88px;
+  height: 86px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--bg2);
+  background: var(--panel);
 }
+
+.note-readout {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
 .note-circle {
-  width: 178px;
-  height: 178px;
   display: grid;
   place-items: center;
-  border: 2px solid var(--border2);
-  border-radius: 50%;
-  background: var(--panel2);
-  color: var(--text);
-  font-family: var(--font-display);
-  font-size: 56px;
-  font-weight: 800;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  min-height: 128px;
+  transition: color 0.15s, text-shadow 0.15s;
 }
-.note-circle.in-tune {
-  border-color: var(--green);
-  background: color-mix(in srgb, var(--green) 20%, var(--panel2));
-  box-shadow: 0 0 24px color-mix(in srgb, var(--green) 25%, transparent);
+
+.note-circle.in-tune #noteName {
+  color: var(--green);
+  text-shadow: 0 0 24px color-mix(in srgb, var(--green) 30%, transparent);
 }
-.note-circle.sharp {
-  border-color: var(--red);
-  background: color-mix(in srgb, var(--red) 16%, var(--panel2));
-}
-.note-circle.flat {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 15%, var(--panel2));
-}
+
+.note-circle.sharp #noteName { color: var(--red); }
+.note-circle.flat #noteName { color: var(--accent); }
+
 .frequency,
 .cents {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
-.frequency { color: var(--muted); font-size: 20px; }
-.cents { color: var(--accent); font-size: 18px; font-weight: 750; }
+
+.frequency {
+  color: var(--muted);
+  font-size: 20px;
+}
+
+.cents {
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 750;
+}
 
 .tuning-meter {
   display: grid;
   gap: 8px;
 }
+
 .meter-marks {
   display: flex;
   justify-content: space-between;
@@ -67,19 +68,20 @@ main {
   font-family: var(--font-mono);
   font-size: 12px;
 }
+
 .meter-bar {
   position: relative;
-  height: 38px;
+  height: 34px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   background:
     linear-gradient(90deg,
-      color-mix(in srgb, var(--accent) 16%, transparent),
-      color-mix(in srgb, var(--green) 24%, transparent) 50%,
-      color-mix(in srgb, var(--red) 16%, transparent)),
-    var(--panel2);
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      color-mix(in srgb, var(--green) 25%, transparent) 50%,
+      color-mix(in srgb, var(--red) 18%, transparent));
 }
+
 .meter-bar::before {
   content: "";
   position: absolute;
@@ -88,41 +90,47 @@ main {
   transform: translateX(1px);
   background: var(--text);
 }
+
 .meter-needle {
   position: absolute;
   top: 4px;
   bottom: 4px;
   left: 50%;
   width: 4px;
-  border-radius: 4px;
   background: var(--accent);
   transform: translateX(-50%);
   transition: left 0.1s;
 }
 
-.bt-app .controls,
+.dock,
 .tuning-select,
 .reference-pitch {
   display: grid;
   gap: 10px;
 }
+
 input[type="range"] {
   width: 100%;
   accent-color: var(--accent);
 }
+
 .btn-start {
-  min-height: 52px;
+  min-height: 54px;
   width: 100%;
   font-size: 17px;
 }
+
 .btn-start.active {
   background: var(--red) !important;
   color: #fff !important;
 }
+
 .auto-tune label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .string-guide {
@@ -130,81 +138,94 @@ input[type="range"] {
   grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
   gap: 8px;
 }
+
 .string-btn {
   padding: 12px 8px;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-lg);
-  background: var(--panel2);
-  color: var(--text);
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 800;
-  cursor: pointer;
 }
+
 .string-btn:hover,
 .string-btn.target {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.stats,
-.history {
-  padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--panel);
+.stats h2,
+.history h2 {
+  margin: 0 0 12px;
 }
-.stats h3,
-.history h3 {
-  margin: 0 0 10px;
-  font-size: 15px;
-}
+
 .stat-grid {
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
+
+.stat-item {
+  padding: 14px;
+  border-right: 1px solid var(--border);
+}
+
+.stat-item:last-child { border-right: 0; }
+
+.stat-label {
+  display: block;
+  color: var(--muted2);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+}
+
 #historyList {
   max-height: 190px;
   overflow: auto;
 }
+
 .history-item {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-  padding: 7px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border);
   font-size: 12.5px;
 }
+
 .history-item .in-tune {
   color: var(--green);
   font-weight: 750;
 }
+
 .history-empty {
   color: var(--muted);
-  padding: 16px;
+  padding: 16px 0;
   text-align: center;
 }
+
 .btn-clear {
   width: 100%;
   margin-top: 10px;
   color: var(--red);
 }
 
-footer {
-  margin-top: 20px;
-  text-align: center;
-}
-.back-link {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
-}
-.back-link:hover { color: var(--text); }
-
 @media (max-width: 480px) {
-  .note-circle {
-    width: 142px;
-    height: 142px;
-    font-size: 44px;
-  }
   .history-item { grid-template-columns: 1fr 1fr; }
+  .stat-grid { grid-template-columns: 1fr; }
+  .stat-item {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-bottom: 0; }
 }

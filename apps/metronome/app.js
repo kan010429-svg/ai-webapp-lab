@@ -186,7 +186,7 @@
     isPlaying = true;
     currentBeat = 0;
     currentSubdivision = subdivision - 1; // 最初のtickで0になるように
-    startBtn.textContent = '⏹ 停止';
+    startBtn.textContent = 'Stop';
     startBtn.classList.add('active');
     
     const interval = 60000 / (bpm * subdivision);
@@ -203,7 +203,7 @@
       clearInterval(intervalId);
       intervalId = null;
     }
-    startBtn.textContent = '▶ 開始';
+    startBtn.textContent = 'Start';
     startBtn.classList.remove('active');
     currentBeat = 0;
     currentSubdivision = 0;
